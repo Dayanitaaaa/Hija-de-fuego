@@ -41,6 +41,11 @@ app.use('/mySystem', typeProductRoutes);
 app.use('/mySystem', productsRoutes);
 
 
+// Redirección de la raíz a la página de inicio
+app.get('/', (req, res) => {
+    res.redirect('/generalViews/home');
+});
+
 // Rutas amigables para dashboards
 app.get('/dashboard/homeDashboard', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/dashboard/homeDashboard/home.html'));
