@@ -5,7 +5,7 @@ body, html {
     overflow: hidden; /* Evita el scroll */
 }
 
-.gastronomy-main {
+.gastronomy-main {  
     position: relative;
     display: flex;
     align-items: center;
