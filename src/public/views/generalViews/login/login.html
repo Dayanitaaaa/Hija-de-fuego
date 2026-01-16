@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../../../assets/css/generalViews/login.css">
+</head>
+<body>
+    <header>
+		<object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+	</header>
+    <div class="login-wrapper">
+        <div class="login-panel">
+            <div class="login-left">
+                <div class="login-logo">
+                    <img src="../../../assets/icons/iconoAlisonSerrano.ico" alt="Logo">
+                </div>
+                <div class="login-welcome welcome-center">
+                    <h1>¡Bienvenido de nuevo!</h1>
+                    <p>Nos alegra verte otra vez.<br>Accede a tu cuenta para continuar.</p>
+                </div>
+            </div>
+            <div class="login-right">
+                <h2 class="register-title">Iniciar Sesión</h2>
+                <p class="login-desc register-desc">Accede con tu correo y contraseña para continuar.</p>
+                <form class="login-form register-form">
+                    <div class="input-group register-input-group">
+                        <input type="email" class="register-input" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="input-group register-input-group">
+                        <input type="password" class="register-input" placeholder="Contraseña" required>
+                    </div>
+                    <div class="options">
+                        <div class="option-item">
+                            <label><input type="checkbox"> Mantener sesión iniciada</label> 
+                        </div>
+                        <div class="option-item">
+                            <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
+                        </div>
+                    </div>
+                    <button type="submit" class="login-btn">Ingresar</button>
+                    <div class="login-register">
+                        <span>¿No tienes cuenta?</span> <a href="/generalViews/register">Regístrate</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
+    <script src="../../../assets/js/generalViews/login/login.js"></script>
+    <script src="../../../assets/js/system/constans.js"></script>
+</body>
+</html>

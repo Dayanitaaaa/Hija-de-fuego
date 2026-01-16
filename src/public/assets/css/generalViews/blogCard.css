@@ -1,0 +1,251 @@
+
+.blogcard-full-bg {
+	background: #f6f3ef;
+	min-height: 100vh;
+	width: 100vw;
+	padding: 0;
+	margin: 0;
+	/* Separación del header */
+	padding-top: 200px;
+}
+
+.blogcard-wide-container {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 64px;
+	max-width: 1400px;
+	margin: 48px auto 0 auto;
+	padding: 48px 0 48px 0;
+	background: transparent;
+}
+
+.blogcard-wide-text {
+	flex: 2 1 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 3vw;
+	padding-right: 3vw;
+	max-width: 700px;
+}
+
+.blogcard-wide-text .blogcard-date {
+	font-size: 1rem;
+	color: #a6a29b;
+	margin-bottom: 32px;
+	font-style: italic;
+	margin-top: 32px;
+}
+
+.blogcard-wide-text .blogcard-title {
+	font-family: 'Cormorant Garamond', serif;
+	font-size: 2.7rem;
+	color: #222;
+	margin-bottom: 36px;
+	font-weight: 400;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.blogcard-wide-text .blogcard-description {
+	font-family: 'Montserrat', Arial, sans-serif;
+	font-size: 1.18rem;
+	color: #3a332a;
+	line-height: 1.7;
+	margin-bottom: 0;
+}
+
+.blogcard-wide-img-container {
+	flex: 1 1 0;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-end;
+	min-width: 320px;
+	max-width: 600px;
+	padding-right: 3vw;
+}
+
+.blogcard-wide-img {
+	width: 100%;
+	max-width: 520px;
+	height: auto;
+	max-height: 520px;
+	object-fit: cover;
+	border-radius: 12px;
+	box-shadow: 0 2px 18px rgba(0,0,0,0.10);
+}
+
+@media (max-width: 1100px) {
+	.blogcard-wide-container {
+		flex-direction: column-reverse;
+		align-items: center;
+		gap: 32px;
+		padding: 32px 0;
+	}
+	.blogcard-wide-img-container {
+		justify-content: center;
+		padding-right: 0;
+	}
+	.blogcard-wide-img {
+		max-width: 90vw;
+		max-height: 320px;
+	}
+	.blogcard-wide-text {
+		padding: 0 4vw;
+		max-width: 98vw;
+		text-align: center;
+	}
+}
+@media (max-width: 700px) {
+	.blogcard-wide-container {
+		padding: 12px 0;
+		gap: 18px;
+	}
+	.blogcard-wide-img {
+		max-width: 98vw;
+		max-height: 180px;
+	}
+	.blogcard-wide-text {
+		padding: 0 2vw;
+	}
+}
+.blogcard-main-container {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 64px;
+	max-width: 1300px;
+	min-height: 480px;
+	margin: 60px auto 40px auto;
+	padding: 48px 3vw;
+	background: #f8f6f3;
+	border-radius: 28px;
+	box-shadow: 0 2px 24px rgba(0,0,0,0.09);
+}
+
+.blogcard-img-container {
+	flex: 1 1 480px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 320px;
+}
+
+.blogcard-img {
+	width: 420px;
+	max-width: 40vw;
+	height: 480px;
+	max-height: 60vh;
+	object-fit: cover;
+	border-radius: 18px;
+	box-shadow: 0 2px 18px rgba(0,0,0,0.10);
+}
+
+.blogcard-content-container {
+	flex: 2 1 600px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-width: 280px;
+	max-width: 700px;
+}
+
+@media (max-width: 1100px) {
+	.blogcard-main-container {
+		flex-direction: column;
+		align-items: center;
+		gap: 32px;
+		padding: 32px 4vw;
+		min-height: unset;
+	}
+	.blogcard-img {
+		width: 90vw;
+		max-width: 420px;
+		height: 320px;
+		max-height: 40vh;
+	}
+	.blogcard-content-container {
+		width: 100%;
+		align-items: center;
+		text-align: center;
+		max-width: 98vw;
+	}
+}
+@media (max-width: 700px) {
+	.blogcard-main-container {
+		padding: 16px 2vw;
+		gap: 18px;
+	}
+	.blogcard-img {
+		width: 96vw;
+		max-width: 98vw;
+		height: 180px;
+		max-height: 30vh;
+	}
+	.blogcard-content-container {
+		padding: 0 2vw;
+	}
+}
+
+.blogcard-main-container {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 48px;
+	max-width: 900px;
+	margin: 80px auto 40px auto;
+	padding: 40px 24px;
+	background: #f8f6f3;
+	border-radius: 24px;
+	box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+.blogcard-img-container {
+	flex: 1 1 320px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.blogcard-img {
+	width: 320px;
+	max-width: 100%;
+	height: 380px;
+	object-fit: cover;
+	border-radius: 12px;
+	box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.blogcard-content-container {
+	flex: 2 1 400px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.blogcard-title {
+	font-family: 'Cormorant Garamond', serif;
+	font-size: 2.2rem;
+	color: #2d2926;
+	margin-bottom: 12px;
+}
+
+.blogcard-date {
+	font-family: 'Cormorant Garamond', serif;
+	font-size: 1.1rem;
+	color: #a6a29b;
+	margin-bottom: 24px;
+}
+
+.blogcard-description {
+	font-family: 'Montserrat', Arial, sans-serif;
+	font-size: 1.08rem;
+	color: #3a332a;
+	line-height: 1.7;
+}
+
+
