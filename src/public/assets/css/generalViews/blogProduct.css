@@ -1,0 +1,117 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: #e6e6e6;
+}
+
+.recipes-main {
+    width: 100%;
+}
+
+.recipes-content-container {
+    padding: 40px 0;
+    width: 80%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.recipes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.recipes-title {
+    font-family: 'Aboreto', cursive;
+    font-size: 2.5em;
+    color: #333;
+    margin: 0;
+}
+
+.btn-view-all {
+    padding: 10px 20px;
+    background-color: #A99985;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.btn-view-all:hover {
+    background-color: #8b7e6b;
+}
+
+.recipes-dropdowns-container {
+    display: flex;
+    gap: 20px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-btn {
+    background-color: #A99985;
+    color: white;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    font-family: 'Georgia', serif;
+} 
+
+.dropdown-btn::after {
+    content: ' ▾';
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #A99985;
+    min-width: 220px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 10px;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content a:hover {background-color: #988875;}
+
+.show {
+    display: block;
+}
+
+.recipes-image-container {
+    height: 60vh;
+    background-image: url('../assets/imgStatic/img14.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.recipes-image-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(106, 68, 79, 0.3);
+}
