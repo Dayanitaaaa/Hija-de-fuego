@@ -1,9 +1,13 @@
 body {
-    background-image: url('/assets/imgStatic/imgKitchen.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+	background-image:
+		linear-gradient(rgba(106, 68, 79, 0.75), rgba(106, 68, 79, 0.35)),
+		url('/assets/imgStatic/imgKitchen.png');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	min-height: 100vh;
+	margin: 0;
 }
 
 /* Cards de blog */
@@ -11,11 +15,11 @@ body {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 40px;
-	background: #ece8e3;
 	padding: 40px 0 60px 0;
 	max-width: 1100px;
 	margin: 0 auto;
 	justify-items: center;
+	background: none;
 }
 
 .blog-card {
@@ -35,7 +39,7 @@ body {
 	height: 330px;
 	object-fit: cover;
 	border-radius: 0;
-	box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 	margin-bottom: 18px;
 }
 
@@ -62,11 +66,13 @@ body {
 		gap: 20px;
 		max-width: 660px;
 	}
+
 	.blog-card {
 		width: 200px;
 		height: 320px;
 		min-height: 320px;
 	}
+
 	.blog-card-img {
 		height: 180px;
 	}
@@ -78,12 +84,14 @@ body {
 		gap: 32px;
 		max-width: 98vw;
 	}
+
 	.blog-card {
 		width: 90vw;
 		max-width: 320px;
 		height: 260px;
 		min-height: 260px;
 	}
+
 	.blog-card-img {
 		height: 140px;
 	}
@@ -99,6 +107,7 @@ body {
 	margin-top: 100px;
 	margin-bottom: 100px;
 }
+
 .blog-hero {
 	width: 100vw;
 	max-width: 100%;
@@ -136,4 +145,86 @@ body {
 	.blog-hero-img {
 		height: 22vw;
 	}
+}
+
+/* Estilos para el hero y el badge */
+.blog-hero {
+    width: 100vw;
+    max-width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 80px 0;  /* Espaciado vertical */
+    position: relative;
+    background: transparent;  /* Fondo transparente */
+    min-height: 300px;  /* Altura mínima */
+    display: flex;  /* Para centrar el contenido */
+    justify-content: center;  /* Centrar horizontalmente */
+    align-items: center;  /* Centrar verticalmente */
+    border-radius: 50px 50px 0 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el cuadrito "BLOG" */
+.blog-badge {
+    background: #f7e8bb;  /* Fondo beige */
+    color: #111;  /* Texto oscuro */
+    border-radius: 20px;  /* Esquinas redondeadas */
+    padding: 12px 90px; /* Espaciado interno */
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+
+/* Contenedor principal */
+.blog-cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    
+}
+
+/* Tarjetas */
+.blog-card {
+    background: rgba(255, 255, 255, 0.1); /* Fondo ligeramente blanco para las tarjetas */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    aspect-ratio: 3/4;
+}
+
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Imágenes dentro de las tarjetas */
+.blog-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.blog-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .blog-cards-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .blog-cards-container {
+        grid-template-columns: 1fr;
+    }
 }
