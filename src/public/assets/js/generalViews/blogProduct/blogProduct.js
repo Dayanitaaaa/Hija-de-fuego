@@ -24,4 +24,38 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // Cargar galería
+    loadGallery();
 });
+
+async function loadGallery() {
+    const container = document.getElementById('gallery');
+    const emptyState = document.getElementById('gallery-empty');
+    if (!container) return;
+    try {
+        const res = await fetch('/api/gallery');
+        const items = await res.json();
+        if (!items || items.length === 0) {
+            emptyState?.removeAttribute('hidden');
+            container.innerHTML = '';
+            return;
+        }
+        emptyState?.setAttribute('hidden', true);
+        container.innerHTML = items.map(item => `
+            <div class="gallery-card">
+                <img src="${item.image_url}" alt="${item.title}">
+                <div class="gallery-card-body">
+                    <div class="gallery-card-title">${item.title}</div>
+                    <div class="gallery-card-subtitle">${item.subtitle || ''}</div>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error cargando galería', error);
+        if (emptyState) {
+            emptyState.textContent = 'No se pudo cargar la galería.';
+            emptyState.removeAttribute('hidden');
+        }
+    }
+}

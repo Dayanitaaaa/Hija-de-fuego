@@ -12,7 +12,7 @@ import cookieParser from 'cookie-parser';
 import { verifyToken } from '../middleware/authMiddleware.js';  
 import { register } from 'module';
 import { type } from 'os';
-
+import galleryRoutes from '../routes/gallery.routes.js';
 
 
 // Configuración de rutas y archivos estáticos para dashboards
@@ -22,16 +22,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const publicPath = path.join(__dirname, '../public');
 const assetsPath = path.join(publicPath, 'assets');
+const uploadsPath = path.join(publicPath, 'uploads');
 
 // Archivos estáticos (solo assets, no exponer views directamente)
 
 app.use('/assets', express.static(assetsPath));
+app.use('/uploads', express.static(uploadsPath));
 
 app.use(cors());
 app.use(cookieParser());
 
 app.use(express.json());
-
 
 app.use('/mySystem', rolesRoutes);
 app.use('/mySystem', usersRoutes);
@@ -39,6 +40,7 @@ app.use('/mySystem', typeFiles);
 app.use('/mySystem', filesRoutes);
 app.use('/mySystem', typeProductRoutes); 
 app.use('/mySystem', productsRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 
 // Redirección de la raíz a la página de inicio

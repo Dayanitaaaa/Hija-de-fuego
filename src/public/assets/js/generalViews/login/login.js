@@ -1,11 +1,18 @@
+console.log('LOG: El script login.js se ha cargado correctamente.');
+
 document.addEventListener('DOMContentLoaded', () => {
-	// Protección: Redirigir si ya hay token (usuario logueado)
-	if (localStorage.getItem('token')) {
-		window.location.href = '/dashboard/homeDashboard';
-		return;
-	}
+	// Limpiar cualquier sesión anterior al cargar la página de login
+	localStorage.removeItem('token');
+	localStorage.removeItem('role');
+
+	// El código original de protección ya no es necesario aquí, 
+	// pero lo dejamos comentado por si se necesita en el futuro.
+	// if (localStorage.getItem('token')) {
+	// 	window.location.href = '/dashboard/homeDashboard';
+	// 	return;
+	// }
 	const form = document.querySelector('.login-form');
-	const inputs = document.querySelectorAll('.register-input');
+	const inputs = document.querySelectorAll('.login-input');
 	const emailInput = inputs[0];
 	const passwordInput = inputs[1];
 
