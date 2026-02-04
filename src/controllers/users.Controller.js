@@ -107,4 +107,7 @@ export const loginUsers = async (req, res) => {
             throw err;
         }
     } catch (error) {
-        console.log('Error inesperado en loginUsers:', error); res.status(500).json({ error: 'Error logging in user', details: error.message }); } };
+                console.log('Error inesperado en loginUsers:', error);
+        res.status(500).json({ error: 'Error logging in user', details: error.message });
+    }
+};

@@ -54,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
 					if (data.role && (data.role.id === 1 || data.role.name === 'Administrador')) {
 						window.location.href = URL_DASHBOARD_HOME;
 					} else if (data.role && (data.role.id === 2 || data.role.name === 'Cliente')) {
-						window.location.href = '/generalViews/home';
+						// Redirigir también a los clientes al dashboard
+						window.location.href = URL_DASHBOARD_HOME;
 					} else {
 						showMessage('Rol no permitido', 'error');
 					}
