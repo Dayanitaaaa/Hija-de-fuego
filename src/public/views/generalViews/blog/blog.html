@@ -8,29 +8,31 @@
 </head>
 <body>
     <header>
-		<object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
-	</header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
     
-    <!-- Dentro de tu archivo blog.html -->
-<section class="blog-hero">
-    <div class="blog-badge">BLOG</div>
-</section>
+    <section class="blog-hero">
+        <a class="blog-badge" href="/generalViews/blogProduct" aria-label="Ir a noticias y fotos">BLOG</a>
+    </section>
 
     <div class="blog-cards-container">
         <div class="blog-card">
-            <img src="/assets/imgStatic/cardCultura1.jpeg" alt="Cultura 1">
+            <img src="../../../assets/imgStatic/cardCultura1.jpeg" alt="Cultura 1">
         </div>
         <div class="blog-card">
-            <img src="/assets/imgStatic/cardCultura2.jpeg" alt="Cultura 2">
+            <img src="../../../assets/imgStatic/cardCultura2.jpeg" alt="Cultura 2">
         </div>
         <div class="blog-card">
-            <img src="/assets/imgStatic/imagen21.jpg" alt="Cultura 3">
+            <img src="../../../assets/imgStatic/imagen21.jpg" alt="Cultura 3">
         </div>
     </div>
 
     <footer></footer>
+        <!-- ... resto del código existente ... -->
     <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
     <script src="../../../assets/js/system/constans.js"></script>
-
+    <!-- Añade esta línea para incluir el script del blog -->
+    <script src="../../../assets/js/generalViews/blog/blog.js"></script>
+</body>
 </body>
 </html>
