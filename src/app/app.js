@@ -10,9 +10,7 @@ import typeProductRoutes from '../routes/typeProduct.routes.js';
 import productsRoutes from '../routes/product.Routes.js';
 import cookieParser from 'cookie-parser';
 import { verifyToken } from '../middleware/authMiddleware.js';  
-import { register } from 'module';
-import { type } from 'os';
-import galleryRoutes from '../routes/gallery.routes.js';
+
 
 
 // Configuración de rutas y archivos estáticos para dashboards
@@ -40,7 +38,6 @@ app.use('/mySystem', typeFiles);
 app.use('/mySystem', filesRoutes);
 app.use('/mySystem', typeProductRoutes); 
 app.use('/mySystem', productsRoutes);
-app.use('/api/gallery', galleryRoutes);
 
 
 // Redirección de la raíz a la página de inicio

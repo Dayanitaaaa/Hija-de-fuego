@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="../../../assets/css/generalViews/login.css">
 </head>
 <body>
-    <header id="header-placeholder"></header>
 
     <main class="login-main">
         <div class="login-container">
@@ -38,17 +37,6 @@
 
     <footer></footer>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch('/generalViews/headerGlobal')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('header-placeholder').innerHTML = data;
-                })
-                .catch(error => console.error('Error loading header:', error));
-        });
-    </script>
-    <!-- <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script> -->
     <script src="../../../assets/js/system/constans.js"></script>
     <script src="../../../assets/js/generalViews/login/login.js"></script>
 </body>
