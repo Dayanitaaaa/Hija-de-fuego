@@ -9,42 +9,68 @@
     
 </head>
 <body>
-    
     <header>
-		<object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
-	</header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
 
     <main class="recipes-main">
         <div class="recipes-content-container">
             <div class="recipes-header">
-                <h1 class="recipes-title">RECETAS</h1>
-                <a href="recipes-all.html" class="btn-view-all">Ver Todas</a>
+                <h1 class="recipes-title">Nuestras Recetas</h1>
+                <a href="#" class="btn-view-all">Ver Todas</a>
             </div>
+
             <div class="recipes-dropdowns-container">
                 <div class="dropdown">
-                    <button class="dropdown-btn">Platos fuertes</button>
+                    <button class="dropdown-btn">Región</button>
                     <div class="dropdown-content">
-                        <a href="/generalViews/blog/bandejaPaisa">Bandeja paisa</a>
-                        <a href="/generalViews/blog/ajiaco">Ajiaco</a>
-                        <a href="/generalViews/blog/lomo">Lomo al trapo</a>
+                        <a href="#">Andina</a>
+                        <a href="#">Caribe</a>
+                        <a href="#">Pacífico</a>
                     </div>
                 </div>
                 <div class="dropdown">
-                    <button class="dropdown-btn">Insumos</button>
+                    <button class="dropdown-btn">Tipo de Plato</button>
                     <div class="dropdown-content">
-                        <a href="/generalViews/blog/arepa">Arepa de huevo</a>
+                        <a href="#">Entrada</a>
+                        <a href="#">Plato Fuerte</a>
+                        <a href="#">Postre</a>
                     </div>
                 </div>
                 <div class="dropdown">
-                    <button class="dropdown-btn">Postres</button>
+                    <button class="dropdown-btn">Ingrediente Principal</button>
                     <div class="dropdown-content">
-                        <a href="/generalViews/blog/arequipe">Arequipe</a>
+                        <a href="#">Carne</a>
+                        <a href="#">Pollo</a>
+                        <a href="#">Pescado</a>
                     </div>
                 </div>
-                <div class="dropdown">
-                    <button class="dropdown-btn">Cenas</button>
-                    <div class="dropdown-content">
-                        <a href="/generalViews/blog/sancocho">Sancocho</a>
+            </div>
+
+            <!-- Aquí se cargarán dinámicamente las cards de las recetas -->
+            <div class="recipes-cards-container">
+                <!-- Card de Ejemplo 1 -->
+                <div class="recipe-card">
+                    <img src="../../../assets/imgStatic/cardCultura1.jpeg" alt="Bandeja Paisa">
+                    <div class="recipe-card-content">
+                        <h3 class="recipe-card-title">Bandeja Paisa</h3>
+                        <p class="recipe-card-description">Un plato icónico de la región Andina, con frijoles, arroz, carne molida, chicharrón, y más.</p>
+                    </div>
+                </div>
+                <!-- Card de Ejemplo 2 -->
+                <div class="recipe-card">
+                    <img src="../../../assets/imgStatic/cardCultura2.jpeg" alt="Ajiaco Santafereño">
+                    <div class="recipe-card-content">
+                        <h3 class="recipe-card-title">Ajiaco Santafereño</h3>
+                        <p class="recipe-card-description">Una sopa tradicional de Bogotá, preparada con diferentes tipos de papa, pollo y mazorca.</p>
+                    </div>
+                </div>
+                <!-- Card de Ejemplo 3 -->
+                <div class="recipe-card">
+                    <img src="../../../assets/imgStatic/imagen21.jpg" alt="Ceviche de Camarón">
+                    <div class="recipe-card-content">
+                        <h3 class="recipe-card-title">Ceviche de Camarón</h3>
+                        <p class="recipe-card-description">Fresco y cítrico, este plato de la costa Pacífica es perfecto para un día caluroso.</p>
                     </div>
                 </div>
             </div>

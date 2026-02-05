@@ -8,28 +8,18 @@ body, html {
 }
 
 .gastronomy-main {  
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-image: url('../../../assets/imgStatic/imgKitchen.png');
+    padding-top: 100px; /* Espacio para el header fijo */
+    background-image: linear-gradient(rgba(106, 68, 79, 0.75), rgba(106, 68, 79, 0.35)), url('/assets/imgStatic/imgKitchen.png');
     background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-color: #5d4650; /* relleno de fondo si la imagen no cubre todo */
-    padding: clamp(80px, 12vw, 140px) clamp(16px, 4vw, 28px) clamp(140px, 18vw, 220px);
-}
-
-.gastronomy-main::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(106, 68, 79, 0.7);
-    z-index: 1;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido horizontalmente */
+    justify-content: center; /* Centra el contenido verticalmente */
 }
 
 .gastronomy-container {
@@ -74,19 +64,24 @@ body, html {
 
 .gastronomy-button {
     display: inline-block;
-    padding: clamp(10px, 3vw, 14px) clamp(18px, 5vw, 28px);
-    background-color: #fdfdfd;
-    color: #444;
+    background: #f7e8bb;  /* Fondo beige */
+    color: #111;  /* Texto oscuro */
+    border-radius: 20px;  /* Esquinas redondeadas */
+    padding: 12px 30px; /* Espaciado interno ajustado */
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; /* Tamaño ajustado */
+    letter-spacing: 0.1em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* Sombra pronunciada */
+    text-align: center;
     text-decoration: none;
-    border-radius: 25px;
-    font-weight: normal;
-    transition: background-color 0.3s, color 0.3s;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: none;
 }
 
 .gastronomy-button:hover {
-    background-color: #eee;
+    transform: translateY(-2px); /* Efecto de elevación */
+    background-color: #fff5d7; /* Tono más claro para resaltar */
+    box-shadow: 0 6px 20px rgba(247, 232, 187, 0.8); /* Sombra de color claro para efecto de luz */
 }
 
 .gastronomy-image-content {

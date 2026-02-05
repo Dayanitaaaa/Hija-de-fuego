@@ -1,14 +1,16 @@
 body {
-	padding-top: 100px; /* Ajusta según la altura de tu header */
-	background-image:
-		linear-gradient(rgba(106, 68, 79, 0.75), rgba(106, 68, 79, 0.35)),
-		url('/assets/imgStatic/imgKitchen.png');
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	min-height: 100vh;
-	margin: 0;
+    padding-top: 100px; /* Espacio para el header fijo */
+    background-image: linear-gradient(rgba(106, 68, 79, 0.75), rgba(106, 68, 79, 0.35)), url('/assets/imgStatic/imgKitchen.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido horizontalmente */
+    justify-content: center; /* Centra el contenido verticalmente */
 }
 
 header {
@@ -23,28 +25,27 @@ header {
 
 /* Cards de blog */
 .blog-cards-container {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: clamp(16px, 3vw, 36px);
-	padding: clamp(16px, 4vw, 36px);
-	max-width: 1600px;
-	width: min(95vw, 1600px);
-	margin: clamp(16px, 4vw, 32px) auto;
-	background: rgba(235, 193, 134, 0.3); /* opacidad baja */
-	border-radius: 16px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-	margin-top: 0 !important;
-	padding-top: 40px;
+    display: grid; /* Crea columnas responsivas que se ajustan automáticamente */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2vw;
+    padding: 2vw;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto 60px auto; /* Centra y añade margen inferior */
+    background: rgba(235, 193, 134, 0.20);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    flex-grow: 1; /* Ocupa el espacio vertical restante */
+    overflow: hidden;
 }
 
 .blog-card {
-	background: transparent;
-	border-radius: 12px;
-	overflow: hidden;
-	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-	transition: transform 0.3s ease;
-	height: clamp(420px, 70vw, 700px); /* tamaño reducido */
-
+    background: transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease;
+    height: 100%; /* Se ajusta a la altura de la celda del grid */
 }
 
 .blog-card img {
@@ -76,38 +77,24 @@ header {
 	letter-spacing: 0.04em;
 }
 
+/* Ajustes responsivos para las cards */
 @media (max-width: 1100px) {
-	.blog-cards-container {
-		grid-template-columns: repeat(2, 1fr);
-		gap: clamp(20px, 4vw, 36px);
-		max-width: 1400px;
-		width: 98vw;
-		padding: clamp(18px, 4vw, 32px);
-		margin: clamp(16px, 4vw, 32px) auto;
-	}
-
-	.blog-card {
-		height: clamp(500px, 85vw, 700px);
-		min-height: 500px;
-	}
+    .blog-cards-container {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 2vw;
+    }
 }
 
 @media (max-width: 700px) {
-	.blog-cards-container {
-		margin: clamp(16px, 4vw, 32px) auto;
-		grid-template-columns: 1fr;
-		gap: clamp(20px, 5vw, 32px);
-		max-width: 97vw;
-		width: 97vw;
-		padding: clamp(14px, 5vw, 22px);
-	}
+    .blog-cards-container {
+        grid-template-columns: 1fr;
+        padding: 4vw 2vw;
+    }
 
-	.blog-card {
-		width: 92vw;
-		max-width: 460px;
-		height: clamp(500px, 100vw, 640px);
-		min-height: 500px;
-	}
+    .blog-card {
+        height: auto; /* Permite que la altura se ajuste al contenido */
+        aspect-ratio: 4 / 5; /* Mantiene una proporción consistente */
+    }
 }
 
 .blog-title {
@@ -122,21 +109,14 @@ header {
 }
 
 .blog-hero {
-  width: 100vw;
-  max-width: 100%;
-  overflow: hidden;
-  margin: 0;
-  padding: 32px 0;
-  position: relative;
-  background: transparent;
-  min-height: 160px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50px 50px 0 0;
-  box-shadow: none;
-  margin-top: clamp(100px, 18vh, 140px); /* empuja bajo el header */
-  z-index: 1;
+    padding: 2vh 0;
+    flex-shrink: 0; /* Evita que se encoja */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	margin-top: clamp(40px, 8vh, 60px);
 }
 
 .blog-hero + .blog-cards-container {
@@ -152,8 +132,15 @@ header {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2rem;
     letter-spacing: 0.1em;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* Sombra más pronunciada */
     text-align: center;
+    transition: all 0.3s ease;
+}
+
+.blog-badge:hover {
+    transform: translateY(-2px); /* Efecto de elevación */
+    background-color: #fff5d7; /* Tono más claro para resaltar */
+    box-shadow: 0 6px 20px rgba(247, 232, 187, 0.8); /* Sombra de color claro para efecto de luz */
 }
 
 .blog-hero-img {
@@ -178,26 +165,6 @@ header {
 	.blog-hero-img {
 		height: 22vw;
 	}
-}
-
-/* Ajustes responsivos */
-@media (max-width: 1100px) {
-    .blog-cards-container {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 800px;
-        padding: 20px;
-    }
-}
-@media (max-width: 700px) {
-    .blog-cards-container {
-        grid-template-columns: 1fr;
-        max-width: 90%;
-        padding: 16px;
-    }
-    
-    .blog-card {
-        height: 300px; /* Altura menor en móviles */
-    }
 }
 
 

@@ -119,7 +119,7 @@ body {
 	color: #222;
 	background: linear-gradient(180deg, #fffbe6 60%, #fff 100%);
 	border: none;
-	border-radius: 0;
+	border-radius: 20px;
 	box-shadow: none;
 	font-family: 'Montserrat', 'Aboreto', 'Cinzel', 'Georgia', serif;
 	text-decoration: none;
@@ -191,7 +191,7 @@ body {
 	color: #222;
 	background: linear-gradient(180deg, #fffbe6 60%, #fff 100%);
 	border: none;
-	border-radius: 0;
+	border-radius: 20px;
 	box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 	font-family: 'Montserrat', 'Aboreto', 'Cinzel', 'Georgia', serif;
 	text-decoration: none;
