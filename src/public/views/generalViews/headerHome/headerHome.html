@@ -7,8 +7,14 @@
 <body>
 	<header class="main-header">
 		<div class="header-content">
+			<button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+			<a href="/generalViews/home" class="logo-link"><span class="logo">Hija del Fuego</span></a>
 			<nav class="navbar">
-				<ul class="nav-menu">
+				<ul class="nav-menu" id="nav-menu">
 					<li>
 						<div class="btn-group-products">
 							<div class="dropdown">
@@ -24,7 +30,6 @@
 							<a href="/generalViews/blog" class="header-btn">Blog</a>
 						</div>
 					</li>
-					<li class="logo-li"><span class="logo">Hija del Fuego</span></li>
 					<li>
 						<div class="btn-group-contact">
 							<a href="/generalViews/contact" class="header-btn">Contacto</a>

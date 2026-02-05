@@ -1,4 +1,19 @@
 
+/* Responsive Design */
+@media (max-width: 768px) {
+    .home-text {
+        font-size: 1.1rem; /* Reducir tamaño de fuente para tabletas */
+        padding: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-text {
+        font-size: 1rem; /* Reducir tamaño de fuente para móviles */
+        padding: 20px;
+    }
+}
+
 .home-image-section {
 	width: 100vw;
 	height: 100vh;

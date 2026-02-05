@@ -6,11 +6,11 @@ producbody, html {
 
 .culture-main {
     position: relative;
-    min-height: calc(100vh - 100px);
+    min-height: 100vh;
     background-image: url('../../../assets/imgStatic/imgKitchen.png');
     background-size: cover;
     background-position: center;
-    padding: 40px 0;
+    
 }
 
 .culture-main::before {
@@ -46,6 +46,7 @@ producbody, html {
     justify-content: center;
     gap: 40px;
     flex-wrap: wrap;
+    margin-top: 180px; /* Espacio para bajar las cards */
 }
 
 .culture-card {
