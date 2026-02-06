@@ -6,25 +6,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const confirmInput = document.querySelector('input[placeholder="Confirmar contraseña"]');
     const roleSelect = document.getElementById('role-select');
 
-    // --- 1. Cargar Roles Dinámicamente ---
-    try {
-        const response = await fetch(HOST + '/mySystem/roles');
-        if (!response.ok) {
-            throw new Error('No se pudieron cargar los roles.');
-        }
-        const roles = await response.json();
-        
-        roles.forEach(role => {
-            const option = document.createElement('option');
-            option.value = role.Roles_id;
-            option.textContent = role.Roles_name;
-            roleSelect.appendChild(option);
-        });
-
-    } catch (error) {
-        console.error('Error al cargar roles:', error);
-        showMessage('No se pudieron cargar los roles. Inténtalo de nuevo.', 'error');
-    }
+    // --- 1. Cargar Roles Fijos ---
+    // Agregar roles fijos: Administrador y Cliente
+    const roles = [
+        { id: 1, name: 'Administrador' },
+        { id: 2, name: 'Cliente' }
+    ];
+    
+    roles.forEach(role => {
+        const option = document.createElement('option');
+        option.value = role.id;
+        option.textContent = role.name;
+        roleSelect.appendChild(option);
+    });
 
     // --- 2. Manejar el Envío del Formulario ---
     form.addEventListener('submit', async (e) => {
@@ -52,18 +46,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Enviar petición al backend
         try {
+            const payload = {
+                User_name: name,
+                User_email: email,
+                User_password: password,
+                Roles_fk: parseInt(selectedRoleId)
+            };
+            
+            console.log('Enviando:', payload);
+            
             const res = await fetch(HOST + '/mySystem/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    User_name: name,
-                    User_email: email,
-                    User_password: password,
-                    Roles_fk: selectedRoleId // Enviar el rol seleccionado
-                })
+                body: JSON.stringify(payload)
             });
 
             const data = await res.json();
+            console.log('Respuesta:', data);
 
             if (res.status === 201) {
                 showMessage('¡Registro exitoso! Redirigiendo...', 'success');
@@ -71,9 +70,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     window.location.href = '/generalViews/login';
                 }, 1500);
             } else {
-                showMessage(data.error || 'Error al registrar usuario', 'error');
+                showMessage(data.error || data.message || 'Error al registrar usuario', 'error');
             }
         } catch (err) {
+            console.error('Error:', err);
             showMessage('Error de conexión con el servidor', 'error');
         }
     });
