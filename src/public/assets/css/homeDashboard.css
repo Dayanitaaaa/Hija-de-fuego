@@ -48,6 +48,59 @@
 	margin-bottom: 0;
 }
 
+/* Tabla (módulos como Usuarios) */
+.table-responsive {
+	background: #ffffff;
+	border-radius: 20px;
+	border: 1px solid rgba(0,0,0,0.10);
+	box-shadow: 0 18px 50px rgba(0,0,0,0.10);
+	overflow: auto;
+}
+
+.table-responsive .table {
+	margin-bottom: 0;
+	min-width: 880px;
+}
+
+.table-responsive .table.table-bordered {
+	border-color: rgba(0,0,0,0.08);
+}
+
+.table-responsive .table tbody tr {
+	transition: background-color 0.18s ease;
+}
+
+.table-responsive .table tbody tr:hover {
+	background-color: rgba(150, 53, 59, 0.06);
+}
+
+.table-responsive .table thead.table-dark {
+	--bs-table-bg: #1f1f1f;
+	--bs-table-color: #ffffff;
+}
+
+.table-responsive .table thead th {
+	border-bottom: 1px solid rgba(255,255,255,0.12) !important;
+	text-align: center;
+}
+
+.table-responsive .table th,
+.table-responsive .table td {
+	vertical-align: middle;
+	white-space: nowrap;
+	text-align: center;
+}
+
+.table-responsive .table td:nth-child(2),
+.table-responsive .table td:nth-child(3) {
+	text-align: left;
+}
+
+.table-responsive .table th:nth-child(2),
+.table-responsive .table th:nth-child(3) {
+	text-align: left;
+}
+
 /* Cards de módulos */
 .module-card {
 	background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);

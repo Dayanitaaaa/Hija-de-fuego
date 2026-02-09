@@ -40,7 +40,7 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     background: rgba(235, 193, 134, 0.1); /* Aumento de transparencia */
-    backdrop-filter: blur(10px); /* Efecto de desenfoque para el fondo */
+    -webkit-backdrop-filter: blur(10px); /* Efecto de desenfoque para el fondo */
     padding: 40px;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);

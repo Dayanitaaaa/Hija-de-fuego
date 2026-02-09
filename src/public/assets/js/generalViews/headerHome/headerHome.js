@@ -6,6 +6,7 @@ fetch('/generalViews/headerHome')
 		if (headerContainer) {
 			headerContainer.innerHTML = data;
 			updateHeaderForLogin();
+			initProductsDropdown();
 
 			// Lógica para el menú hamburguesa (mobile) usando ids
 			const menuToggleBtn = document.getElementById('menu-toggle');
@@ -18,6 +19,48 @@ fetch('/generalViews/headerHome')
 			}
 		}
 	});
+
+function initProductsDropdown() {
+	const dropdownRoot = document.getElementById('productsDropdown');
+	const trigger = document.getElementById('productsDropdownTrigger');
+	const mobileTrigger = document.getElementById('mobileProductsDropdownTrigger');
+	const mobileMenu = document.getElementById('mobileProductsDropdownMenu');
+
+	const closeDesktop = () => {
+		if (!dropdownRoot || !trigger) return;
+		dropdownRoot.classList.remove('is-open');
+		trigger.setAttribute('aria-expanded', 'false');
+	};
+
+	const toggleDesktop = () => {
+		if (!dropdownRoot || !trigger) return;
+		const isOpen = dropdownRoot.classList.toggle('is-open');
+		trigger.setAttribute('aria-expanded', String(isOpen));
+	};
+
+	if (trigger && dropdownRoot) {
+		trigger.addEventListener('click', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			toggleDesktop();
+		});
+
+		document.addEventListener('click', (e) => {
+			if (!dropdownRoot.contains(e.target)) closeDesktop();
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') closeDesktop();
+		});
+	}
+
+	if (mobileTrigger && mobileMenu) {
+		mobileTrigger.addEventListener('click', () => {
+			const isOpen = mobileMenu.classList.toggle('open');
+			mobileTrigger.setAttribute('aria-expanded', String(isOpen));
+		});
+	}
+}
 
 function updateHeaderForLogin() {
 	// Si hay token, modificar el header

@@ -35,7 +35,6 @@
             <li><a class="menu-button active" href="/generalViews/home"> <i class="fas fa-eye"></i> Ver página </a></li>
             <li><button id="logoutBtn" class="menu-button logout-button" style="width: 100%; background: #96353B !important; border: none !important; color: white !important;"> <i class="fas fa-sign-out-alt"></i> Cerrar Sesión </button></li>
             <hr>
-            <h5>Sección de Administración</h5>
             <li><a class="menu-button" id="menu-dashboardHome" href="/dashboard/homeDashboard"><i class="fas fa-home"></i> Inicio</a></li>
             <li><a class="menu-button" id="menu-users" href="/dashboard/users"><i class="fas fa-users"></i> Usuarios</a></li>
             <li><a class="menu-button" id="menu-roles" href="/dashboard/roles"> <i class="fas fa-user-tag"></i> Roles</a></li>
@@ -45,6 +44,14 @@
             <li><a class="menu-button" id="menu-products" href="/dashboard/products"><i class="fas fa-shopping-cart"></i> Productos</a></li>
             <hr>
         </ul>
+
+        <div class="sidebar-profile" aria-label="Usuario logueado">
+            <div class="sidebar-profile__avatar" id="sidebarUserAvatar">UA</div>
+            <div class="sidebar-profile__meta">
+                <div class="sidebar-profile__name" id="sidebarUserName">Sesión activa</div>
+                <div class="sidebar-profile__role" id="sidebarUserRole">Rol</div>
+            </div>
+        </div>
     </div>
 
     <!-- Contenido principal -->
@@ -67,6 +74,14 @@
                         <div class="card-content">
                             <h3>Usuarios</h3>
                             <p>Gestión de usuarios del sistema</p>
+
+                            <div class="sticky-bottom-bar">
+  <div class="sticky-inner">
+    <span>Accesos rápidos</span>
+    <a class="btn btn-sm btn-primary" href="/dashboard/users">Usuarios</a>
+    <a class="btn btn-sm btn-primary" href="/dashboard/roles">Roles</a>
+  </div>
+</div>
                         </div>
                     </div>
                 </div>
@@ -118,6 +133,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../../../assets/js/dashboard/homeDashboard/homeDashboard.js"></script>
+    <script src="../../../assets/js/dashboard/userBadge.js"></script>
     <script src="../../../assets/js/system/constans.js"></script>
     <script src="../../../assets/js/dashboard/homeDashboard/sidebar.js"></script>
     <script src="../../../assets/js/logOut/logOut.js"></script>

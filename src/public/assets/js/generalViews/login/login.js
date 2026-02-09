@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (res.ok && data.token) {
 				localStorage.setItem('token', data.token);
 				localStorage.setItem('role', JSON.stringify(data.role));
+				if (data.user) {
+					localStorage.setItem('user', JSON.stringify(data.user));
+				}
 				showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
 				setTimeout(() => {
 					if (data.role && (data.role.id === 1 || data.role.name === 'Administrador')) {

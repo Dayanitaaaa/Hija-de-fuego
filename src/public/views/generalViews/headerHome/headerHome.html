@@ -13,7 +13,16 @@
             <!-- Desktop Navigation -->
             <nav class="desktop-nav">
                 <div class="nav-left">
-                    <a href="/generalViews/culture" class="nav-link">Productos</a>
+                    <div class="nav-dropdown" id="productsDropdown">
+                        <button type="button" class="nav-link nav-dropdown__trigger" id="productsDropdownTrigger" aria-haspopup="true" aria-expanded="false">
+                            Productos
+                        </button>
+                        <div class="nav-dropdown__menu" id="productsDropdownMenu" role="menu" aria-label="Categorías de productos">
+                            <a class="nav-dropdown__item" href="/generalViews/recipes" role="menuitem">Recetas</a>
+                            <a class="nav-dropdown__item" href="/generalViews/books" role="menuitem">Libros</a>
+                            <a class="nav-dropdown__item" href="/generalViews/supplies" role="menuitem">Insumos</a>
+                        </div>
+                    </div>
                     <a href="/generalViews/gastronomic" class="nav-link">Gastronomía</a>
                     <a href="/generalViews/blog" class="nav-link">Blog</a>
                     <a href="/generalViews/contact" class="nav-link">Contacto</a>
@@ -49,7 +58,13 @@
                 </a>
                 
                 <div id="mobile-menu" class="mobile-menu">
-                    <a href="/generalViews/culture" class="mobile-link">Productos</a>
+                    <button type="button" class="mobile-link mobile-dropdown__trigger" id="mobileProductsDropdownTrigger" aria-haspopup="true" aria-expanded="false">Productos</button>
+                    <div class="mobile-dropdown__menu" id="mobileProductsDropdownMenu" role="menu" aria-label="Categorías de productos">
+                        <a href="/generalViews/recipes" class="mobile-sublink" role="menuitem">Recetas</a>
+                        <a href="/generalViews/gastronomic" class="mobile-sublink" role="menuitem">Gastronomía</a>
+                        <a href="/generalViews/books" class="mobile-sublink" role="menuitem">Libros</a>
+                        <a href="/generalViews/supplies" class="mobile-sublink" role="menuitem">Insumos</a>
+                    </div>
                     <a href="/generalViews/gastronomic" class="mobile-link">Gastronomía</a>
                     <a href="/generalViews/blog" class="mobile-link">Blog</a>
                     <a href="/generalViews/contact" class="mobile-link">Contacto</a>
@@ -60,9 +75,6 @@
         </div>
     </header>
     <script src="../../../assets/js/header.js"></script>
+    <script src="../../../assets/js/logOut/logOut.js"></script>
 </body>
 </html>
-</body>
-<!-- Script de logout para exponer logOutUser() -->
-<script src="../../../assets/js/logOut/logOut.js"></script>
-</body>
