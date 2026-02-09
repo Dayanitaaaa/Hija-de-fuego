@@ -3,7 +3,8 @@
 function logOutUser() {
 	localStorage.removeItem('token');
 	localStorage.removeItem('role');
-	window.location.href = '/generalViews/login';
+	localStorage.removeItem('user');
+	window.location.href = '/generalViews/home';
 }
 
 // Permitir que otros scripts llamen a logOutUser

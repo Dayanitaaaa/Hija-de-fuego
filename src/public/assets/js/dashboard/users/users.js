@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         <td>${user.User_id}</td>
                         <td>${user.User_name}</td>
                         <td>${user.User_email}</td>
-                        <td>${user.User_password}</td>
                         <td>${user.Roles_name}</td>
                         <td>${user.Updated_at}</td>
                         <td>

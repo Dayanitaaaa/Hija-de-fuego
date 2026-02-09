@@ -123,6 +123,9 @@ app.get('/generalViews/culture', (req, res) => {
 app.get('/generalViews/book', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/book/book.html'));
 });
+app.get('/generalViews/recipes', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/blogProduct.html'));
+});
 app.get('/generalViews/blogProduct', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/blogProduct.html'));
 });

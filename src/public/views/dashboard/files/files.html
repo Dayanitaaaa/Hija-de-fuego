@@ -17,6 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Poppins:wght@700&display=swap" rel="stylesheet">
 
   <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="../../../assets/css/homeDashboard.css">
   <link rel="stylesheet" href="../../../assets/css/dashboard.css">
 </head>
 <body>
@@ -38,20 +39,31 @@
     <li><a class="menu-button" id="menu-typeProducts" href="/dashboard/typeProducts"><i class="fas fa-box"></i> Tipos de Producto</a></li>
     <li><a class="menu-button" id="menu-products" href="/dashboard/products"><i class="fas fa-shopping-cart"></i> Productos</a></li>
       </ul>
+
+  <div class="sidebar-profile" aria-label="Usuario logueado">
+    <div class="sidebar-profile__avatar" id="sidebarUserAvatar">UA</div>
+    <div class="sidebar-profile__meta">
+      <div class="sidebar-profile__name" id="sidebarUserName">Sesión activa</div>
+      <div class="sidebar-profile__role" id="sidebarUserRole">Rol</div>
+    </div>
+  </div>
 </div>
 
 
   <!-- Contenido principal -->
-  <div class="content">
-    <div class="container">
-  <h1 class="dashboard-title-yellow text-center mb-4">Gestión de Archivos</h1>
+  <div class="main-content">
+    <div class="container-fluid">
+      <div class="dashboard-header">
+        <h1><i class="fas fa-file-upload"></i> Gestión de Archivos</h1>
+        <p class="text-muted">Administra los archivos del sistema</p>
+      </div>
 
-      <!-- Botón para agregar -->
-      <button type="button" class="btn btn-primary mb-3 dashboard-subtitle-yellow" data-bs-toggle="modal" data-bs-target="#fileModal">
-        <i class="fas fa-plus"></i> Agregar Nuevo Archivo
-      </button>
+      <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fileModal">
+          <i class="fas fa-plus"></i> Agregar Nuevo Archivo
+        </button>
+      </div>
 
-      <!-- Tabla -->
       <div class="table-responsive">
         <table id="fileTable" class="table table-striped table-bordered">
           <thead class="table-dark">
@@ -110,6 +122,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="../../../assets/js/system/constans.js"></script>
   <script src="../../../assets/js/dashboard/files/files.js"></script>
+  <script src="../../../assets/js/dashboard/userBadge.js"></script>
   <script src="../../../assets/js/logOut/logOut.js"></script>
 </body>
 </html>
