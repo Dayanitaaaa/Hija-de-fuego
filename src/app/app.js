@@ -8,6 +8,7 @@ import typeFiles from '../routes/typeFiles.Routes.js';
 import filesRoutes from '../routes/files.Routes.js'
 import typeProductRoutes from '../routes/typeProduct.routes.js';
 import productsRoutes from '../routes/product.Routes.js';
+import storeProductsRoutes from '../routes/storeProducts.Routes.js';
 import cookieParser from 'cookie-parser';
 import { verifyToken } from '../middleware/authMiddleware.js';  
 
@@ -38,6 +39,7 @@ app.use('/mySystem', typeFiles);
 app.use('/mySystem', filesRoutes);
 app.use('/mySystem', typeProductRoutes); 
 app.use('/mySystem', productsRoutes);
+app.use('/mySystem', storeProductsRoutes);
 
 
 // Redirección de la raíz a la página de inicio
@@ -125,6 +127,9 @@ app.get('/generalViews/book', (req, res) => {
 });
 app.get('/generalViews/recipes', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/blogProduct.html'));
+});
+app.get('/generalViews/comida-con-alma', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/comidaConAlma/comidaConAlma.html'));
 });
 app.get('/generalViews/blogProduct', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/blogProduct.html'));

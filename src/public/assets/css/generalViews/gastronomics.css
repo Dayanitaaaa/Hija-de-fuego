@@ -9,7 +9,7 @@ body, html {
 
 .gastronomy-main {  
     padding-top: 100px; /* Espacio para el header fijo */
-    background-image: linear-gradient(rgba(106, 68, 79, 0.75), rgba(106, 68, 79, 0.35)), url('/assets/imgStatic/imgKitchen.png');
+    background-image: linear-gradient(rgba(106, 68, 79, 0.75), rgba(106, 68, 79, 0.35)), url('/assets/imgStatic/fondo-yogur.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
