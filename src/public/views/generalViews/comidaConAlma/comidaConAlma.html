@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comida con Alma</title>
+
+    <link rel="stylesheet" href="../../../assets/css/generalViews/comidaConAlma.css">
+</head>
+<body>
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="comida-alma-main">
+        <section class="comida-alma-container">
+            <div class="shop-header">
+                <div class="shop-breadcrumb">Inicio / Gastronomía / Comida con Alma</div>
+                <h1 class="comida-alma-title">Comida con Alma</h1>
+            </div>
+
+            <section class="product" aria-label="Producto destacado">
+                <div class="product__grid">
+                    <div class="product__gallery" aria-label="Galería del producto">
+                        <div class="product__mainImage">
+                            <div class="product__carousel" aria-label="Carrusel de imágenes">
+                                <button type="button" class="product__nav product__nav--prev" data-gallery-prev aria-label="Imagen anterior">‹</button>
+
+                                <img class="product__img is-active" data-gallery-item src="/assets/imgStatic/imagen-yogurt(2).png" alt="Yogur griego bebible - piezas promocionales" aria-hidden="false">
+                                <img class="product__img" data-gallery-item src="/assets/imgStatic/imagen-yogurt(1).jpg" alt="Botella de yogur griego bebible" aria-hidden="true">
+
+                                <button type="button" class="product__nav product__nav--next" data-gallery-next aria-label="Siguiente imagen">›</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product__info">
+                        <div class="product__badge">Producto artesanal</div>
+                        <h2 class="product__name">Yogur griego bebible</h2>
+                        <p class="product__price">$20.000 <span class="product__currency">COP</span></p>
+
+                        <p class="product__meta">Disponible en Santa Marta. Ideal para nutrir y disfrutar.</p>
+
+                        <div class="product__section">
+                            <h3 class="product__subtitle">Sabores</h3>
+                            <div class="product__chips" role="list">
+                                <span class="product__chip" role="listitem">Lulo</span>
+                                <span class="product__chip" role="listitem">Frutos amarillos</span>
+                                <span class="product__chip" role="listitem">Café</span>
+                                <span class="product__chip" role="listitem">Vainilla</span>
+                                <span class="product__chip" role="listitem">Natural</span>
+                            </div>
+                        </div>
+
+                        <div class="product__actions" aria-label="Acciones de compra">
+                            <div class="product__qty" aria-label="Cantidad">
+                                <span class="product__qtyLabel">Cantidad</span>
+                                <div class="product__qtyBox">
+                                    <button type="button" class="product__qtyBtn" aria-label="Disminuir cantidad">-</button>
+                                    <input class="product__qtyInput" type="number" min="1" value="1" aria-label="Cantidad">
+                                    <button type="button" class="product__qtyBtn" aria-label="Aumentar cantidad">+</button>
+                                </div>
+                            </div>
+                            <a class="product__buyBtn" href="cart.html" aria-label="Ir al carrito">Agregar al carrito</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <footer></footer>
+    <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
+    <script src="../../../assets/js/system/constans.js"></script>
+    <script src="../../../assets/js/generalViews/comidaConAlma/comidaConAlma.js"></script>
+</body>
+</html>

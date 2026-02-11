@@ -1,0 +1,291 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.comida-alma-main {
+    padding-top: 110px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #ffffff 0%, #f6f2f2 70%, #ffffff 100%);
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.comida-alma-container {
+    width: min(1100px, 100%);
+    padding: clamp(22px, 3vw, 34px);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 18px 55px rgba(30, 10, 10, 0.10);
+    text-align: left;
+}
+
+.comida-alma-title {
+    margin: 0 0 12px 0;
+    font-family: 'Aboreto', cursive;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    color: #2a1a1a;
+}
+
+.comida-alma-description {
+    margin: 0;
+    font-family: 'Georgia', serif;
+    font-size: 1.1rem;
+    color: #444;
+}
+
+ .product {
+     margin-top: 18px;
+ }
+
+ .product__grid {
+     display: grid;
+     grid-template-columns: 1.1fr 0.9fr;
+     gap: 22px;
+     align-items: start;
+ }
+
+ .product__gallery {
+     display: grid;
+     grid-template-columns: 1fr;
+     gap: 12px;
+ }
+
+ .shop-header {
+     margin-bottom: 18px;
+ }
+
+ .shop-breadcrumb {
+     font-size: 0.95rem;
+     color: rgba(40, 20, 20, 0.62);
+     margin-bottom: 10px;
+ }
+
+ .product__mainImage {
+     border-radius: 16px;
+     overflow: hidden;
+     background: #fff;
+     border: 1px solid rgba(0,0,0,0.08);
+ }
+
+ .product__carousel {
+	position: relative;
+	aspect-ratio: 4 / 3;
+	width: 100%;
+	background: #fff;
+ }
+
+ .product__carousel .product__img {
+	display: none;
+ }
+
+ .product__carousel .product__img.is-active {
+	display: block;
+ }
+
+ .product__carousel .product__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+ }
+
+ .product__nav {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 42px;
+	height: 42px;
+	border-radius: 999px;
+	border: 1px solid rgba(0,0,0,0.14);
+	background: rgba(255,255,255,0.88);
+	box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+	cursor: pointer;
+	font-size: 1.8rem;
+	line-height: 1;
+	color: #2a1a1a;
+ }
+
+ .product__nav--prev {
+	left: 10px;
+ }
+
+ .product__nav--next {
+	right: 10px;
+ }
+
+ .product__nav:hover {
+	filter: brightness(1.02);
+ }
+
+ .product__thumbs {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 10px;
+ }
+
+ .product__thumb {
+     width: 100%;
+     height: 120px;
+     object-fit: cover;
+     border-radius: 12px;
+     border: 1px solid rgba(0,0,0,0.10);
+     box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+ }
+
+ .product__img {
+     width: 100%;
+     display: block;
+     border-radius: 0;
+     box-shadow: none;
+ }
+
+ .product__info {
+     text-align: left;
+     padding: 6px 4px;
+ }
+
+ .product__badge {
+     display: inline-block;
+     padding: 6px 10px;
+     border-radius: 999px;
+     background: rgba(111, 12, 12, 0.08);
+     color: #6f0c0c;
+     font-weight: 700;
+     font-size: 0.9rem;
+     letter-spacing: 0.02em;
+     margin-bottom: 10px;
+ }
+
+ .product__name {
+     margin: 0;
+     font-family: 'Georgia', serif;
+     font-size: clamp(1.4rem, 3vw, 1.7rem);
+     color: #201212;
+ }
+
+ .product__price {
+     margin: 10px 0 16px 0;
+     font-weight: 800;
+     letter-spacing: 0.02em;
+     color: #6f0c0c;
+     font-size: 1.25rem;
+ }
+
+ .product__currency {
+     font-weight: 700;
+     opacity: 0.75;
+     font-size: 0.95rem;
+ }
+
+ .product__meta {
+     margin: 0 0 16px 0;
+     color: rgba(30, 18, 18, 0.72);
+     line-height: 1.55;
+ }
+
+ .product__subtitle {
+     margin: 0 0 10px 0;
+     font-size: 1.05rem;
+     color: #3a2a2a;
+ }
+
+ .product__chips {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 10px;
+ }
+
+ .product__chip {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     padding: 8px 12px;
+     border-radius: 999px;
+     background: rgba(0,0,0,0.05);
+     border: 1px solid rgba(0,0,0,0.10);
+     font-weight: 600;
+     color: #2a1a1a;
+ }
+
+ .product__actions {
+     margin-top: 18px;
+     display: flex;
+     flex-wrap: wrap;
+     gap: 14px;
+     align-items: flex-end;
+ }
+
+ .product__qtyLabel {
+     display: block;
+     font-weight: 700;
+     margin-bottom: 8px;
+     color: #3a2a2a;
+ }
+
+ .product__qtyBox {
+     display: inline-flex;
+     align-items: center;
+     border: 1px solid rgba(0,0,0,0.14);
+     border-radius: 12px;
+     overflow: hidden;
+     background: #fff;
+ }
+
+ .product__qtyBtn {
+     width: 40px;
+     height: 40px;
+     border: none;
+     background: rgba(0,0,0,0.04);
+     cursor: pointer;
+     font-size: 1.1rem;
+     font-weight: 700;
+     color: #2a1a1a;
+ }
+
+ .product__qtyInput {
+     width: 64px;
+     height: 40px;
+     border: none;
+     text-align: center;
+     font-weight: 700;
+     outline: none;
+ }
+
+ .product__buyBtn {
+     flex: 1;
+     min-width: 220px;
+     height: 42px;
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     border-radius: 999px;
+     text-decoration: none;
+     font-weight: 800;
+     letter-spacing: 0.02em;
+     background: linear-gradient(180deg, #bf9e62, #996e2d);
+     color: #fff;
+     box-shadow: 0 14px 34px rgba(153, 110, 45, 0.25);
+ }
+
+ .product__buyBtn:hover {
+     filter: brightness(1.03);
+ }
+
+ @media (max-width: 880px) {
+     .product__grid {
+         grid-template-columns: 1fr;
+     }
+     .product__info {
+         text-align: center;
+     }
+     .product__actions {
+         justify-content: center;
+     }
+     .product__thumb {
+         height: 96px;
+     }
+ }
