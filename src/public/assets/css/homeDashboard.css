@@ -16,7 +16,7 @@
 /* Header del dashboard */
 .dashboard-header {
 	background: white !important;
-	padding: 30px !important;
+	padding: 24px !important;
 	border-radius: 15px !important;
 	box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
 	margin-bottom: 30px !important;
@@ -33,19 +33,36 @@
 	color: var(--color-negro);
 	font-family: var(--fuente-montserrat);
 	font-weight: 700;
-	margin-bottom: 10px;
+	margin-bottom: 8px;
 	font-size: 2.2rem;
+	line-height: 1.15;
 }
 
 .dashboard-header h1 i {
 	color: #8E8261;
-	margin-right: 15px;
+	margin-right: 12px;
 }
 
 .dashboard-header p {
 	color: #6c757d;
 	font-size: 1.1rem;
 	margin-bottom: 0;
+	line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+	.dashboard-header {
+		padding: 18px !important;
+		margin-bottom: 20px !important;
+	}
+
+	.dashboard-header h1 {
+		font-size: 1.7rem;
+	}
+
+	.dashboard-header p {
+		font-size: 1rem;
+	}
 }
 
 /* Tabla (módulos como Usuarios) */

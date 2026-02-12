@@ -25,10 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             window.location.href = '/dashboard/roles';
                             break;
                         case 'typeFiles':
-                            window.location.href = '/dashboard/typeFiles';
+                            window.location.href = '/dashboard/archivos';
                             break;  
                         case 'files':
-                            window.location.href = '/dashboard/files';
+                            window.location.href = '/dashboard/archivos';
                             break;
                         default:
                             // Módulo no reconocido, no hacer nada

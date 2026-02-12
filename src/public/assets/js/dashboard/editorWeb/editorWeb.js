@@ -8,69 +8,40 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof HOST === 'undefined') window.HOST = 'http://localhost:3000';
   if (typeof URL_STORE_PRODUCTS === 'undefined') window.URL_STORE_PRODUCTS = '/mySystem/tiendaProductos';
 
-  const pageSelect = document.getElementById('productsPageSelect');
-  const refreshBtn = document.getElementById('refreshProductsBtn');
-  const openModalBtn = document.getElementById('openProductModalBtn');
-  const tableBody = document.querySelector('#productsTable tbody');
+  const sectionComida = document.getElementById('sectionComida');
+  const refreshStoreProductsBtn = document.getElementById('refreshStoreProductsBtn');
+  const storeProductsTableBody = document.querySelector('#storeProductsTable tbody');
 
-  const productModal = document.getElementById('productModal');
-  const productModalLabel = document.getElementById('productModalLabel');
-  const productForm = document.getElementById('productForm');
+  const storeProductModal = document.getElementById('storeProductModal');
+  const storeProductModalLabel = document.getElementById('storeProductModalLabel');
+  const storeProductForm = document.getElementById('storeProductForm');
 
-  const productId = document.getElementById('productId');
-  const productName = document.getElementById('productName');
-  const productCategory = document.getElementById('productCategory');
-  const productPrice = document.getElementById('productPrice');
-  const productStock = document.getElementById('productStock');
-  const productActive = document.getElementById('productActive');
-  const productDescription = document.getElementById('productDescription');
+  const storeProductId = document.getElementById('storeProductId');
+  const storeProductName = document.getElementById('storeProductName');
+  const storeProductCategory = document.getElementById('storeProductCategory');
+  const storeProductPrice = document.getElementById('storeProductPrice');
+  const storeProductStock = document.getElementById('storeProductStock');
+  const storeProductActive = document.getElementById('storeProductActive');
+  const storeProductDescription = document.getElementById('storeProductDescription');
+  const storeProductImages = document.getElementById('storeProductImages');
 
-  const flavorInput = document.getElementById('productFlavorInput');
-  const addFlavorBtn = document.getElementById('productAddFlavorBtn');
-  const flavorsWrap = document.getElementById('productFlavorsWrap');
+  const flavorInput = document.getElementById('flavorInput');
+  const addFlavorBtn = document.getElementById('addFlavorBtn');
+  const flavorsWrap = document.getElementById('flavorsWrap');
+  const imagesList = document.getElementById('imagesList');
 
-  const imagesInput = document.getElementById('productImages');
-  const imagesList = document.getElementById('productImagesList');
+  const FIXED_CATEGORIES = ['Alimentos', 'Bebidas', 'Postres', 'Snacks', 'Lácteos', 'Cereales', 'Frutas', 'Verduras', 'Carnes', 'Aseo', 'Limpieza', 'Higiene', 'Otros'];
 
-  const CATEGORIES_WITH_FLAVORS = [
-    'Alimentos',
-    'Bebidas',
-    'Postres',
-    'Snacks',
-    'Lácteos',
-    'Cereales',
-    'Frutas',
-    'Verduras',
-    'Carnes',
-    'Aseo',
-    'Limpieza',
-    'Higiene',
-    'Otros'
-  ];
-
-  const FIXED_CATEGORIES = CATEGORIES_WITH_FLAVORS;
   const STORE_PRODUCTS_PATH = '/mySystem/tiendaProductos';
+  const PAGE_SLUGS = {
+    comida_con_alma: 'comida-con-alma'
+  };
 
   let currentFlavors = [];
   let currentProductImages = [];
 
-  function moneyCOP(value) {
-    const n = Number(value);
-    if (Number.isNaN(n)) return value ?? '';
-    return n.toLocaleString('es-CO');
-  }
-
-  function escapeHtml(str) {
-    return String(str ?? '')
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
-  }
-
   function shouldShowFlavors() {
-    const cat = productCategory?.value?.trim() || '';
+    const cat = storeProductCategory?.value?.trim() || '';
     return ['Alimentos', 'Bebidas', 'Postres', 'Snacks', 'Lácteos', 'Cereales'].includes(cat);
   }
 
@@ -85,10 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  productCategory?.addEventListener('change', toggleFlavorsVisibility);
+  function moneyCOP(value) {
+    const n = Number(value);
+    if (Number.isNaN(n)) return value ?? '';
+    return n.toLocaleString('es-CO');
+  }
 
-  function getCurrentPageSlug() {
-    return (pageSelect?.value || 'comida-con-alma').trim() || 'comida-con-alma';
+  function escapeHtml(str) {
+    return String(str ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
   }
 
   function renderFlavors() {
@@ -122,13 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function renderImagesList(id) {
+  function renderImagesList(productId) {
     imagesList.innerHTML = '';
 
-    if (!id) {
+    if (!productId) {
       const msg = document.createElement('div');
       msg.className = 'text-muted';
-      msg.textContent = 'Guarda el producto para poder subir imágenes.';
+      msg.textContent = 'Guarda el plato para poder subir imágenes.';
       imagesList.appendChild(msg);
       return;
     }
@@ -136,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!currentProductImages.length) {
       const msg = document.createElement('div');
       msg.className = 'text-muted';
-      msg.textContent = 'Este producto aún no tiene imágenes.';
+      msg.textContent = 'Este plato aún no tiene imágenes.';
       imagesList.appendChild(msg);
     }
 
@@ -168,11 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
       delBtn.addEventListener('click', async () => {
         if (!confirm('¿Eliminar esta imagen?')) return;
         try {
-          const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}/imagenes/${img.imagen_id}`, { method: 'DELETE' });
+          const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${productId}/imagenes/${img.imagen_id}`, { method: 'DELETE' });
           const data = await resp.json().catch(() => ({}));
           if (!resp.ok) throw new Error(data?.error || 'Error al eliminar imagen');
           currentProductImages = Array.isArray(data.imagenes) ? data.imagenes : [];
-          renderImagesList(id);
+          renderImagesList(productId);
         } catch (err) {
           alert(err.message);
         }
@@ -184,14 +164,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  async function uploadImages(id, files) {
-    if (!id) return;
+  async function uploadImages(productId, files) {
+    if (!productId) return;
     if (!files || !files.length) return;
 
     const formData = new FormData();
     [...files].forEach((f) => formData.append('images', f));
 
-    const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}/imagenes`, {
+    const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${productId}/imagenes`, {
       method: 'POST',
       body: formData
     });
@@ -200,19 +180,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!resp.ok) throw new Error(data?.error || 'Error al subir imágenes');
 
     currentProductImages = Array.isArray(data.imagenes) ? data.imagenes : [];
-    renderImagesList(id);
+    renderImagesList(productId);
   }
 
-  async function loadProducts() {
+  async function loadStoreProducts() {
     try {
-      const pagina = getCurrentPageSlug();
-      const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}?pagina=${encodeURIComponent(pagina)}`);
-      if (!resp.ok) throw new Error('Error al listar productos');
+      const pageSlug = 'comida-con-alma';
+      const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}?pagina=${encodeURIComponent(pageSlug)}`);
+      if (!resp.ok) throw new Error('Error al listar platos');
       const rows = await resp.json();
 
-      tableBody.innerHTML = '';
+      storeProductsTableBody.innerHTML = '';
+
       (rows || []).forEach((p) => {
         const tr = document.createElement('tr');
+
         const activeTxt = Number(p.activo) === 1 ? 'Sí' : 'No';
         const catTxt = p.categoria || '';
 
@@ -236,10 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
           </td>
         `;
 
-        tableBody.appendChild(tr);
+        storeProductsTableBody.appendChild(tr);
       });
 
-      tableBody.querySelectorAll('button[data-action]').forEach((btn) => {
+      storeProductsTableBody.querySelectorAll('button[data-action]').forEach((btn) => {
         btn.addEventListener('click', () => {
           const action = btn.dataset.action;
           const id = btn.dataset.id;
@@ -254,23 +236,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  refreshBtn.addEventListener('click', loadProducts);
-  pageSelect.addEventListener('change', loadProducts);
+  refreshStoreProductsBtn.addEventListener('click', loadStoreProducts);
 
   function resetModalForm() {
-    productForm.reset();
-    productId.value = '';
+    storeProductForm.reset();
+    storeProductId.value = '';
     currentFlavors = [];
     currentProductImages = [];
     renderFlavors();
     renderImagesList('');
-    imagesInput.value = '';
-    productActive.checked = true;
+    storeProductImages.value = '';
+    storeProductActive.checked = true;
   }
 
-  openModalBtn.addEventListener('click', () => {
+  document.getElementById('openStoreProductModalBtn').addEventListener('click', () => {
     resetModalForm();
-    productModalLabel.textContent = 'Nuevo producto';
+    storeProductModalLabel.textContent = 'Nuevo plato';
     toggleFlavorsVisibility();
   });
 
@@ -279,18 +260,18 @@ document.addEventListener('DOMContentLoaded', () => {
       resetModalForm();
       const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}`);
       const data = await resp.json().catch(() => ({}));
-      if (!resp.ok) throw new Error(data?.error || 'Error al cargar producto');
+      if (!resp.ok) throw new Error(data?.error || 'Error al cargar plato');
 
-      productModalLabel.textContent = 'Editar producto';
-      productId.value = data.producto_id;
-      productName.value = data.nombre || '';
-      productPrice.value = data.precio_cop ?? '';
-      productStock.value = data.stock ?? 0;
-      productDescription.value = data.descripcion || '';
-      productActive.checked = Number(data.activo) === 1;
+      storeProductModalLabel.textContent = 'Editar plato';
+      storeProductId.value = data.producto_id;
+      storeProductName.value = data.nombre || '';
+      storeProductPrice.value = data.precio_cop ?? '';
+      storeProductStock.value = data.stock ?? 0;
+      storeProductDescription.value = data.descripcion || '';
+      storeProductActive.checked = Number(data.activo) === 1;
 
       const cat = data.categoria || '';
-      productCategory.value = FIXED_CATEGORIES.includes(cat) ? cat : '';
+      storeProductCategory.value = FIXED_CATEGORIES.includes(cat) ? cat : '';
 
       currentFlavors = Array.isArray(data.sabores) ? data.sabores : [];
       renderFlavors();
@@ -299,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderImagesList(id);
 
       toggleFlavorsVisibility();
-      bootstrap.Modal.getOrCreateInstance(productModal).show();
+      bootstrap.Modal.getOrCreateInstance(storeProductModal).show();
     } catch (err) {
       alert(err.message);
     }
@@ -307,36 +288,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function openImagesManager(id) {
     await openEditProduct(id);
-    imagesInput.focus();
+    storeProductImages.focus();
   }
 
   async function deleteProduct(id) {
-    if (!confirm('¿Eliminar este producto?')) return;
+    if (!confirm('¿Eliminar este plato?')) return;
     try {
       const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}`, { method: 'DELETE' });
       const data = await resp.json().catch(() => ({}));
-      if (!resp.ok) throw new Error(data?.error || 'Error al eliminar producto');
-      loadProducts();
+      if (!resp.ok) throw new Error(data?.error || 'Error al eliminar plato');
+      loadStoreProducts();
     } catch (err) {
       alert(err.message);
     }
   }
 
-  productForm.addEventListener('submit', async (e) => {
+  storeProductForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const id = productId.value;
-    const pagina = getCurrentPageSlug();
+    const id = storeProductId.value;
+    const pageSlug = 'comida-con-alma';
 
     const payload = {
-      nombre: (productName.value || '').trim(),
-      categoria: productCategory.value || null,
-      precio_cop: Number(productPrice.value || 0),
-      stock: Number(productStock.value || 0),
-      descripcion: (productDescription.value || '').trim() || null,
+      nombre: (storeProductName.value || '').trim(),
+      categoria: storeProductCategory.value || null,
+      precio_cop: Number(storeProductPrice.value || 0),
+      stock: Number(storeProductStock.value || 0),
+      descripcion: (storeProductDescription.value || '').trim() || null,
       sabores: currentFlavors,
-      activo: productActive.checked ? 1 : 0,
-      pagina
+      activo: storeProductActive.checked ? 1 : 0,
+      pagina: pageSlug
     };
 
     if (!payload.nombre || !payload.precio_cop) {
@@ -355,40 +336,45 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const data = await resp.json().catch(() => ({}));
-      if (!resp.ok) throw new Error(data?.error || 'Error al guardar producto');
+      if (!resp.ok) throw new Error(data?.error || 'Error al guardar plato');
 
       const savedId = id || data?.data?.[0]?.producto_id;
+
       if (savedId) {
         try {
-          await uploadImages(savedId, imagesInput.files);
+          const files = storeProductImages.files;
+          await uploadImages(savedId, files);
         } catch (err) {
           alert(err.message);
         }
       }
 
-      bootstrap.Modal.getOrCreateInstance(productModal).hide();
-      loadProducts();
+      bootstrap.Modal.getOrCreateInstance(storeProductModal).hide();
+      loadStoreProducts();
     } catch (err) {
       alert(err.message);
     }
   });
 
-  imagesInput.addEventListener('change', async () => {
-    const id = productId.value;
+  storeProductImages.addEventListener('change', async () => {
+    const id = storeProductId.value;
     if (!id) return;
 
     try {
-      await uploadImages(id, imagesInput.files);
-      imagesInput.value = '';
+      await uploadImages(id, storeProductImages.files);
+      storeProductImages.value = '';
     } catch (err) {
       alert(err.message);
     }
   });
 
-  productModal.addEventListener('hidden.bs.modal', () => {
+  storeProductModal.addEventListener('hidden.bs.modal', () => {
     resetModalForm();
   });
 
-  loadProducts();
-  toggleFlavorsVisibility();
+  // Listener para mostrar/ocultar sabores al cambiar categoría
+  storeProductCategory?.addEventListener('change', toggleFlavorsVisibility);
+
+  // Cargar productos al iniciar
+  loadStoreProducts();
 });

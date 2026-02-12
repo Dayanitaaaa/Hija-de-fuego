@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    if (typeof HOST === 'undefined') window.HOST = 'http://localhost:3000';
+    if (typeof URL_USERS === 'undefined') window.URL_USERS = '/mySystem/users';
     // Protección: Redirigir si no hay token
     if (!localStorage.getItem('token')) {
         window.location.href = '/generalViews/login';

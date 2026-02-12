@@ -74,7 +74,9 @@ export const addFiles = [
 
 
       const customName = req.body.fileName || req.file.originalname;
-      const fileUrl = `/assets/img/${req.file.filename}`;
+      const ext = path.extname(req.file.originalname).toLowerCase();
+      const isOffice = ['.pdf', '.xlsx', '.docx'].includes(ext);
+      const fileUrl = isOffice ? `/assets/documents/${req.file.filename}` : `/assets/img/${req.file.filename}`;
       const typeFileFk = req.body.typeFileFk || null;
 
       await connect.query(
@@ -155,9 +157,13 @@ export const updateFiles = [
 
       // Si hay nuevo archivo, eliminar el anterior
       if (req.file) {
-        const fullPath = path.join(__dirname, '../../public', prevFile.Files_route);
-        if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
-        fileUrl = `/assets/img/${req.file.filename}`;
+        const prevBaseDir = prevFile.Files_route?.startsWith('/assets/documents') ? 'documents' : 'img';
+        const prevFullPath = path.join(__dirname, '../public/assets', prevBaseDir, path.basename(prevFile.Files_route));
+        if (fs.existsSync(prevFullPath)) fs.unlinkSync(prevFullPath);
+
+        const ext = path.extname(req.file.originalname).toLowerCase();
+        const isOffice = ['.pdf', '.xlsx', '.docx'].includes(ext);
+        fileUrl = isOffice ? `/assets/documents/${req.file.filename}` : `/assets/img/${req.file.filename}`;
       }
 
       const newName = fileName || prevFile.Files_name;
@@ -185,7 +191,8 @@ export const deleteFiles = async (req, res) => {
 
     const file = result[0];
 
-    const fullPath = path.join(__dirname, '../../public', file.Files_route);
+    const baseDir = file.Files_route?.startsWith('/assets/documents') ? 'documents' : 'img';
+    const fullPath = path.join(__dirname, '../public/assets', baseDir, path.basename(file.Files_route));
     if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
 
     await connect.query('DELETE FROM files WHERE Files_id = ?', [filesId]);

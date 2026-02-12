@@ -6,18 +6,20 @@ const URL_TYPE_FILES = "/mySystem/typeFiles";
 const URL_FILES = "/mySystem/files";
 const URL_TYPE_PRODUCTS = "/mySystem/typeProducts";
 const URL_PRODUCTS = "/mySystem/products";
+const URL_STORE_PRODUCTS = "/mySystem/tiendaProductos";
 
 
 // Rutas amigables para dashboards
 
-const URL_DASHBOARD_HOME = "/dashboard/homeDashboard";
-const URL_DASHBOARD_USERS = "/dashboard/users";
-const URL_DASHBOARD_ROLES = "/dashboard/roles";
+const URL_DASHBOARD_HOME = '/dashboard/homeDashboard';
+const URL_DASHBOARD_ARCHIVOS = '/dashboard/archivos';
+const URL_DASHBOARD_EDITOR_WEB = '/dashboard/editor-web';
+const URL_DASHBOARD_PRODUCTS = '/dashboard/products';
 const URL_DASHBOARD_TYPE_FILES = "/dashboard/typeFiles";
 const URL_DASHBOARD_FILES = "/dashboard/files";
 const URL_DASHBOARD_TYPE_PRODUCTS = "/dashboard/typeProducts";
-const URL_DASHBOARD_PRODUCTS = "/dashboard/products";
-
+const URL_DASHBOARD_USERS = "/dashboard/users";
+const URL_DASHBOARD_ROLES = "/dashboard/roles";
 
 // Rutas amigables para vistas generales
 
@@ -43,3 +45,22 @@ const URL_GENERAL_VIEWS_BLOG_AREPA = "/generalViews/blog/arepa";
 const URL_GENERAL_VIEWS_BLOG_SANCOCHO = "/generalViews/blog/sancocho";
 const URL_GENERAL_VIEWS_BLOG_AREQUIPE = "/generalViews/blog/arequipe";
 const URL_GENERAL_VIEWS_BLOG_LOMO = "/generalViews/blog/lomo";
+
+// Exponer globales para compatibilidad con scripts legacy (no modules)
+window.HOST = HOST;
+window.URL_USERS = URL_USERS;
+window.URL_ROLES = URL_ROLES;
+window.URL_TYPE_FILES = URL_TYPE_FILES;
+window.URL_FILES = URL_FILES;
+window.URL_TYPE_PRODUCTS = URL_TYPE_PRODUCTS;
+window.URL_PRODUCTS = URL_PRODUCTS;
+window.URL_STORE_PRODUCTS = URL_STORE_PRODUCTS;
+window.URL_DASHBOARD_HOME = URL_DASHBOARD_HOME;
+window.URL_DASHBOARD_ARCHIVOS = URL_DASHBOARD_ARCHIVOS;
+window.URL_DASHBOARD_EDITOR_WEB = URL_DASHBOARD_EDITOR_WEB;
+window.URL_DASHBOARD_PRODUCTS = URL_DASHBOARD_PRODUCTS;
+window.URL_DASHBOARD_TYPE_FILES = URL_DASHBOARD_TYPE_FILES;
+window.URL_DASHBOARD_FILES = URL_DASHBOARD_FILES;
+window.URL_DASHBOARD_TYPE_PRODUCTS = URL_DASHBOARD_TYPE_PRODUCTS;
+window.URL_DASHBOARD_USERS = URL_DASHBOARD_USERS;
+window.URL_DASHBOARD_ROLES = URL_DASHBOARD_ROLES;

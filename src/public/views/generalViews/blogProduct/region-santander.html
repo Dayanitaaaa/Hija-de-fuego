@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas: Santander</title>
+
+    <link rel="stylesheet" href="../../../assets/css/generalViews/blogProduct.css">
+</head>
+<body>
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="recipes-main">
+        <div class="recipes-content-container">
+            <a class="region-back" href="/generalViews/recipes">Volver</a>
+            <h1 class="region-page-title">Santander</h1>
+            <p class="region-page-subtitle">Selecciona un plato para ver ingredientes y preparación.</p>
+
+            <div class="dish-chips" id="dish-chips">
+                <button class="dish-chip" type="button" data-dish="pepitoria">Pepitoria</button>
+                <button class="dish-chip" type="button" data-dish="hallacas">Hallacas</button>
+                <button class="dish-chip" type="button" data-dish="hogao-santandereano">Hogao Santandereano</button>
+                <button class="dish-chip" type="button" data-dish="bocadillo-veleno">Bocadillo Veleño</button>
+                <button class="dish-chip" type="button" data-dish="chocolate-jiron">Chocolate Jirón</button>
+                <button class="dish-chip" type="button" data-dish="sancocho-santandereano">Sancocho Santandereano</button>
+                <button class="dish-chip" type="button" data-dish="mute-santandereano">Mute Santandereano</button>
+                <button class="dish-chip" type="button" data-dish="chorotas">Chorotas</button>
+                <button class="dish-chip" type="button" data-dish="cabro-al-horno">Cabro al Horno</button>
+            </div>
+
+            <section class="dish-panel" id="dish-panel" hidden>
+                <h2 id="dish-title"></h2>
+
+                <h3>Ingredientes</h3>
+                <ul id="dish-ingredients"></ul>
+
+                <h3>Preparación</h3>
+                <p id="dish-prep"></p>
+            </section>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script>
+        (function() {
+            const DATA = {
+                "pepitoria": {
+                    title: "Pepitoria",
+                    ingredients: [
+                        "Sangre y menudo de cabro (riñones, hígado, corazón, etc.)",
+                        "Cebolla larga",
+                        "Ajo",
+                        "Comino",
+                        "Aceite",
+                        "Achiote",
+                        "Pimienta",
+                        "Pan rallado",
+                        "Jugo de limón",
+                        "Huevo"
+                    ],
+                    prep: "Se cocina el menudo de cabro en agua con sal hasta que esté blando. En una sartén se sofríe cebolla, ajo, comino, achiote y pimienta. Luego se añade la sangre cocida y picada, el huevo batido y el pan rallado, mezclando hasta obtener una preparación compacta y llena de sabor."
+                },
+                "hallacas": {
+                    title: "Hallacas",
+                    ingredients: [
+                        "Masa de maíz pilado",
+                        "Grasa de cerdo",
+                        "Bijao",
+                        "Sal",
+                        "Relleno: cerdo, gallina, pollo, tocino picado",
+                        "Guiso: cebolla cabezona, cebolla junca, perejil, orégano, ajo, manteca de cerdo, sal, pimienta",
+                        "Hojas de plátano"
+                    ],
+                    prep: "Se prepara una masa de maíz, se rellena con un guiso de carne, se envuelven en hojas de plátano y se cocinan en agua."
+                },
+                "hogao-santandereano": {
+                    title: "Hogao Santandereano",
+                    ingredients: ["Cebolla larga", "Tomate maduro", "Aceite", "Sal", "Pimienta", "Comino"],
+                    prep: "Se sofríe la cebolla y el tomate picados en aceite caliente. Se sazona con sal, pimienta y comino, y se cocina a fuego bajo hasta que forme una salsa espesa y aromática."
+                },
+                "bocadillo-veleno": {
+                    title: "Bocadillo Veleño",
+                    ingredients: ["Guayabas maduras", "Azúcar", "Jugo de naranja", "Agua"],
+                    prep: "Cocine las guayabas por 15 minutos en el agua, luego licúe, cuele y agregue el jugo de naranja. Ponga a fuego lento con el azúcar, revolviendo constantemente, hasta que deje los lados de la vasija y se recoja en el centro. Ponga en una vasija rectangular y cuando esté frío, parta en panelitas."
+                },
+                "chocolate-jiron": {
+                    title: "Chocolate Jirón",
+                    ingredients: ["Cacao en semilla", "Azúcar (se muele junto al cacao)", "Agua o leche"],
+                    prep: "Se tuesta el cacao, se pela y se muele junto con azúcar. Para servir, se hierve en agua o leche y se bate hasta que haga espuma. Se toma caliente."
+                },
+                "sancocho-santandereano": {
+                    title: "Sancocho Santandereano",
+                    ingredients: [
+                        "Gallina",
+                        "Costilla de res",
+                        "Costilla de cerdo",
+                        "Chorizo",
+                        "Ajo",
+                        "Cebolla junca",
+                        "Tomate maduro",
+                        "Plátano verde",
+                        "Yuca",
+                        "Apio",
+                        "Arracacha",
+                        "Mazorca",
+                        "Papa",
+                        "Repollo",
+                        "Cebolla cabezona",
+                        "Plátano maduro",
+                        "Garbanzo",
+                        "Auyama",
+                        "Zanahoria",
+                        "Arroz",
+                        "Chorotas",
+                        "Sal",
+                        "Pimienta",
+                        "Comino",
+                        "Cilantro"
+                    ],
+                    prep: "Cocer carnes. Añadir vegetales. Preparar sofrito, agregar y cocinar hasta integrar."
+                },
+                "mute-santandereano": {
+                    title: "Mute Santandereano",
+                    ingredients: [
+                        "Costilla de res",
+                        "Pulpa de cerdo",
+                        "Mondongo",
+                        "Pata de res",
+                        "Maíz pelado amarillo",
+                        "Maíz peludo blanco",
+                        "Cebolla larga",
+                        "Papas",
+                        "Ahuyama",
+                        "Berenjena",
+                        "Frijol verde",
+                        "Garbanzos",
+                        "Conchita",
+                        "Cepasta",
+                        "Huasca",
+                        "Perejil",
+                        "Hojo",
+                        "Sal",
+                        "Pimienta",
+                        "Comino",
+                        "Ahogo: cebolla larga, cebolla cabezona, ajo, tomate",
+                        "Aceite achiotado",
+                        "Mantequilla",
+                        "Perejil",
+                        "Sal, pimienta, comino"
+                    ],
+                    prep: "El mute santandereano se prepara con maíz pelado y cocido, carne de cerdo, res y costillas. Se le agregan papas, zanahorias, cebolla, ajo, cilantro y condimentos. Todo se cocina junto hasta que esté bien suave y espeso."
+                },
+                "chorotas": {
+                    title: "Chorotas",
+                    ingredients: ["Masa de maíz", "Carne molida", "Cebolla larga", "Cebolla cabezona", "Tomate maduro", "Huevo", "Aceite", "Sal", "Comino"],
+                    prep: "Se prepara una masa con maíz molido, carne molida, cebolla, tomate y huevo. Se forman bolitas pequeñas que se cocinan dentro del sancocho o en caldo hasta que estén firmes y cocidas por dentro."
+                },
+                "cabro-al-horno": {
+                    title: "Cabro al Horno",
+                    ingredients: ["Cabro (costilla o pernil)", "Sal nitro", "Comino", "Ajo", "Pimienta", "Pan rallado", "Sal y pimienta"],
+                    prep: "Adobar cabro, cubrir con pan rallado, hornear hasta dorar."
+                }
+            };
+
+            const chips = document.getElementById('dish-chips');
+            const panel = document.getElementById('dish-panel');
+            const title = document.getElementById('dish-title');
+            const ingredients = document.getElementById('dish-ingredients');
+            const prep = document.getElementById('dish-prep');
+
+            function setActive(el) {
+                chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
+                el.classList.add('is-active');
+            }
+
+            function renderDish(key) {
+                const dish = DATA[key];
+                title.textContent = dish?.title || 'Pendiente por agregar';
+                ingredients.innerHTML = '';
+
+                if (dish?.ingredients?.length) {
+                    dish.ingredients.forEach(text => {
+                        const li = document.createElement('li');
+                        li.textContent = text;
+                        ingredients.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = 'Pendiente por agregar.';
+                    ingredients.appendChild(li);
+                }
+
+                prep.textContent = dish?.prep || 'Pendiente por agregar.';
+                panel.hidden = false;
+            }
+
+            chips.addEventListener('click', (e) => {
+                const btn = e.target.closest('.dish-chip');
+                if (!btn) return;
+                const key = btn.getAttribute('data-dish');
+                setActive(btn);
+                renderDish(key);
+            });
+
+            const first = chips.querySelector('.dish-chip');
+            if (first) {
+                setActive(first);
+                renderDish(first.getAttribute('data-dish'));
+            }
+        })();
+    </script>
+</body>
+</html>

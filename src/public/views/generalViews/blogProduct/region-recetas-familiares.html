@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas: Familiares</title>
+
+    <link rel="stylesheet" href="../../../assets/css/generalViews/blogProduct.css">
+</head>
+<body>
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="recipes-main">
+        <div class="recipes-content-container">
+            <a class="region-back" href="/generalViews/recipes">Volver</a>
+            <h1 class="region-page-title">Recetas familiares</h1>
+            <p class="region-page-subtitle">Selecciona una receta para ver ingredientes y preparación.</p>
+
+            <div class="dish-chips" id="dish-chips">
+                <button class="dish-chip" type="button" data-dish="tamal-tolimense">Tamal Tolimense (por mi abuela Alba)</button>
+                <button class="dish-chip" type="button" data-dish="lechona-tolimense">Lechona Tolimense (por mi abuelo Raúl)</button>
+            </div>
+
+            <section class="dish-panel" id="dish-panel" hidden>
+                <h2 id="dish-title"></h2>
+
+                <h3>Ingredientes</h3>
+                <ul id="dish-ingredients"></ul>
+
+                <h3>Preparación</h3>
+                <p id="dish-prep"></p>
+            </section>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script>
+        (function() {
+            const DATA = {
+                "tamal-tolimense": {
+                    title: "Tamal Tolimense (por mi abuela Alba)",
+                    ingredients: [
+                        "Arroz",
+                        "Arvejas verdes",
+                        "Pollo o gallina",
+                        "Carne de cerdo y chicharrón",
+                        "Papa",
+                        "Zanahoria",
+                        "Huevo cocido",
+                        "Ajo",
+                        "Cebolla",
+                        "Comino",
+                        "Sal",
+                        "Hojas de plátano"
+                    ],
+                    prep: "La abuela mezcla el arroz con el guiso. Sobre la hoja de plátano acomoda la carne, el chicharrón, las verduras y el huevo. Envuelve y amarra. Cocina al vapor hasta que esté listo."
+                },
+                "lechona-tolimense": {
+                    title: "Lechona Tolimense (por mi abuelo Raúl)",
+                    ingredients: [
+                        "Carne y cuero de cerdo",
+                        "Arroz blanco cocido",
+                        "Arveja amarilla cocida",
+                        "Cebolla larga",
+                        "Ajo",
+                        "Comino",
+                        "Sal",
+                        "Pimienta",
+                        "Color",
+                        "Limón",
+                        "Horno o recipiente grande para asar"
+                    ],
+                    prep: "Adoba la carne y el cuero con ajo, cebolla, comino, sal y limón. Mezcla arroz con arveja, carne picada y aliño. Rellena el cuero con la mezcla y cose. Lleva al horno hasta dorar y lograr piel crujiente."
+                }
+            };
+
+            const chips = document.getElementById('dish-chips');
+            const panel = document.getElementById('dish-panel');
+            const title = document.getElementById('dish-title');
+            const ingredients = document.getElementById('dish-ingredients');
+            const prep = document.getElementById('dish-prep');
+
+            function setActive(el) {
+                chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
+                el.classList.add('is-active');
+            }
+
+            function renderDish(key) {
+                const dish = DATA[key];
+                title.textContent = dish?.title || 'Pendiente por agregar';
+                ingredients.innerHTML = '';
+
+                if (dish?.ingredients?.length) {
+                    dish.ingredients.forEach(text => {
+                        const li = document.createElement('li');
+                        li.textContent = text;
+                        ingredients.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = 'Pendiente por agregar.';
+                    ingredients.appendChild(li);
+                }
+
+                prep.textContent = dish?.prep || 'Pendiente por agregar.';
+                panel.hidden = false;
+            }
+
+            chips.addEventListener('click', (e) => {
+                const btn = e.target.closest('.dish-chip');
+                if (!btn) return;
+                const key = btn.getAttribute('data-dish');
+                setActive(btn);
+                renderDish(key);
+            });
+
+            const first = chips.querySelector('.dish-chip');
+            if (first) {
+                setActive(first);
+                renderDish(first.getAttribute('data-dish'));
+            }
+        })();
+    </script>
+</body>
+</html>

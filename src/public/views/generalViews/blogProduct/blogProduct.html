@@ -16,63 +16,68 @@
     <main class="recipes-main">
         <div class="recipes-content-container">
             <div class="recipes-header">
-                <h1 class="recipes-title">Nuestras Recetas</h1>
-                <a href="#" class="btn-view-all">Ver Todas</a>
+                <h1 class="recipes-title">Recetas</h1>
             </div>
 
-            <div class="recipes-dropdowns-container">
-                <div class="dropdown">
-                    <button class="dropdown-btn">Región</button>
-                    <div class="dropdown-content">
-                        <a href="#">Andina</a>
-                        <a href="#">Caribe</a>
-                        <a href="#">Pacífico</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="dropdown-btn">Tipo de Plato</button>
-                    <div class="dropdown-content">
-                        <a href="#">Entrada</a>
-                        <a href="#">Plato Fuerte</a>
-                        <a href="#">Postre</a>
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="dropdown-btn">Ingrediente Principal</button>
-                    <div class="dropdown-content">
-                        <a href="#">Carne</a>
-                        <a href="#">Pollo</a>
-                        <a href="#">Pescado</a>
-                    </div>
-                </div>
-            </div>
+            <p class="recipes-intro">
+                Un bocado de Colombia: sabores que cuentan historias. Tradición, alma y fuego en cada receta.
+                Este recetario recorre regiones y memorias —de la Costa Caribe a Santander, Antioquia y el Pacífico—
+                celebrando platos cotidianos y festivos que nacen del fogón, la familia y el territorio.
+            </p>
+
+            
 
             <!-- Aquí se cargarán dinámicamente las cards de las recetas -->
             <div class="recipes-cards-container">
-                <!-- Card de Ejemplo 1 -->
-                <div class="recipe-card">
-                    <img src="../../../assets/imgStatic/cardCultura1.jpeg" alt="Bandeja Paisa">
+                <a class="recipe-card" href="/generalViews/recipes/region/santander">
+                    <img src="../../../assets/imgStatic/imgKitchen.png" alt="Sopa de Guandú">
                     <div class="recipe-card-content">
-                        <h3 class="recipe-card-title">Bandeja Paisa</h3>
-                        <p class="recipe-card-description">Un plato icónico de la región Andina, con frijoles, arroz, carne molida, chicharrón, y más.</p>
+                        <h3 class="recipe-card-title">Santander</h3>
+                        <p class="recipe-card-description">La gastronomía santandereana es una muestra de tradición, carácter y orgullo, con platos como el mute, la carne oreada y la hormiga culona que representan su identidad cultural.</p>
                     </div>
-                </div>
-                <!-- Card de Ejemplo 2 -->
-                <div class="recipe-card">
-                    <img src="../../../assets/imgStatic/cardCultura2.jpeg" alt="Ajiaco Santafereño">
+                </a>
+
+                <a class="recipe-card" href="/generalViews/recipes/region/pacifica">
+                    <img src="../../../assets/imgStatic/imgKitchen.png" alt="Enyucado">
                     <div class="recipe-card-content">
-                        <h3 class="recipe-card-title">Ajiaco Santafereño</h3>
-                        <p class="recipe-card-description">Una sopa tradicional de Bogotá, preparada con diferentes tipos de papa, pollo y mazorca.</p>
+                        <h3 class="recipe-card-title">pacifica</h3>
+                        <p class="recipe-card-description">Costa Caribe. Dulce horneado de yuca y coco con panela, anís y queso costeño: salado-dulce de hogar.</p>
                     </div>
-                </div>
-                <!-- Card de Ejemplo 3 -->
-                <div class="recipe-card">
-                    <img src="../../../assets/imgStatic/imagen21.jpg" alt="Ceviche de Camarón">
+                </a>
+
+                <a class="recipe-card" href="/generalViews/recipes/region/antioquia-viejo-caldas">
+                    <img src="../../../assets/imgStatic/imgKitchen.png" alt="Arroz con Camarón y Coco">
                     <div class="recipe-card-content">
-                        <h3 class="recipe-card-title">Ceviche de Camarón</h3>
-                        <p class="recipe-card-description">Fresco y cítrico, este plato de la costa Pacífica es perfecto para un día caluroso.</p>
+                        <h3 class="recipe-card-title">Antioquia / Viejo caldas</h3>
+                        <p class="recipe-card-description">La gastronomía del Viejo Caldas combina tradición cafetera y sabor casero, con preparaciones como el sancocho, la arepa y los fríjoles que representan la cultura y hospitalidad de la región.</p>
                     </div>
-                </div>
+                </a>
+
+                <a class="recipe-card" href="/generalViews/recipes/region/huila-valle">
+                    <img src="../../../assets/imgStatic/imgKitchen.png" alt="Cocadas">
+                    <div class="recipe-card-content">
+                        <h3 class="recipe-card-title">Huila y Valle</h3>
+                        <p class="recipe-card-description">La gastronomía del Huila y el Valle del Cauca destaca por su sabor auténtico y tradición, con platos como el asado huilense, el tamal, el sancocho de gallina y el pandebono, que representan la riqueza cultural y la identidad alegre de estas regiones.</p>
+                    </div>
+                </a>
+
+                <a class="recipe-card" href="/generalViews/recipes/region/cundinamarca-boyaca">
+                    <img src="../../../assets/imgStatic/imgKitchen.png" alt="Pastel Costeño">
+                    <div class="recipe-card-content">
+                        <h3 class="recipe-card-title">Cundinamarca y Boyacá</h3>
+                        <p class="recipe-card-description">La gastronomía de Cundinamarca y Boyacá se caracteriza por sus sabores tradicionales y recetas campesinas, con platos como el ajiaco, la changua, la fritanga y el cocido boyacense, que reflejan la historia, la cultura y el arraigo andino de estas regiones.</p>
+                    </div>
+                </a>
+
+                <a class="recipe-card" href="/generalViews/recipes/region/recetas-familiares">
+                    <img src="../../../assets/imgStatic/imgKitchen.png" alt="Pepitoria">
+                    <div class="recipe-card-content">
+                        <h3 class="recipe-card-title">Recetas familiares</h3>
+                        <p class="recipe-card-description">El tamal tolimense de mi abuela se prepara mezclando arroz con un guiso tradicional y acomodándolo en hojas de plátano junto con carne, chicharrón, verduras y huevo. Luego se envuelve con cuidado y se cocina al vapor hasta que su aroma llena la casa. Es un sabor que representa historia, familia y tradición.</p>
+                    </div>
+                </a>
+
+                
             </div>
         </div>
     </main>

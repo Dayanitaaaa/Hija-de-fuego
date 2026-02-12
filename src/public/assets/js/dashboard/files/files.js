@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    if (typeof HOST === 'undefined') window.HOST = 'http://localhost:3000';
+    if (typeof URL_FILES === 'undefined') window.URL_FILES = '/mySystem/files';
     // Protección: Redirigir si no hay token
     if (!localStorage.getItem('token')) {
         window.location.href = '/generalViews/login';
@@ -12,6 +14,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileTypeSelect = document.getElementById("fileType");
     const fileModalLabel = document.getElementById("fileModalLabel");
     const openModalBtn = document.querySelector('[data-bs-target="#fileModal"]');
+
+    const FIXED_EXTENSIONS = [
+        'jpg',
+        'png',
+        'pdf',
+        'xlsx',
+        'docx'
+    ];
+
+    let typeFilesIdByExtension = {};
+
+    async function loadTypeFilesIdsByExtension() {
+        try {
+            const response = await fetch(`${HOST}${URL_TYPE_FILES}`);
+            if (!response.ok) throw new Error("Error al cargar tipos de archivo");
+
+            const typeFiles = await response.json();
+            typeFilesIdByExtension = {};
+
+            typeFiles.forEach(tf => {
+                const ext = (tf.Type_files_extension || '').toString().trim().toLowerCase();
+                if (ext) typeFilesIdByExtension[ext] = tf.Type_files_id;
+            });
+        } catch (error) {
+            typeFilesIdByExtension = {};
+        }
+    }
+
+    function getTypeFileFkFromSelector() {
+        const ext = (fileTypeSelect.value || '').trim().toLowerCase();
+        if (!FIXED_EXTENSIONS.includes(ext)) return '';
+        return typeFilesIdByExtension[ext] ?? '';
+    }
 
     async function loadFiles() {
         try {
@@ -76,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fileModalLabel.textContent = "Editar Archivo";
             fileIdInput.value = file.Files_id;
             fileNameInput.value = file.Files_name;
-            fileTypeSelect.value = file.Type_files_extension;
+            fileTypeSelect.value = (file.Type_files_extension || '').toLowerCase();
         } catch (error) {
             alert("Error al cargar archivo: " + error.message);
         }
@@ -107,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const id = fileIdInput.value;
         const name = fileNameInput.value.trim();
-        const type = fileTypeSelect.value;
+        const type = getTypeFileFkFromSelector();
         const fileInput = document.getElementById("imageFile");
         const file = fileInput.files[0];
 
@@ -133,27 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Error al guardar archivo: " + error.message);
         }
     });
-
-    async function loadTypeFiles() {
-        try {
-            const response = await fetch(`${HOST}${URL_TYPE_FILES}`);
-            if (!response.ok) throw new Error("Error al cargar tipos de archivo");
-
-            const typeFiles = await response.json();
-            fileTypeSelect.innerHTML = '<option value="">Seleccione un tipo de archivo</option>';
-
-            typeFiles.forEach(typeFile => {
-                const option = document.createElement("option");
-                option.value = typeFile.Type_files_id;
-                option.textContent = typeFile.Type_files_extension;
-                fileTypeSelect.appendChild(option);
-            });
-        } catch (error) {
-            alert("Error al cargar tipos de archivo: " + error.message);
-        }
-    }
-
-    loadTypeFiles();
-    loadFiles();
+    loadTypeFilesIdsByExtension().finally(() => {
+        loadFiles();
+    });
 });
     

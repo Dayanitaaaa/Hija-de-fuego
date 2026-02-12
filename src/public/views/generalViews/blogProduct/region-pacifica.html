@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas: Región Pacífica</title>
+
+    <link rel="stylesheet" href="../../../assets/css/generalViews/blogProduct.css">
+</head>
+<body>
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="recipes-main">
+        <div class="recipes-content-container">
+            <a class="region-back" href="/generalViews/recipes">Volver</a>
+            <h1 class="region-page-title">Región Pacífica</h1>
+            <p class="region-page-subtitle">Selecciona un plato para ver ingredientes y preparación.</p>
+
+            <div class="dish-chips" id="dish-chips">
+                <button class="dish-chip" type="button" data-dish="mulata-paseadora">Mulata Paseadora</button>
+                <button class="dish-chip" type="button" data-dish="arroz-clavao">Arroz Clavao</button>
+                <button class="dish-chip" type="button" data-dish="fresco-guanabana">Fresco de Guanábana (Tumaco)</button>
+                <button class="dish-chip" type="button" data-dish="rellena-guapi">Rellena (Guapi, Cauca)</button>
+                <button class="dish-chip" type="button" data-dish="tamal-gallina-cerdo">Tamal de Gallina y Cerdo</button>
+                <button class="dish-chip" type="button" data-dish="tamal-masa-arroz">Tamal de Masa de Arroz</button>
+            </div>
+
+            <section class="dish-panel" id="dish-panel" hidden>
+                <h2 id="dish-title"></h2>
+
+                <h3>Ingredientes</h3>
+                <ul id="dish-ingredients"></ul>
+
+                <h3>Preparación</h3>
+                <p id="dish-prep"></p>
+            </section>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script>
+        (function() {
+            const DATA = {
+                "mulata-paseadora": {
+                    title: "Mulata Paseadora",
+                    ingredients: [
+                        "Carne de res",
+                        "Trocitos de carne de cerdo",
+                        "Queso",
+                        "Plátano verde",
+                        "Yuca",
+                        "Papa",
+                        "Plátano maduro",
+                        "Cebolla cabezona",
+                        "Ajo",
+                        "Cilantro",
+                        "Camarón",
+                        "Comino molido",
+                        "Pimienta",
+                        "Sal"
+                    ],
+                    prep: "Se sella carne de res y cerdo, se sofríen cebolla, ajo y cilantro, y se cocinan las carnes con agua hasta ablandar. Se agregan yuca, papa, plátano verde y maduro, y se cocina hasta que todo esté suave. Al final, se incorporan camarones y queso en cubos, y se sazona con sal, pimienta y comino."
+                },
+                "arroz-clavao": {
+                    title: "Arroz Clavao",
+                    ingredients: ["Arroz (lavado)", "Cebolla cabezona", "Cebolla larga", "Ajo", "Tomate maduro", "Longaniza", "Queso", "Aceite", "Bija", "Sal", "Pimienta"],
+                    prep: "Sofríe las cebollas y el ajo, agrega la longaniza y cocina. Añade el arroz y condimenta."
+                },
+                "fresco-guanabana": {
+                    title: "Fresco de Guanábana (Tumaco)",
+                    ingredients: ["Guanábana", "Leche", "Canela", "Azúcar", "Hielo"],
+                    prep: "Se licúa la pulpa de guanábana con agua fría y azúcar al gusto. Luego se cuela y se sirve bien frío, con hielo si se desea."
+                },
+                "rellena-guapi": {
+                    title: "Rellena (Guapi, Cauca)",
+                    ingredients: ["1 litro de sangre", "Arroz cocido", "Cebolla larga", "Chillangua", "Poleo", "Orégano fresco", "Sal", "Pimienta", "Comino"],
+                    prep: "Se lava bien el arroz y se mezcla con sangre fresca, cebolla, ajo, comino y otros condimentos. Esta mezcla se introduce en tripas limpias de cerdo y se amarran por porciones. Luego se cocinan en agua caliente sin hervir hasta que estén cocidas y firmes."
+                },
+                "tamal-gallina-cerdo": {
+                    title: "Tamal de Gallina y Cerdo",
+                    ingredients: ["Plátanos hartones", "Leche de coco", "Ajo", "Carne de cerdo", "Gallina", "Huevos duros", "Papa cocida en cubos", "Pimienta al gusto", "Chumbes"],
+                    prep: "Con una base de leche de coco y plátano hartón, se mezcla un guiso de gallina, cerdo, papa, huevos y especias. Se envuelve en hojas (chumbes) y se cocina al vapor hasta lograr una masa tierna y llena de sabor."
+                },
+                "tamal-masa-arroz": {
+                    title: "Tamal de Masa de Arroz",
+                    ingredients: ["Arroz", "Leche de coco", "Agua de coco", "Refrito (tomate, cebolla, ajo, ají)", "Costilla de cerdo", "Huevos duros", "Pan", "Papas pastusas", "Sal y pimienta"],
+                    prep: "El arroz se mezcla con leche y agua de coco. Se incorpora un refrito con costilla, huevo duro y papas. Se envuelve en hojas y se cuece al vapor, obteniendo un tamal cremoso, sabroso y muy tradicional."
+                }
+            };
+
+            const chips = document.getElementById('dish-chips');
+            const panel = document.getElementById('dish-panel');
+            const title = document.getElementById('dish-title');
+            const ingredients = document.getElementById('dish-ingredients');
+            const prep = document.getElementById('dish-prep');
+
+            function setActive(el) {
+                chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
+                el.classList.add('is-active');
+            }
+
+            function renderDish(key) {
+                const dish = DATA[key];
+                title.textContent = dish?.title || 'Pendiente por agregar';
+                ingredients.innerHTML = '';
+
+                if (dish?.ingredients?.length) {
+                    dish.ingredients.forEach(text => {
+                        const li = document.createElement('li');
+                        li.textContent = text;
+                        ingredients.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = 'Pendiente por agregar.';
+                    ingredients.appendChild(li);
+                }
+
+                prep.textContent = dish?.prep || 'Pendiente por agregar.';
+                panel.hidden = false;
+            }
+
+            chips.addEventListener('click', (e) => {
+                const btn = e.target.closest('.dish-chip');
+                if (!btn) return;
+                const key = btn.getAttribute('data-dish');
+                setActive(btn);
+                renderDish(key);
+            });
+
+            const first = chips.querySelector('.dish-chip');
+            if (first) {
+                setActive(first);
+                renderDish(first.getAttribute('data-dish'));
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -58,14 +58,23 @@ app.get('/dashboard/roles', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/dashboard/roles/roles.html'));
 });
 app.get('/dashboard/typeFiles', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/dashboard/typeFiles/typeFiles.html'));
+    res.redirect('/dashboard/archivos');
 });
 app.get('/dashboard/files', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/dashboard/files/files.html'));
+    res.redirect('/dashboard/archivos');
 });
+app.get('/dashboard/archivos', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/dashboard/archivos/archivos.html'));
+});
+app.get('/dashboard/editor-web', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/dashboard/editorWeb/editorWeb.html'));
+});
+
+// Unificar navegación: Tipos de Producto ahora se gestiona desde Productos
 app.get('/dashboard/typeProducts', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/dashboard/typeProducts/typeProducts.html'));
+  res.redirect('/dashboard/products');
 });
+
 app.get('/dashboard/products', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/dashboard/products/products.html'));
 });
@@ -134,23 +143,24 @@ app.get('/generalViews/comida-con-alma', (req, res) => {
 app.get('/generalViews/blogProduct', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/blogProduct.html'));
 });
-app.get('/generalViews/blog/ajiaco', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/ajiaco.html'));
+
+app.get('/generalViews/recipes/region/santander', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/region-santander.html'));
 });
-app.get('/generalViews/blog/bandejaPaisa', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/bandeja-paisa.html'));
+app.get('/generalViews/recipes/region/pacifica', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/region-pacifica.html'));
 });
-app.get('/generalViews/blog/arepa', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/arepa-de-huevo.html'));
+app.get('/generalViews/recipes/region/antioquia-viejo-caldas', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/region-antioquia-viejo-caldas.html'));
 });
-app.get('/generalViews/blog/sancocho', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/sancocho.html'));
+app.get('/generalViews/recipes/region/huila-valle', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/region-huila-valle.html'));
 });
-app.get('/generalViews/blog/arequipe', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/arequipe.html'));
+app.get('/generalViews/recipes/region/cundinamarca-boyaca', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/region-cundinamarca-boyaca.html'));
 });
-app.get('/generalViews/blog/lomo', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/lomo-al-trapo.html'));
+app.get('/generalViews/recipes/region/recetas-familiares', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/region-recetas-familiares.html'));
 });
 
 // Redirección de rutas antiguas a rutas amigables (opcional)

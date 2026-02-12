@@ -3,63 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestión de Archivos</title>
+  <title>Archivos</title>
 
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
-  
-  <!-- Google Fonts - Aboreto y Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Poppins:wght@700&display=swap" rel="stylesheet">
 
-  <!-- Estilos personalizados -->
   <link rel="stylesheet" href="../../../assets/css/homeDashboard.css">
   <link rel="stylesheet" href="../../../assets/css/dashboard.css">
 </head>
 <body>
 
-  
-  <!-- Menú lateral -->
   <div class="sidebar" id="sidebar">
-  <h2>Menú</h2>
-  <ul>
-    <li><a class="menu-button active" href="/generalViews/home"> <i class="fas fa-eye"></i> Ver página </a></li>
-    <li><button id="logoutBtn" class="menu-button logout-button" style="width: 100%; background: #96353B !important; border: none !important; color: white !important;"> <i class="fas fa-sign-out-alt"></i> Cerrar Sesión </button></li>
+    <h2>Menú</h2>
+    <ul>
+      <li><a class="menu-button active" href="/generalViews/home"> <i class="fas fa-eye"></i> Ver página </a></li>
+      <li><button id="logoutBtn" class="menu-button logout-button" style="width: 100%; background: #96353B !important; border: none !important; color: white !important;"> <i class="fas fa-sign-out-alt"></i> Cerrar Sesión </button></li>
+    </ul>
+
     <hr>
     <h5>Sección de Administración</h5>
-    <li><a class="menu-button" id="menu-dashboardHome" href="/dashboard/homeDashboard"><i class="fas fa-home"></i>Inicio</a></li>
-    <li><a class="menu-button" id="menu-users" href="/dashboard/users"><i class="fas fa-users"></i> Usuarios</a></li>
-    <li><a class="menu-button" id="menu-roles" href="/dashboard/roles"> <i class="fas fa-user-tag"></i> Roles</a></li>
-    <li><a class="menu-button" id="menu-archivos" href="/dashboard/archivos"><i class="fas fa-folder-open"></i> Archivos</a></li>
-    <li><a class="menu-button" id="menu-typeProducts" href="/dashboard/typeProducts"><i class="fas fa-box"></i> Tipos de Producto</a></li>
-    <li><a class="menu-button" id="menu-products" href="/dashboard/products"><i class="fas fa-shopping-cart"></i> Productos</a></li>
-      </ul>
+    <ul>
+      <li><a class="menu-button" id="menu-dashboardHome" href="/dashboard/homeDashboard"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a class="menu-button" id="menu-users" href="/dashboard/users"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a class="menu-button" id="menu-roles" href="/dashboard/roles"> <i class="fas fa-user-tag"></i> Roles</a></li>
+      <li><a class="menu-button" id="menu-archivos" href="/dashboard/archivos"><i class="fas fa-folder-open"></i> Archivos</a></li>
+      <li><a class="menu-button" id="menu-editorWeb" href="/dashboard/editor-web"><i class="fas fa-pen-to-square"></i> Editor Web</a></li>
+      <li><a class="menu-button" id="menu-typeProducts" href="/dashboard/products"><i class="fas fa-box"></i> Tipos de Producto</a></li>
+    </ul>
 
-  <div class="sidebar-profile" aria-label="Usuario logueado">
-    <div class="sidebar-profile__avatar" id="sidebarUserAvatar">UA</div>
-    <div class="sidebar-profile__meta">
-      <div class="sidebar-profile__name" id="sidebarUserName">Sesión activa</div>
-      <div class="sidebar-profile__role" id="sidebarUserRole">Rol</div>
+    <hr>
+
+    <div class="sidebar-profile" aria-label="Usuario logueado">
+      <div class="sidebar-profile__avatar" id="sidebarUserAvatar">UA</div>
+      <div class="sidebar-profile__meta">
+        <div class="sidebar-profile__name" id="sidebarUserName">Sesión activa</div>
+        <div class="sidebar-profile__role" id="sidebarUserRole">Rol</div>
+      </div>
     </div>
   </div>
-</div>
 
-
-  <!-- Contenido principal -->
   <div class="main-content">
     <div class="container-fluid">
       <div class="dashboard-header">
-        <h1><i class="fas fa-file-upload"></i> Gestión de Archivos</h1>
-        <p class="text-muted">Administra los archivos del sistema</p>
+        <h1><i class="fas fa-folder-open"></i> Archivos</h1>
+        <p class="text-muted">Sube y administra tus archivos</p>
       </div>
 
       <div class="d-flex justify-content-end mb-3">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fileModal">
-          <i class="fas fa-plus"></i> Agregar Nuevo Archivo
+          <i class="fas fa-plus"></i> Subir Archivo
         </button>
       </div>
 
@@ -75,15 +70,13 @@
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Contenido dinámico -->
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- Modal Crear/Editar -->
+  <!-- Modal Archivos -->
   <div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -101,14 +94,18 @@
             <div class="mb-3">
               <label for="fileType" class="form-label">Tipo de Archivo:</label>
               <select class="form-select" id="fileType" name="fileType" required>
+                <option value="">Seleccione un tipo de archivo</option>
+                <option value="jpg">JPG</option>
+                <option value="png">PNG</option>
+                <option value="pdf">PDF</option>
+                <option value="xlsx">XLSX</option>
+                <option value="docx">DOCX</option>
               </select>
             </div>
             <div class="mb-3">
               <label for="imageFile" class="form-label dashboard-subtitle-yellow">Seleccionar Archivo (JPG, PNG, PDF, XLSX o DOCX):</label>
               <input type="file" class="form-control dashboard-subtitle-black" id="imageFile" name="file" accept=".jpg,.jpeg,.png,.pdf,.xlsx,.docx">
             </div>
-
-
             <button type="submit" class="btn btn-success">Guardar</button>
           </form>
         </div>
@@ -116,7 +113,6 @@
     </div>
   </div>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="../../../assets/js/system/constans.js"></script>
