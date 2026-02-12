@@ -53,6 +53,27 @@ producbody, html {
     width: 300px;
 }
 
+/* Ajuste para catálogo de Libros cuando hay un solo producto destacado */
+.culture-cards-container > a.culture-card:only-child {
+    width: min(440px, 92vw);
+}
+
+.culture-cards-container > a.culture-card:only-child .culture-card-image-container {
+    padding: 18px;
+}
+
+.culture-cards-container > a.culture-card:only-child .culture-card-image-container img {
+    border-radius: 14px;
+}
+
+.culture-cards-container > a.culture-card:only-child .culture-card-title {
+    font-size: 1.1rem;
+}
+
+.culture-cards-container > a.culture-card:only-child .culture-card-price {
+    font-size: 1rem;
+}
+
 .culture-card-image-container {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 15px;

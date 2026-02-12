@@ -134,11 +134,18 @@ app.get('/generalViews/culture', (req, res) => {
 app.get('/generalViews/book', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/book/book.html'));
 });
+app.get('/generalViews/book/raices-y-fogones', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/book/raices-y-fogones.html'));
+});
 app.get('/generalViews/recipes', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/blogProduct.html'));
 });
 app.get('/generalViews/comida-con-alma', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/comidaConAlma/comidaConAlma.html'));
+});
+
+app.get('/generalViews/comida-con-alma/producto/:id', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/comidaConAlma/comidaConAlmaDetail.html'));
 });
 app.get('/generalViews/blogProduct', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/blogProduct.html'));

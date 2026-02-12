@@ -26,6 +26,48 @@
 		   </div>
 	   </section>
 
+	   <section class="book-feature" id="book-feature" aria-label="Carrusel destacado del libro">
+		   <div class="book-feature-inner">
+			   <button class="book-feature-nav prev" type="button" data-bf-prev aria-label="Anterior">‹</button>
+			   <div class="book-feature-viewport">
+				   <div class="book-feature-track">
+					   <div class="book-feature-slide is-active">
+						   <div class="book-feature-block">
+				   <div class="book-feature-copy">
+					   <div class="book-feature-kicker">Premio nacional de escritura gastronómica</div>
+					   <h2 class="book-feature-title">Raíces y Fogones</h2>
+					   <p class="book-feature-text">Un homenaje a la memoria y a los fogones de Colombia: tradición, identidad y gastronomía contadas con sensibilidad editorial.</p>
+					   <a class="book-feature-cta" href="/generalViews/book/raices-y-fogones">Ver libro</a>
+				   </div>
+				   <div class="book-feature-media">
+					   <img src="../../../assets/imgStatic/imagen10.jpg" alt="Portada del libro Raíces y Fogones">
+				   </div>
+						   </div>
+					   </div>
+
+					   <div class="book-feature-slide">
+						   <div class="book-feature-block reverse">
+				   <div class="book-feature-copy">
+					   <div class="book-feature-kicker">Obra reconocida internacionalmente</div>
+					   <h2 class="book-feature-title">Tradición e identidad</h2>
+					   <p class="book-feature-text">Recetas y relatos que celebran la herencia familiar y el valor cultural de la cocina colombiana, desde la intimidad del hogar.</p>
+					   <a class="book-feature-cta" href="/generalViews/book/raices-y-fogones">Descúbrelo ahora</a>
+				   </div>
+				   <div class="book-feature-media">
+					   <img src="../../../assets/imgStatic/imagen3.jpg" alt="Interior del libro Raíces y Fogones">
+				   </div>
+						   </div>
+					   </div>
+				   </div>
+			   </div>
+			   <button class="book-feature-nav next" type="button" data-bf-next aria-label="Siguiente">›</button>
+		   </div>
+		   <div class="book-feature-dots" aria-label="Indicadores">
+			   <button class="book-feature-dot is-active" type="button" aria-label="Slide 1"></button>
+			   <button class="book-feature-dot" type="button" aria-label="Slide 2"></button>
+		   </div>
+	   </section>
+
 	   <section class="home-image-section">
 		   <div class="home-split">
 			   <div class="home-split-left">
@@ -51,29 +93,62 @@
 			   <div class="footer-text">Sabores, cultura y tradición colombiana.</div>
 		   </div>
 
-		   
-
 		   <div class="footer-col">
-			   <div class="footer-heading">Redes</div>
-			   <div class="footer-social">
-				   <a class="social-link" href="#" aria-label="Instagram">
-					   <i class="fa-brands fa-instagram"></i>
-				   </a>
-				   <a class="social-link" href="#" aria-label="Facebook">
-					   <i class="fa-brands fa-facebook-f"></i>
-				   </a>
-				   <a class="social-link" href="#" aria-label="TikTok">
-					   <i class="fa-brands fa-tiktok"></i>
-				   </a>
-			   </div>
+		   <div class="footer-heading">Redes</div>
+		   <div class="footer-social">
+			   <a class="social-link" href="#" aria-label="Instagram">
+				   <i class="fa-brands fa-instagram"></i>
+			   </a>
+			   <a class="social-link" href="#" aria-label="Facebook">
+				   <i class="fa-brands fa-facebook-f"></i>
+			   </a>
+			   <a class="social-link" href="#" aria-label="TikTok">
+				   <i class="fa-brands fa-tiktok"></i>
+			   </a>
 		   </div>
 	   </div>
 
+	   <div class="footer-col footer-audio">
+		   <div class="footer-heading">Canción del libro</div>
+		   <div class="spotify-card" id="home-spotify">
+			   <div class="spotify-cover">
+				   <img src="../../../assets/imgStatic/logo-circular.png" alt="Logo">
+			   </div>
+			   <div class="spotify-meta">
+				   <div class="spotify-title">
+					   <span>Raíces y Fogones</span>
+				   </div>
+				   <div class="spotify-subtitle">Canción oficial del libro</div>
+				   <div class="spotify-controls">
+					   <button class="spotify-play" type="button" data-audio-play aria-label="Reproducir o pausar">
+						   <span class="icon-play">▶</span>
+						   <span class="icon-pause">❚❚</span>
+					   </button>
+					   <div class="spotify-progress" data-audio-progress role="slider" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+						   <div class="spotify-progress-fill" data-audio-progress-fill></div>
+					   </div>
+					   <div class="spotify-time" aria-label="Tiempo">
+						   <span data-audio-current>0:00</span>
+						   <span class="spotify-time-sep">/</span>
+						   <span data-audio-duration>0:00</span>
+					   </div>
+				   </div>
+			   </div>
+			   <audio class="spotify-audio" preload="metadata" data-audio>
+				   <source src="../../../assets/audio/raices-y-fogones.mp3" type="audio/mpeg">
+			   </audio>
+		   </div>
+	   </div>
+	   </div>
+
 	   <div class="footer-bottom">
-		   <span>© 2026 Hija del Fuego. Todos los derechos reservados.</span>
+		   <span>2026 Hija del Fuego. Todos los derechos reservados.</span>
 	   </div>
    </footer>
    <script src="../../../assets/js/generalViews/headerHome/headerHome.js"></script>
+   <script src="../../../assets/js/generalViews/home/bookFeatureCarousel.js"></script>
+   <script src="../../../assets/js/generalViews/home/footerSpotifyPlayer.js"></script>
+   <script src="../../../assets/js/generalViews/home/editorialCarousel.js"></script>
 
 </body>
-</html  >
+</html>

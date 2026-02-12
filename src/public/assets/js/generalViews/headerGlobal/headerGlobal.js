@@ -6,9 +6,10 @@ fetch('/generalViews/headerGlobal')
 			if (headerContainer) {
 				headerContainer.innerHTML = data;
 				initHamburger();
+				initGlobalProductsDropdown();
 				// Ocultar botón de registro si estamos en login o register
 				const path = window.location.pathname;
-				if (path.includes('/login') || path.includes('/register')) {
+				if (path.includes('/login')) {
 					const registerBtn = document.querySelector('.btn-group-contact a[href="/generalViews/register"]');
 					if (registerBtn) {
 						registerBtn.style.display = 'none';
@@ -17,6 +18,36 @@ fetch('/generalViews/headerGlobal')
 			}
 		});
 });
+
+function initGlobalProductsDropdown() {
+	const dropdownRoot = document.getElementById('globalProductsDropdown');
+	const trigger = document.getElementById('globalProductsDropdownTrigger');
+	if (!dropdownRoot || !trigger) return;
+
+	const close = () => {
+		dropdownRoot.classList.remove('is-open');
+		trigger.setAttribute('aria-expanded', 'false');
+	};
+
+	const toggle = () => {
+		const isOpen = dropdownRoot.classList.toggle('is-open');
+		trigger.setAttribute('aria-expanded', String(isOpen));
+	};
+
+	trigger.addEventListener('click', (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		toggle();
+	});
+
+	document.addEventListener('click', (e) => {
+		if (!dropdownRoot.contains(e.target)) close();
+	});
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') close();
+	});
+}
 
 function initHamburger() {
 	const toggle = document.querySelector('.menu-toggle');
