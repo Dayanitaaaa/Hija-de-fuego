@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas: Antioquia / Viejo Caldas</title>
+
+    <link rel="stylesheet" href="../../../assets/css/generalViews/blogProduct.css">
+</head>
+<body>
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="recipes-main">
+        <div class="recipes-content-container">
+            <a class="region-back" href="/generalViews/recipes">Volver</a>
+            <h1 class="region-page-title">Antioquia / Viejo Caldas</h1>
+            <p class="region-page-subtitle">Selecciona un plato para ver ingredientes y preparación.</p>
+
+            <div class="dish-chips" id="dish-chips">
+                <button class="dish-chip" type="button" data-dish="crema-de-cafe">Crema de Café</button>
+                <button class="dish-chip" type="button" data-dish="lengua-en-salsa">Lengua en Salsa</button>
+                <button class="dish-chip" type="button" data-dish="arroz-con-pollo">Arroz con Pollo (Antioqueño)</button>
+                <button class="dish-chip" type="button" data-dish="migao">Migao</button>
+                <button class="dish-chip" type="button" data-dish="arepa-de-arriero">Arepa de Arriero</button>
+                <button class="dish-chip" type="button" data-dish="bunuelos">Buñuelos</button>
+                <button class="dish-chip" type="button" data-dish="chorizo-santarrosano">Chorizo Santarrosano</button>
+                <button class="dish-chip" type="button" data-dish="hogao-antioqueno">Hogao Antioqueño</button>
+                <button class="dish-chip" type="button" data-dish="frijoles-blancos">Frijoles Blancos</button>
+                <button class="dish-chip" type="button" data-dish="orejas-de-cerdo">Orejas de Cerdo</button>
+                <button class="dish-chip" type="button" data-dish="chorizo-casero">Chorizo Casero</button>
+                <button class="dish-chip" type="button" data-dish="frisoles-antioquenos">Frisoles Antioqueños</button>
+            </div>
+
+            <section class="dish-panel" id="dish-panel" hidden>
+                <h2 id="dish-title"></h2>
+
+                <h3>Ingredientes</h3>
+                <ul id="dish-ingredients"></ul>
+
+                <h3>Preparación</h3>
+                <p id="dish-prep"></p>
+            </section>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script>
+        (function() {
+            const DATA = {
+                "crema-de-cafe": {
+                    title: "Crema de Café",
+                    ingredients: [
+                        "2 ½ tazas de crema de leche",
+                        "2 cucharadas de café",
+                        "15 g de gelatina sin sabor",
+                        "¾ taza de azúcar"
+                    ],
+                    prep: "Hidratar la gelatina en agua fría. Calentar la crema de leche con el café y el azúcar hasta disolver. Añadir la gelatina hidratada y mezclar. Verter en moldes y refrigerar hasta que cuaje."
+                },
+                "lengua-en-salsa": {
+                    title: "Lengua en Salsa",
+                    ingredients: [
+                        "Lengua",
+                        "Ahogo",
+                        "Cerveza",
+                        "Laurel",
+                        "Ajo",
+                        "Mantequilla",
+                        "Aceite",
+                        "Harina",
+                        "Cilantro",
+                        "Sal y pimienta"
+                    ],
+                    prep: "Cocina la lengua en agua con sal y laurel hasta que esté tierna, luego pélala y rebánala. Prepara un ahogo con mantequilla, aceite, ajo y harina. Añade la cerveza, cilantro, sal y pimienta. Incorpora la lengua y deja cocinar hasta espesar la salsa."
+                },
+                "arroz-con-pollo": {
+                    title: "Arroz con Pollo (Antioqueño)",
+                    ingredients: [
+                        "1 pollo",
+                        "2 lb de arroz (lavado 3 veces)",
+                        "Caldo básico",
+                        "Pimiento verde y rojo",
+                        "Chorizo",
+                        "Cebolla",
+                        "Huevo",
+                        "Ajo",
+                        "Ajíes",
+                        "Aceite de oliva",
+                        "Orégano",
+                        "Tomillo",
+                        "Alcaparras con su vinagre",
+                        "Pasta de tomate",
+                        "Pimienta negra",
+                        "Sal"
+                    ],
+                    prep: "Cocina el pollo y desmenúzalo. Sofríe todos los ingredientes con el chorizo, cebolla y pasta de tomate. Agrega el arroz, mezcla y cocina con el caldo hasta que esté en su punto."
+                },
+                "migao": {
+                    title: "Migao",
+                    ingredients: ["Chocolate espeso", "Queso fresco", "Arepa blanca", "Pandebono", "Según la región: buñuelos, achiras o galletas"],
+                    prep: "Se prepara con un chocolate espeso recién batido, al que se sumergen trozos de pan, pandebono, arepa o buñuelos."
+                },
+                "arepa-de-arriero": {
+                    title: "Arepa de Arriero",
+                    ingredients: ["Maíz trillado fermentado por 5 días", "Chicharrón de armolleja de res", "Sal al gusto"],
+                    prep: "Muele el maíz fermentado hasta obtener una masa suave. Forma arepas y ásalas en una plancha caliente. Acompaña con chicharrón de armolleja bien crocante."
+                },
+                "bunuelos": {
+                    title: "Buñuelos",
+                    ingredients: ["2 lb de queso molido", "4 huevos batidos", "Harina de maíz", "2 cucharadas de almidón"],
+                    prep: "Mezcla el queso con los huevos, el almidón y la harina hasta obtener una masa manejable. Forma bolitas y fríe en abundante aceite caliente hasta dorar."
+                },
+                "chorizo-santarrosano": {
+                    title: "Chorizo Santarrosano",
+                    ingredients: [
+                        "2 lb de pulpa de cerdo",
+                        "250 g de tocino",
+                        "1 cucharadita de sal de nitro",
+                        "4 dientes de ajo",
+                        "Cebolla en rama",
+                        "Comino",
+                        "Pimiento",
+                        "Tripas de cerdo"
+                    ],
+                    prep: "Pica finamente todos los ingredientes y mézclalos. Rellena las tripas y amarra porciones pequeñas. Deja reposar mínimo 24 horas antes de cocinar."
+                },
+                "hogao-antioqueno": {
+                    title: "Hogao Antioqueño",
+                    ingredients: ["Tomate", "Cebolla larga", "Aceite", "Sal", "Pimienta", "Azafrán"],
+                    prep: "Sofríe la cebolla y el tomate en aceite. Añade sal, pimienta y azafrán al gusto. Cocina hasta espesar."
+                },
+                "frijoles-blancos": {
+                    title: "Frijoles Blancos",
+                    ingredients: ["Fríjol blanco", "Panela", "Costilla", "Tocineta", "Cebolla", "Huevo", "Ajo", "Sal y pimienta", "Salsa de tomate"],
+                    prep: "Pendiente por agregar."
+                },
+                "orejas-de-cerdo": {
+                    title: "Orejas de cerdo",
+                    ingredients: ["Orejas de cerdo", "Cebolla", "Huevo", "Apio", "Orégano", "Laurel", "Sal y pimienta"],
+                    prep: "Cocina las orejas en agua con laurel, cebolla y apio hasta ablandar. Retira del fuego y corta en tiras. Puedes servirlas solas, empanizadas o con guiso."
+                },
+                "chorizo-casero": {
+                    title: "Chorizo casero",
+                    ingredients: [
+                        "1 kg de carne molida de cerdo",
+                        "1 kg de carne molida de res",
+                        "½ kg de tocino",
+                        "250 g de ajo dulce",
+                        "4 dientes de ajo",
+                        "Ajo picante al gusto",
+                        "1 cucharada de orégano",
+                        "Cilantro",
+                        "Sal y pimienta al gusto"
+                    ],
+                    prep: "Mezcla todos los ingredientes hasta que estén bien incorporados. Forma chorizos o bolitas. Cocínalos al horno, fritos o asados según tu preferencia."
+                },
+                "frisoles-antioquenos": {
+                    title: "Frisoles Antioqueños",
+                    ingredients: ["Fríjol cargamanto", "Patitas de cerdo", "Plátano verde", "Zanahoria rallada", "1 taza de hogao (licuado)", "Sal", "Pimienta", "Comino"],
+                    prep: "Cocina los fríjoles con costilla, ajo y cebolla. Añade tocineta, huevo picado, salsa de tomate y un toque de panela. Deja cocinar hasta espesar y servir bien calientico."
+                }
+            };
+
+            const chips = document.getElementById('dish-chips');
+            const panel = document.getElementById('dish-panel');
+            const title = document.getElementById('dish-title');
+            const ingredients = document.getElementById('dish-ingredients');
+            const prep = document.getElementById('dish-prep');
+
+            function setActive(el) {
+                chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
+                el.classList.add('is-active');
+            }
+
+            function renderDish(key) {
+                const dish = DATA[key];
+                title.textContent = dish?.title || 'Pendiente por agregar';
+                ingredients.innerHTML = '';
+
+                if (dish?.ingredients?.length) {
+                    dish.ingredients.forEach(text => {
+                        const li = document.createElement('li');
+                        li.textContent = text;
+                        ingredients.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = 'Pendiente por agregar.';
+                    ingredients.appendChild(li);
+                }
+
+                prep.textContent = dish?.prep || 'Pendiente por agregar.';
+                panel.hidden = false;
+            }
+
+            chips.addEventListener('click', (e) => {
+                const btn = e.target.closest('.dish-chip');
+                if (!btn) return;
+                const key = btn.getAttribute('data-dish');
+                setActive(btn);
+                renderDish(key);
+            });
+
+            const first = chips.querySelector('.dish-chip');
+            if (first) {
+                setActive(first);
+                renderDish(first.getAttribute('data-dish'));
+            }
+        })();
+    </script>
+</body>
+</html>

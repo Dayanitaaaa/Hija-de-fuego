@@ -71,7 +71,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: clamp(12px, 4vw, 28px);
+	padding: 14px clamp(14px, 3vw, 24px);
 	height: auto;
 	min-height: 100px;
 	width: 100%;
@@ -103,7 +103,7 @@ body {
 
 .btn-group-products, .btn-group-contact {
 	display: flex;
-	gap: clamp(12px, 4vw, 26px);
+	gap: clamp(10px, 2.4vw, 18px);
 	justify-content: center;
 	align-items: center;
 	margin: 0;
@@ -114,8 +114,9 @@ body {
 .btn-group-products .header-btn,
 .btn-group-contact .header-btn {
 	display: inline-block;
-	padding: clamp(0.12em, 1vw, 0.22em) clamp(0.6em, 3vw, 0.9em);
+	padding: 0.20em 0.78em;
 	font-size: clamp(1rem, 2vw, 1.1rem);
+	line-height: 1.2;
 	color: #222;
 	background: linear-gradient(180deg, #fffbe6 60%, #fff 100%);
 	border: none;
@@ -127,11 +128,23 @@ body {
 	letter-spacing: 0.01em;
 	transition: background 0.3s, color 0.3s, box-shadow 0.3s;
 	text-align: center;
+	white-space: nowrap;
+	min-width: 86px;
 	background-clip: padding-box;
-	margin: 0 0.5em;
+	margin: 0;
 	position: relative;
 	z-index: 1;
 	box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+@media (max-width: 520px) {
+	.btn-group-products .header-btn,
+	.btn-group-contact .header-btn {
+		padding: 0.22em 0.78em;
+		font-size: 0.98rem;
+		line-height: 1.05;
+		min-width: 0;
+	}
 }
 
 .btn-group-products .header-btn:hover,

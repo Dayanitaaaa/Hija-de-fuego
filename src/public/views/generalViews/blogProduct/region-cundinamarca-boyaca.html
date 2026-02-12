@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas: Cundinamarca y Boyacá</title>
+
+    <link rel="stylesheet" href="../../../assets/css/generalViews/blogProduct.css">
+</head>
+<body>
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="recipes-main">
+        <div class="recipes-content-container">
+            <a class="region-back" href="/generalViews/recipes">Volver</a>
+            <h1 class="region-page-title">Cundinamarca y Boyacá</h1>
+            <p class="region-page-subtitle">Selecciona un plato para ver ingredientes y preparación.</p>
+
+            <div class="dish-chips" id="dish-chips">
+                <button class="dish-chip" type="button" data-dish="canelazo">Canelazo</button>
+                <button class="dish-chip" type="button" data-dish="almojabana">Almojábana</button>
+                <button class="dish-chip" type="button" data-dish="pan-de-yuca">Pan de Yuca</button>
+                <button class="dish-chip" type="button" data-dish="ajiaco-bogotano">Ajiaco</button>
+                <button class="dish-chip" type="button" data-dish="costilla-de-cordero">Costilla de Cordero Asada</button>
+            </div>
+
+            <section class="dish-panel" id="dish-panel" hidden>
+                <h2 id="dish-title"></h2>
+
+                <h3>Ingredientes</h3>
+                <ul id="dish-ingredients"></ul>
+
+                <h3>Preparación</h3>
+                <p id="dish-prep"></p>
+            </section>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script>
+        (function() {
+            const DATA = {
+                "canelazo": {
+                    title: "Canelazo",
+                    ingredients: ["Agua de panela", "Aguardiente", "Canela en astillas"],
+                    prep: "Se hierve agua con panela y canela. Se le añade aguardiente al gusto."
+                },
+                "almojabana": {
+                    title: "Almojábana",
+                    ingredients: ["500 g de masa de maíz", "1 kg de cuajada", "1 cda de sal", "1 cda de polvo de hornear", "2 huevos batidos"],
+                    prep: "Se mezclan los ingredientes hasta formar una masa homogénea. Se moldean y se hornean hasta estar doradas y esponjosas."
+                },
+                "pan-de-yuca": {
+                    title: "Pan de Yuca",
+                    ingredients: ["1 libra de almidón de yuca agrio", "½ libra de queso blanco", "3 cdas de mantequilla", "1 huevo", "Leche (cantidad necesaria)"],
+                    prep: "Se mezclan los ingredientes hasta obtener una masa moldeable. Se forman pequeños panes y se hornean hasta que estén crocantes por fuera y suaves por dentro."
+                },
+                "ajiaco-bogotano": {
+                    title: "Ajiaco (Bogotano)",
+                    ingredients: [
+                        "Papa criolla, sabanera y pastusa",
+                        "Pollo",
+                        "Mazorca",
+                        "Cebolla larga",
+                        "Ajo",
+                        "Guascas frescas",
+                        "Crema de leche",
+                        "Sal",
+                        "Cilantro",
+                        "Aguacate",
+                        "Arracacha"
+                    ],
+                    prep: "Se cocinan las papas y el pollo con ajo y cebolla hasta formar una sopa espesa. Las guascas aportan su aroma. Se sirve con crema de leche, alcaparras y aguacate."
+                },
+                "costilla-de-cordero": {
+                    title: "Costilla de Cordero Asada",
+                    ingredients: ["Costilla de cordero", "Cerveza", "Adobo: cebolla larga, ajo, laurel, orégano, limón, sal, pimienta, comino"],
+                    prep: "Las costillas se adoban con especias, limón y cerveza, se dejan reposar y luego se asan lentamente hasta estar doradas y tiernas."
+                }
+            };
+
+            const chips = document.getElementById('dish-chips');
+            const panel = document.getElementById('dish-panel');
+            const title = document.getElementById('dish-title');
+            const ingredients = document.getElementById('dish-ingredients');
+            const prep = document.getElementById('dish-prep');
+
+            function setActive(el) {
+                chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
+                el.classList.add('is-active');
+            }
+
+            function renderDish(key) {
+                const dish = DATA[key];
+                title.textContent = dish?.title || 'Pendiente por agregar';
+                ingredients.innerHTML = '';
+
+                if (dish?.ingredients?.length) {
+                    dish.ingredients.forEach(text => {
+                        const li = document.createElement('li');
+                        li.textContent = text;
+                        ingredients.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = 'Pendiente por agregar.';
+                    ingredients.appendChild(li);
+                }
+
+                prep.textContent = dish?.prep || 'Pendiente por agregar.';
+                panel.hidden = false;
+            }
+
+            chips.addEventListener('click', (e) => {
+                const btn = e.target.closest('.dish-chip');
+                if (!btn) return;
+                const key = btn.getAttribute('data-dish');
+                setActive(btn);
+                renderDish(key);
+            });
+
+            const first = chips.querySelector('.dish-chip');
+            if (first) {
+                setActive(first);
+                renderDish(first.getAttribute('data-dish'));
+            }
+        })();
+    </script>
+</body>
+</html>

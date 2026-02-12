@@ -196,6 +196,29 @@ header {
     margin: 0 0 10px 0;
 }
 
+.dish-panel ul {
+    margin: 8px 0 0 18px;
+}
+
+.region-back {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.92);
+    color: #3a2f2b;
+    text-decoration: none;
+    font-family: 'Georgia', serif;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.region-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px rgba(0,0,0,0.16);
+    background: #ffffff;
+}
+
 .recipe-card-description {
     font-family: 'Georgia', serif;
     font-size: 1rem;

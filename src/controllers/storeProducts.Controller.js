@@ -7,11 +7,15 @@ const MAX_IMAGES_PER_PRODUCT = 3;
 
 export const listStoreProducts = async (_req, res) => {
 	try {
+		const pagina = typeof _req?.query?.pagina === 'string' && _req.query.pagina.trim() ? _req.query.pagina.trim() : null;
+
 		const sql = `
 			SELECT
 				p.producto_id,
 				p.nombre,
 				p.precio_cop,
+				p.pagina,
+				p.stock,
 				p.descripcion,
 				p.categoria,
 				p.sabores,
@@ -26,9 +30,10 @@ export const listStoreProducts = async (_req, res) => {
 					LIMIT 1
 				) AS imagen_principal
 			FROM ${TABLE_PRODUCTS} p
+			${pagina ? 'WHERE p.pagina = ?' : ''}
 			ORDER BY p.producto_id DESC
 		`;
-		const [rows] = await connect.query(sql);
+		const [rows] = await connect.query(sql, pagina ? [pagina] : []);
 
 		const data = rows.map((r) => ({
 			...r,
@@ -66,17 +71,24 @@ export const getStoreProductById = async (req, res) => {
 
 export const createStoreProduct = async (req, res) => {
 	try {
-		const { nombre, precio_cop, descripcion, categoria, sabores, activo } = req.body;
+		const { nombre, precio_cop, stock, descripcion, categoria, sabores, activo, pagina } = req.body;
 		if (!nombre || !precio_cop) {
 			return res.status(400).json({ error: 'Faltan campos requeridos: nombre, precio_cop' });
 		}
 
+		// Validar que precio_cop sea un número válido
+		if (!isValidNumber(precio_cop)) {
+			return res.status(400).json({ error: 'El precio debe ser un número válido' });
+		}
+
 		const saboresJson = normalizeFlavors(sabores);
 		const activeValue = activo === undefined ? 1 : Number(Boolean(Number(activo)));
+		const stockValue = stock === undefined || stock === null || stock === '' ? 0 : Number(stock);
+		const pageValue = typeof pagina === 'string' && pagina.trim() ? pagina.trim() : 'comida-con-alma';
 
 		const [result] = await connect.query(
-			`INSERT INTO ${TABLE_PRODUCTS} (nombre, precio_cop, descripcion, categoria, sabores, activo) VALUES (?, ?, ?, ?, ?, ?)`,
-			[nombre, Number(precio_cop), descripcion || null, categoria || null, saboresJson, activeValue]
+			`INSERT INTO ${TABLE_PRODUCTS} (nombre, precio_cop, pagina, stock, descripcion, categoria, sabores, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+			[nombre, Number(precio_cop), pageValue, stockValue, descripcion || null, categoria || null, saboresJson, activeValue]
 		);
 
 		res.status(201).json({
@@ -84,6 +96,8 @@ export const createStoreProduct = async (req, res) => {
 				producto_id: result.insertId,
 				nombre,
 				precio_cop: Number(precio_cop),
+				pagina: pageValue,
+				stock: stockValue,
 				descripcion: descripcion || null,
 				categoria: categoria || null,
 				sabores: safeJsonParse(saboresJson),
@@ -99,17 +113,24 @@ export const createStoreProduct = async (req, res) => {
 export const updateStoreProduct = async (req, res) => {
 	try {
 		const id = req.params.id;
-		const { nombre, precio_cop, descripcion, categoria, sabores, activo } = req.body;
+		const { nombre, precio_cop, stock, descripcion, categoria, sabores, activo, pagina } = req.body;
 		if (!nombre || !precio_cop) {
 			return res.status(400).json({ error: 'Faltan campos requeridos: nombre, precio_cop' });
 		}
 
+		// Validar que precio_cop sea un número válido
+		if (!isValidNumber(precio_cop)) {
+			return res.status(400).json({ error: 'El precio debe ser un número válido' });
+		}
+
 		const saboresJson = normalizeFlavors(sabores);
 		const activeValue = activo === undefined ? 1 : Number(Boolean(Number(activo)));
+		const stockValue = stock === undefined || stock === null || stock === '' ? 0 : Number(stock);
+		const pageValue = typeof pagina === 'string' && pagina.trim() ? pagina.trim() : 'comida-con-alma';
 
 		const [result] = await connect.query(
-			`UPDATE ${TABLE_PRODUCTS} SET nombre = ?, precio_cop = ?, descripcion = ?, categoria = ?, sabores = ?, activo = ? WHERE producto_id = ?`,
-			[nombre, Number(precio_cop), descripcion || null, categoria || null, saboresJson, activeValue, id]
+			`UPDATE ${TABLE_PRODUCTS} SET nombre = ?, precio_cop = ?, pagina = ?, stock = ?, descripcion = ?, categoria = ?, sabores = ?, activo = ? WHERE producto_id = ?`,
+			[nombre, Number(precio_cop), pageValue, stockValue, descripcion || null, categoria || null, saboresJson, activeValue, id]
 		);
 
 		if (result.affectedRows === 0) return res.status(404).json({ error: 'Producto no encontrado' });
@@ -229,4 +250,10 @@ function safeJsonParse(str) {
 	} catch {
 		return null;
 	}
+}
+
+// Helper para validar que un valor es un número válido y no NaN
+function isValidNumber(value) {
+	const n = Number(value);
+	return !Number.isNaN(n) && Number.isFinite(n);
 }

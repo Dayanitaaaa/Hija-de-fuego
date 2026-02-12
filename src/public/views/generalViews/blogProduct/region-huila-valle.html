@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas: Huila y Valle</title>
+
+    <link rel="stylesheet" href="../../../assets/css/generalViews/blogProduct.css">
+</head>
+<body>
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="recipes-main">
+        <div class="recipes-content-container">
+            <a class="region-back" href="/generalViews/recipes">Volver</a>
+            <h1 class="region-page-title">Huila y Valle</h1>
+            <p class="region-page-subtitle">Selecciona un plato para ver ingredientes y preparación.</p>
+
+            <div class="dish-chips" id="dish-chips">
+                <button class="dish-chip" type="button" data-dish="lechona">Lechona</button>
+                <button class="dish-chip" type="button" data-dish="pan-batido">Pan Batido</button>
+                <button class="dish-chip" type="button" data-dish="insulso">Insulso</button>
+                <button class="dish-chip" type="button" data-dish="asado-huilense">Asado Huilense</button>
+            </div>
+
+            <section class="dish-panel" id="dish-panel" hidden>
+                <h2 id="dish-title"></h2>
+
+                <h3>Ingredientes</h3>
+                <ul id="dish-ingredients"></ul>
+
+                <h3>Preparación</h3>
+                <p id="dish-prep"></p>
+            </section>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script>
+        (function() {
+            const DATA = {
+                "lechona": {
+                    title: "Lechona",
+                    ingredients: [
+                        "Manteca de cerdo",
+                        "Cebolla larga (sin punta verde)",
+                        "Arvejas secas (remojadas y cocidas)",
+                        "Pulpa de cerdo",
+                        "Naranja agria",
+                        "Adobo: sal, pimienta, comino, ajo molido, cebolla larga"
+                    ],
+                    prep: "El cerdo entero se adoba con ajo, cebolla, sal, comino y naranja agria. Su interior se rellena con arvejas cocidas y pulpa de cerdo mezcladas con manteca. Se hornea por varias horas hasta que la piel queda dorada y crocante."
+                },
+                "pan-batido": {
+                    title: "Pan Batido",
+                    ingredients: [
+                        "½ taza de agua tibia",
+                        "½ taza de leche",
+                        "1 cucharada de levadura",
+                        "125 g de mantequilla",
+                        "2 huevos batidos",
+                        "500 g de harina"
+                    ],
+                    prep: "Se mezcla el agua tibia con la leche y se disuelve la levadura. Luego se incorpora la mantequilla derretida, los huevos batidos y, poco a poco, la harina hasta obtener una masa suave. Se deja reposar hasta que duplique su tamaño. Después se forman los panes, se dejan crecer de nuevo y se hornean hasta que estén dorados y esponjosos."
+                },
+                "insulso": {
+                    title: "Insulso",
+                    ingredients: [
+                        "1 taza de azúcar",
+                        "1 libra de harina de maíz",
+                        "3 tazas de agua",
+                        "Panela negra",
+                        "Canela",
+                        "Clavos",
+                        "Hojas de plátano"
+                    ],
+                    prep: "Se cocina la harina con agua, panela, azúcar, canela y clavos hasta formar una mezcla espesa. Luego se envuelve en hojas de plátano y se deja reposar."
+                },
+                "asado-huilense": {
+                    title: "Asado Huilense",
+                    ingredients: [
+                        "Pulpa de cerdo",
+                        "Sal",
+                        "Cerveza",
+                        "Vinagre",
+                        "Naranja agria",
+                        "Pimienta",
+                        "Cebolla larga",
+                        "Ajo",
+                        "Albahaca",
+                        "Cilantro",
+                        "Yerbabuena",
+                        "Poleo",
+                        "Orégano (curado)",
+                        "Tomillo",
+                        "Guayabitas (tres tostaditas)",
+                        "Nuez moscada"
+                    ],
+                    prep: "La carne se marina con cerveza, vinagre, especias y hierbas. Se deja reposar y luego se cocina lentamente, logrando una textura suave y un sabor profundo y aromático."
+                }
+            };
+
+            const chips = document.getElementById('dish-chips');
+            const panel = document.getElementById('dish-panel');
+            const title = document.getElementById('dish-title');
+            const ingredients = document.getElementById('dish-ingredients');
+            const prep = document.getElementById('dish-prep');
+
+            function setActive(el) {
+                chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
+                el.classList.add('is-active');
+            }
+
+            function renderDish(key) {
+                const dish = DATA[key];
+                title.textContent = dish?.title || 'Pendiente por agregar';
+                ingredients.innerHTML = '';
+
+                if (dish?.ingredients?.length) {
+                    dish.ingredients.forEach(text => {
+                        const li = document.createElement('li');
+                        li.textContent = text;
+                        ingredients.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = 'Pendiente por agregar.';
+                    ingredients.appendChild(li);
+                }
+
+                prep.textContent = dish?.prep || 'Pendiente por agregar.';
+                panel.hidden = false;
+            }
+
+            chips.addEventListener('click', (e) => {
+                const btn = e.target.closest('.dish-chip');
+                if (!btn) return;
+                const key = btn.getAttribute('data-dish');
+                setActive(btn);
+                renderDish(key);
+            });
+
+            const first = chips.querySelector('.dish-chip');
+            if (first) {
+                setActive(first);
+                renderDish(first.getAttribute('data-dish'));
+            }
+        })();
+    </script>
+</body>
+</html>
