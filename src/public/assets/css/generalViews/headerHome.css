@@ -91,6 +91,10 @@ body {
     flex: 1;
 }
 
+.nav-left {
+    padding-left: 1rem;
+}
+
 .nav-right {
     justify-content: flex-end;
 }
@@ -164,6 +168,21 @@ body {
  .nav-dropdown__item:hover {
     color: var(--primary-hover);
  }
+
+.nav-icon-link {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 999px;
+}
+
+.nav-icon-link i {
+    font-size: 1.45rem;
+    line-height: 1;
+}
 
 .cart-icon {
     color: var(--text-color);

@@ -15,9 +15,17 @@
 				<ul class="nav-menu" id="nav-menu">
 					<li>
 						<div class="btn-group-products">
-							<a href="/generalViews/culture" class="header-btn">Productos</a>
+							<div class="header-dropdown" id="globalProductsDropdown">
+								<button type="button" class="header-btn header-dropdown__trigger" id="globalProductsDropdownTrigger" aria-haspopup="true" aria-expanded="false">
+									Productos
+								</button>
+								<div class="header-dropdown__menu" id="globalProductsDropdownMenu" role="menu" aria-label="Categorías de productos">
+									<a class="header-dropdown__item" href="/generalViews/recipes" role="menuitem">Recetas</a>
+									<a class="header-dropdown__item" href="/generalViews/book" role="menuitem">Libros</a>
+								</div>
+							</div>
 							<a href="/generalViews/gastronomic" class="header-btn">Mi&nbsp;Marca</a>
-							<a href="/generalViews/blog" class="header-btn">Blog</a>
+							<a href="/generalViews/blog" class="header-btn">Blog personal</a>
 						</div>
 					</li>
 					<li class="logo-li"><a href="/generalViews/home" class="logo-link"><span class="logo">Hija del Fuego

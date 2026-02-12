@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+    <title>Home pages</title>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,13 +20,11 @@
                         </button>
                         <div class="nav-dropdown__menu" id="productsDropdownMenu" role="menu" aria-label="Categorías de productos">
                             <a class="nav-dropdown__item" href="/generalViews/recipes" role="menuitem">Recetas</a>
-                            <a class="nav-dropdown__item" href="/generalViews/books" role="menuitem">Libros</a>
-                            <a class="nav-dropdown__item" href="/generalViews/supplies" role="menuitem">Insumos</a>
+                            <a class="nav-dropdown__item" href="/generalViews/book" role="menuitem">Libros</a>
                         </div>
                     </div>
                     <a href="/generalViews/gastronomic" class="nav-link">Mi Marca</a>
-                    <a href="/generalViews/blog" class="nav-link">Blog</a>
-                    <a href="/generalViews/contact" class="nav-link">Contacto</a>
+                    <a href="/generalViews/blog" class="nav-link">Blog personal</a>
                 </div>
                 
                 <a href="/generalViews/home" class="logo-link">
@@ -33,9 +32,10 @@
                 </a>
                 
                 <div class="nav-right">
-                    <a href="/generalViews/login" class="nav-link">Iniciar Sesión</a>
+                    <a href="/generalViews/contact" class="nav-link">Contacto</a>
                     <a href="/generalViews/register" class="nav-link">Registrarse</a>
-                    <a href="cart.html" class="cart-icon">
+                    <a href="/generalViews/login" class="nav-link nav-icon-link" aria-label="Iniciar Sesión" title="Iniciar Sesión"><i class="bi bi-person-circle"></i></a>
+                    <a href="cart.html" class="cart-icon" aria-label="Carrito" title="Carrito">
                         <i class="bi bi-cart-fill"></i>
                     </a>
                 </div>
@@ -53,7 +53,7 @@
                     <span class="logo">Hija del Fuego</span>
                 </a>
                 
-                <a href="cart.html" class="cart-icon mobile-cart">
+                <a href="cart.html" class="cart-icon mobile-cart" aria-label="Carrito" title="Carrito">
                     <i class="bi bi-cart-fill"></i>
                 </a>
                 
@@ -62,19 +62,19 @@
                     <div class="mobile-dropdown__menu" id="mobileProductsDropdownMenu" role="menu" aria-label="Categorías de productos">
                         <a href="/generalViews/recipes" class="mobile-sublink" role="menuitem">Recetas</a>
                         <a href="/generalViews/gastronomic" class="mobile-sublink" role="menuitem">Mi Marca</a>
-                        <a href="/generalViews/books" class="mobile-sublink" role="menuitem">Libros</a>
+                        <a href="/generalViews/book" class="mobile-sublink" role="menuitem">Libros</a>
                         <a href="/generalViews/supplies" class="mobile-sublink" role="menuitem">Insumos</a>
                     </div>
                     <a href="/generalViews/gastronomic" class="mobile-link">Mi Marca</a>
                     <a href="/generalViews/blog" class="mobile-link">Blog</a>
                     <a href="/generalViews/contact" class="mobile-link">Contacto</a>
-                    <a href="/generalViews/login" class="mobile-link">Iniciar Sesión</a>
+                    <a href="/generalViews/login" class="mobile-link mobile-icon-link" aria-label="Iniciar Sesión"><i class="bi bi-person-circle"></i> Iniciar Sesión</a>
                     <a href="/generalViews/register" class="mobile-link">Registrarse</a>
                 </div>
             </div>
         </div>
     </header>
-    <script src="../../../assets/js/header.js"></script>
+    <script src="../../../assets/js/generalViews/headerHome/headerHome.js"></script>
     <script src="../../../assets/js/logOut/logOut.js"></script>
 </body>
 </html>

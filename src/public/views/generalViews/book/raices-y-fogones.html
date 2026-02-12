@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raíces y Fogones</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../../assets/css/generalViews/bookDetail.css">
+</head>
+<body>
+
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="book-detail-main">
+        <div class="book-detail-container">
+
+            <section class="book-detail-hero">
+                <div>
+                    <img class="book-cover" src="../../../assets/imgStatic/imagen10.jpg" alt="Portada del libro Raíces y Fogones">
+                </div>
+
+                <div>
+                    <h1 class="book-title">Raíces y Fogones</h1>
+                    <p class="book-subtitle">El alma de la cocina colombiana.</p>
+
+                    <div class="book-badges">
+                        <span class="badge"><i class="bi bi-star-fill"></i> Edición limitada</span>
+                        <span class="badge"><i class="bi bi-book"></i> Recetas + historia</span>
+                    </div>
+
+                    <p class="book-price"><strong>Precio:</strong> COP 30.000</p>
+
+                    <div class="book-cta-row">
+                        <button class="book-btn book-btn-primary" type="button" id="buyBtn">Agregar al carrito</button>
+                        <a class="book-btn book-btn-secondary" href="/generalViews/book">Volver a libros</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="book-section">
+                <h2>Un libro que nace del fogón</h2>
+                <p>Todo comenzó en una cocina tibia, donde el vapor subía lento y los aromas eran lenguaje. Ahí estaba yo, pequeña, observando a mi abuela como quien presencia un hechizo: con sus manos llenas de tiempo, revolviendo un arroz con leche que sabía a infancia.</p>
+                <p>Pero fue mi papá —el mismo que me enseñó a preparar un arroz como si fuera un acto sagrado— quien encendió en mí la chispa. Él me enseñó que la cocina no era solo alimentar, era amar con las manos.</p>
+                <p>Este viaje comienza en mi cocina, pero también en mi historia. Antes de probar mis recetas, te invito a conocer de dónde vengo, por qué cocino y cómo el fuego encendió mi alma. Bienvenid@.</p>
+            </section>
+
+            <section class="book-section">
+                <h2>Introducción (extracto)</h2>
+                <p>La cocina es un puente entre el pasado y el presente, una memoria viva que se transmite de generación en generación. Es el fogón de leña donde se cocinaban los primeros sancochos, es la molienda donde el maíz se transformaba en arepas, es la olla de barro que conserva los sabores de antaño.</p>
+                <p>Desde pequeña, entendí que la cocina era mucho más que el acto de preparar alimentos. En mi familia crecí rodeada de personas que disfrutaban cocinar y que entendían que un plato bien hecho no solo alimenta el cuerpo, sino que reconforta el alma.</p>
+                <p>Este libro es un homenaje a los fogones de antaño y un llamado a seguir cocinando con el alma.</p>
+            </section>
+
+            <section class="book-section">
+                <h2>Producto premium en mercados nacionales e internacionales</h2>
+                <p>Raíces y Fogones ha trascendido fronteras, consolidándose como un producto premium en el sector editorial gastronómico. Su reconocimiento en los Gourmand World Cookbook Awards —considerados los “Óscar” de los libros culinarios— ha abierto puertas en mercados internacionales, posicionándolo como una obra de referencia para estudios culturales, bibliotecas especializadas y lectores exigentes.</p>
+                <p>Distribuido en librerías de lujo, ferias del libro y tiendas gourmet de América Latina y Europa, este libro representa la excelencia editorial colombiana y es un emblema de nuestra cultura culinaria en el exterior.</p>
+            </section>
+
+            <section class="book-section">
+                <h2>Galería</h2>
+                <div class="book-gallery">
+                    <img src="../../../assets/imgStatic/imagen3.jpg" alt="Autora con el libro Raíces y Fogones">
+                    <img src="../../../assets/imgStatic/imagen21.jpg" alt="Autora mostrando el interior del libro">
+                    <img src="../../../assets/imgStatic/imagen10.jpg" alt="Portada del libro Raíces y Fogones">
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
+    <script>
+        document.getElementById('buyBtn')?.addEventListener('click', () => {
+            alert('Próximamente: compra y carrito.');
+        });
+    </script>
+</body>
+</html>
