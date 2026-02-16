@@ -8,16 +8,11 @@ const URL_TYPE_PRODUCTS = "/mySystem/typeProducts";
 const URL_PRODUCTS = "/mySystem/products";
 const URL_STORE_PRODUCTS = "/mySystem/tiendaProductos";
 
-
 // Rutas amigables para dashboards
 
 const URL_DASHBOARD_HOME = '/dashboard/homeDashboard';
 const URL_DASHBOARD_ARCHIVOS = '/dashboard/archivos';
-const URL_DASHBOARD_EDITOR_WEB = '/dashboard/editor-web';
-const URL_DASHBOARD_PRODUCTS = '/dashboard/products';
-const URL_DASHBOARD_TYPE_FILES = "/dashboard/typeFiles";
-const URL_DASHBOARD_FILES = "/dashboard/files";
-const URL_DASHBOARD_TYPE_PRODUCTS = "/dashboard/typeProducts";
+const URL_DASHBOARD_EDITOR_WEB = '/dashboard/gestion-productos';
 const URL_DASHBOARD_USERS = "/dashboard/users";
 const URL_DASHBOARD_ROLES = "/dashboard/roles";
 
@@ -58,9 +53,5 @@ window.URL_STORE_PRODUCTS = URL_STORE_PRODUCTS;
 window.URL_DASHBOARD_HOME = URL_DASHBOARD_HOME;
 window.URL_DASHBOARD_ARCHIVOS = URL_DASHBOARD_ARCHIVOS;
 window.URL_DASHBOARD_EDITOR_WEB = URL_DASHBOARD_EDITOR_WEB;
-window.URL_DASHBOARD_PRODUCTS = URL_DASHBOARD_PRODUCTS;
-window.URL_DASHBOARD_TYPE_FILES = URL_DASHBOARD_TYPE_FILES;
-window.URL_DASHBOARD_FILES = URL_DASHBOARD_FILES;
-window.URL_DASHBOARD_TYPE_PRODUCTS = URL_DASHBOARD_TYPE_PRODUCTS;
 window.URL_DASHBOARD_USERS = URL_DASHBOARD_USERS;
 window.URL_DASHBOARD_ROLES = URL_DASHBOARD_ROLES;

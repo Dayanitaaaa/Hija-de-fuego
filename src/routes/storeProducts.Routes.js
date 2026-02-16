@@ -4,6 +4,7 @@ import {
 	getStoreProductById,
 	createStoreProduct,
 	updateStoreProduct,
+	updateStoreProductStock,
 	deleteStoreProduct,
 	uploadStoreProductImages,
 	deleteStoreProductImage
@@ -20,6 +21,9 @@ router.route(`${name}/:id`)
 	.get(getStoreProductById)
 	.put(updateStoreProduct)
 	.delete(deleteStoreProduct);
+
+router.route(`${name}/:id/stock`)
+	.patch(updateStoreProductStock);
 
 router.route(`${name}/:id/imagenes`)
 	.post(uploadStoreProductImages);
