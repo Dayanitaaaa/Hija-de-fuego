@@ -2,11 +2,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
 import express from 'express';
-import rolesRoutes from '../routes/roles.Routes.js';
+import rolesRoutes from '../routes/roles.Routes.js';// Rutas
 import usersRoutes from '../routes/users.Routes.js';
 import typeFiles from '../routes/typeFiles.Routes.js';
-import filesRoutes from '../routes/files.Routes.js'
-import typeProductRoutes from '../routes/typeProduct.routes.js';
+import filesRoutes from '../routes/files.Routes.js';
+import typeProductRoutes from '../routes/typeProduct.Routes.js';
 import productsRoutes from '../routes/product.Routes.js';
 import storeProductsRoutes from '../routes/storeProducts.Routes.js';
 import cookieParser from 'cookie-parser';

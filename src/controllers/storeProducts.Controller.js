@@ -5,6 +5,31 @@ const TABLE_PRODUCTS = 'tienda_productos';
 const TABLE_IMAGES = 'tienda_productos_imagenes';
 const MAX_IMAGES_PER_PRODUCT = 3;
 
+async function registrarAuditoria({
+	id_producto,
+	id_usuario,
+	accion,
+	nombre_producto,
+	req
+}) {
+	try {
+		const sql = `
+			INSERT INTO auditoria_productos
+			(id_producto, id_usuario, accion, nombre_producto)
+			VALUES (?, ?, ?, ?)
+		`;
+
+		await connect.query(sql, [
+			id_producto,
+			id_usuario,
+			accion,
+			nombre_producto
+		]);
+	} catch (error) {
+		console.error('Error al registrar auditoría:', error?.message || error);
+	}
+}
+
 export const listStoreProducts = async (_req, res) => {
 	try {
 		const pagina = typeof _req?.query?.pagina === 'string' && _req.query.pagina.trim() ? _req.query.pagina.trim() : null;
@@ -91,6 +116,13 @@ export const createStoreProduct = async (req, res) => {
 			[nombre, Number(precio_cop), pageValue, stockValue, descripcion || null, categoria || null, saboresJson, activeValue]
 		);
 
+		await registrarAuditoria({
+			id_producto: result.insertId,
+			id_usuario: req.user?.id ?? null,
+			accion: 'CREAR',
+			nombre_producto: nombre
+		});
+
 		res.status(201).json({
 			data: [{
 				producto_id: result.insertId,
@@ -128,12 +160,23 @@ export const updateStoreProduct = async (req, res) => {
 		const stockValue = stock === undefined || stock === null || stock === '' ? 0 : Number(stock);
 		const pageValue = typeof pagina === 'string' && pagina.trim() ? pagina.trim() : 'comida-con-alma';
 
+		const [oldRows] = await connect.query(`SELECT * FROM ${TABLE_PRODUCTS} WHERE producto_id = ?`, [id]);
+		if (!oldRows.length) return res.status(404).json({ error: 'Producto no encontrado' });
+		const oldProduct = oldRows[0];
+
 		const [result] = await connect.query(
 			`UPDATE ${TABLE_PRODUCTS} SET nombre = ?, precio_cop = ?, pagina = ?, stock = ?, descripcion = ?, categoria = ?, sabores = ?, activo = ? WHERE producto_id = ?`,
 			[nombre, Number(precio_cop), pageValue, stockValue, descripcion || null, categoria || null, saboresJson, activeValue, id]
 		);
 
 		if (result.affectedRows === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+
+		await registrarAuditoria({
+			id_producto: Number(id),
+			id_usuario: req.user?.id ?? null,
+			accion: 'EDITAR',
+			nombre_producto: nombre
+		});
 
 		res.status(200).json({
 			data: [{ producto_id: Number(id), nombre, precio_cop: Number(precio_cop) }],
@@ -170,8 +213,20 @@ export const updateStoreProductStock = async (req, res) => {
 export const deleteStoreProduct = async (req, res) => {
 	try {
 		const id = req.params.id;
+		const [oldRows] = await connect.query(`SELECT * FROM ${TABLE_PRODUCTS} WHERE producto_id = ?`, [id]);
+		if (!oldRows.length) return res.status(404).json({ error: 'Producto no encontrado' });
+		const oldProduct = oldRows[0];
+
 		const [result] = await connect.query(`DELETE FROM ${TABLE_PRODUCTS} WHERE producto_id = ?`, [id]);
 		if (result.affectedRows === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+
+		await registrarAuditoria({
+			id_producto: Number(id),
+			id_usuario: req.user?.id ?? null,
+			accion: 'ELIMINAR',
+			nombre_producto: oldProduct.nombre
+		});
+
 		res.status(200).json({ data: [], status: 200, deleted: result.affectedRows });
 	} catch (error) {
 		res.status(500).json({ error: 'Error al eliminar producto', details: error.message });
