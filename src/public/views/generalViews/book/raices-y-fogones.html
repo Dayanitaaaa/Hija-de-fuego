@@ -78,7 +78,34 @@
     <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
     <script>
         document.getElementById('buyBtn')?.addEventListener('click', () => {
-            alert('Próximamente: compra y carrito.');
+            const key = 'cart_items_v1';
+            const item = {
+                id: 'book-raices-y-fogones',
+                name: 'Raíces y Fogones',
+                price: 30000,
+                qty: 1,
+                image: '../../../assets/imgStatic/imagen10.jpg',
+                type: 'libro'
+            };
+
+            let cart = [];
+            try {
+                const raw = localStorage.getItem(key);
+                cart = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(cart)) cart = [];
+            } catch {
+                cart = [];
+            }
+
+            const idx = cart.findIndex((x) => String(x?.id) === item.id);
+            if (idx >= 0) {
+                cart[idx].qty = Math.max(1, Number(cart[idx].qty || 1) + 1);
+            } else {
+                cart.push(item);
+            }
+
+            localStorage.setItem(key, JSON.stringify(cart));
+            window.location.href = '/generalViews/cart';
         });
     </script>
 </body>

@@ -66,17 +66,17 @@ app.get('/dashboard/files', (req, res) => {
 app.get('/dashboard/archivos', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/dashboard/archivos/archivos.html'));
 });
+app.get('/dashboard/gestion-productos', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/dashboard/gestionProductos/gestionProductos.html'));
+});
+
 app.get('/dashboard/editor-web', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/dashboard/editorWeb/editorWeb.html'));
+    res.redirect('/dashboard/gestion-productos');
 });
 
-// Unificar navegación: Tipos de Producto ahora se gestiona desde Productos
-app.get('/dashboard/typeProducts', (req, res) => {
-  res.redirect('/dashboard/products');
-});
-
+// Redirección legacy de productos a gestión de productos
 app.get('/dashboard/products', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/dashboard/products/products.html'));
+    res.redirect('/dashboard/gestion-productos');
 });
 
 // Rutas amigables para generalViews
@@ -137,6 +137,9 @@ app.get('/generalViews/book', (req, res) => {
 app.get('/generalViews/book/raices-y-fogones', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/book/raices-y-fogones.html'));
 });
+app.get('/generalViews/cart', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/cart/cart.html'));
+});
 app.get('/generalViews/recipes', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/blogProduct/blogProduct.html'));
 });
@@ -181,8 +184,7 @@ app.get('/views/dashboard/:section/:file', (req, res) => {
         roles: '/dashboard/roles',
         typeFiles: '/dashboard/typeFiles',
         files: '/dashboard/files',
-        typeProducts: '/dashboard/typeProducts',
-        products: '/dashboard/products'
+        products: '/dashboard/gestion-productos'
     };
     if (map[section]) return res.redirect(map[section]);
     res.status(404).send('Not found');

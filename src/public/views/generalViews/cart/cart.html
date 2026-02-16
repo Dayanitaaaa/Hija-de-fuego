@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito</title>
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/css/generalViews/cart.css">
+</head>
+<body>
+    <header>
+        <object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+    </header>
+
+    <main class="cart-main">
+        <div class="cart-container">
+            <div class="cart-header">
+                <h1 class="cart-title">Carrito</h1>
+                <p class="cart-subtitle">Revisa tus productos y completa tus datos para finalizar.</p>
+            </div>
+
+            <div class="cart-grid">
+                <section class="cart-panel" aria-label="Productos en el carrito">
+                    <div class="cart-panel__header">
+                        <h2 class="cart-panel__title">Tus productos</h2>
+                        <button type="button" class="cart-clear" data-cart-clear>Vaciar</button>
+                    </div>
+
+                    <div class="cart-items" data-cart-items></div>
+
+                    <div class="cart-summary" aria-label="Resumen">
+                        <div class="cart-summary__row">
+                            <span>Subtotal</span>
+                            <strong data-cart-subtotal>COP 0</strong>
+                        </div>
+                        <div class="cart-summary__row cart-summary__total">
+                            <span>Total</span>
+                            <strong data-cart-total>COP 0</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="checkout-panel" aria-label="Formulario de compra">
+                    <h2 class="checkout-title">Datos de envío</h2>
+                    <form class="checkout-form" data-checkout-form>
+                        <div class="field-row">
+                            <label class="field">
+                                <span>Nombre completo</span>
+                                <input name="fullName" type="text" required>
+                            </label>
+                            <label class="field">
+                                <span>Teléfono</span>
+                                <input name="phone" type="tel" required>
+                            </label>
+                        </div>
+
+                        <label class="field">
+                            <span>Correo</span>
+                            <input name="email" type="email" required>
+                        </label>
+
+                        <label class="field">
+                            <span>Dirección</span>
+                            <input name="address" type="text" required>
+                        </label>
+
+                        <div class="field-row">
+                            <label class="field">
+                                <span>Ciudad</span>
+                                <input name="city" type="text" required>
+                            </label>
+                            <label class="field">
+                                <span>Departamento</span>
+                                <input name="state" type="text" required>
+                            </label>
+                        </div>
+
+                        <label class="field">
+                            <span>Notas (opcional)</span>
+                            <textarea name="notes" rows="3"></textarea>
+                        </label>
+
+                        <button class="checkout-btn" type="submit" data-checkout-submit>Finalizar pedido</button>
+                        <p class="checkout-hint" data-checkout-hint></p>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="../../../assets/js/system/constans.js"></script>
+    <script src="../../../assets/js/generalViews/cart/cart.js"></script>
+    <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
+</body>
+</html>

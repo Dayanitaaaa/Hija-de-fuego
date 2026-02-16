@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <button type="button" class="product__qtyBtn" data-qty-plus aria-label="Aumentar cantidad">+</button>
                 </div>
               </div>
-              <a class="product__buyBtn" href="cart.html" aria-label="Ir al carrito">Agregar al carrito</a>
+              <button class="product__buyBtn" type="button" data-add-to-cart aria-label="Agregar al carrito">Agregar al carrito</button>
             </div>
           </div>
         </div>
@@ -77,10 +77,54 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     initCarousel(root);
     initQty(root);
+    initAddToCart(root, p);
   } catch (_err) {
     // silencioso
   }
 });
+
+function initAddToCart(scope, product) {
+  const btn = scope.querySelector('[data-add-to-cart]');
+  const qtyInput = scope.querySelector('.product__qtyInput');
+  if (!btn || !qtyInput) return;
+
+  btn.addEventListener('click', () => {
+    const qty = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
+    const item = {
+      id: String(product?.producto_id ?? ''),
+      name: String(product?.nombre ?? 'Producto'),
+      price: Number(product?.precio_cop ?? 0),
+      qty,
+      image: String(product?.imagen_principal ?? ''),
+      type: 'comida-con-alma'
+    };
+
+    if (!item.id) {
+      window.location.href = '/generalViews/cart';
+      return;
+    }
+
+    const key = 'cart_items_v1';
+    let cart = [];
+    try {
+      const raw = localStorage.getItem(key);
+      cart = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(cart)) cart = [];
+    } catch {
+      cart = [];
+    }
+
+    const idx = cart.findIndex((x) => String(x?.id) === item.id);
+    if (idx >= 0) {
+      cart[idx].qty = Math.max(1, Number(cart[idx].qty || 1) + item.qty);
+    } else {
+      cart.push(item);
+    }
+
+    localStorage.setItem(key, JSON.stringify(cart));
+    window.location.href = '/generalViews/cart';
+  });
+}
 
 function initCarousel(scope) {
   const items = Array.from(scope.querySelectorAll('[data-gallery-item]'));

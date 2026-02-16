@@ -145,6 +145,28 @@ export const updateStoreProduct = async (req, res) => {
 	}
 };
 
+export const updateStoreProductStock = async (req, res) => {
+	try {
+		const id = req.params.id;
+		const { stock } = req.body;
+		const stockValue = stock === undefined || stock === null || stock === '' ? null : Number(stock);
+		if (stockValue === null || Number.isNaN(stockValue) || !Number.isFinite(stockValue) || stockValue < 0) {
+			return res.status(400).json({ error: 'El stock debe ser un número válido mayor o igual a 0' });
+		}
+
+		const [result] = await connect.query(
+			`UPDATE ${TABLE_PRODUCTS} SET stock = ? WHERE producto_id = ?`,
+			[stockValue, id]
+		);
+
+		if (result.affectedRows === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+
+		res.status(200).json({ data: [{ producto_id: Number(id), stock: stockValue }], status: 200 });
+	} catch (error) {
+		res.status(500).json({ error: 'Error al actualizar stock', details: error.message });
+	}
+};
+
 export const deleteStoreProduct = async (req, res) => {
 	try {
 		const id = req.params.id;
