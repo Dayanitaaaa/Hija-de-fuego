@@ -377,4 +377,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Cargar productos al iniciar
   loadStoreProducts();
+
 });

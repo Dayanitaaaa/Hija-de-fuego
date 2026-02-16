@@ -7,6 +7,7 @@ fetch('/generalViews/headerHome')
 			headerContainer.innerHTML = data;
 			updateHeaderForLogin();
 			initProductsDropdown();
+			initBrandLoaderNavigation(headerContainer);
 
 			// Lógica para el menú hamburguesa (mobile) usando ids
 			const menuToggleBtn = document.getElementById('menu-toggle');
@@ -19,6 +20,84 @@ fetch('/generalViews/headerHome')
 			}
 		}
 	});
+
+function initBrandLoaderNavigation(container) {
+	if (!container) return;
+
+	const ensureLoaderCss = () => {
+		if (document.querySelector('link[href$="/assets/css/loader.css"], link[href$="assets/css/loader.css"], link[href$="assets/css/loader.css"]')) return;
+		if (document.getElementById('brandLoaderCss')) return;
+		const link = document.createElement('link');
+		link.id = 'brandLoaderCss';
+		link.rel = 'stylesheet';
+		link.href = '/assets/css/loader.css';
+		document.head.appendChild(link);
+	};
+
+	const ensureLoaderEl = () => {
+		let el = document.getElementById('pageLoader');
+		if (el) return el;
+		const html = `
+			<div class="page-loader hidden" id="pageLoader">
+				<div class="campfire-loader">
+					<div class="fire-container">
+						<div class="flame flame-main"></div>
+						<div class="flame flame-left"></div>
+						<div class="flame flame-right"></div>
+					</div>
+					<div class="logs">
+						<div class="log"></div>
+						<div class="log"></div>
+					</div>
+					<div class="embers">
+						<div class="ember"></div>
+						<div class="ember"></div>
+						<div class="ember"></div>
+						<div class="ember"></div>
+					</div>
+					<div class="sparkles"></div>
+				</div>
+			</div>
+		`;
+		document.body.insertAdjacentHTML('afterbegin', html);
+		return document.getElementById('pageLoader');
+	};
+
+	const showLoader = () => {
+		ensureLoaderCss();
+		const el = ensureLoaderEl();
+		if (!el) return;
+		el.classList.remove('hidden');
+		document.body.classList.add('loading');
+	};
+
+	container.addEventListener('click', (e) => {
+		const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+		if (!a) return;
+		if (a.hasAttribute('download')) return;
+		if (a.getAttribute('target') === '_blank') return;
+
+		const href = a.getAttribute('href');
+		if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+		let url;
+		try {
+			url = new URL(href, window.location.href);
+		} catch {
+			return;
+		}
+		if (url.origin !== window.location.origin) return;
+		if (url.href === window.location.href) return;
+
+		e.preventDefault();
+		showLoader();
+		requestAnimationFrame(() => {
+			setTimeout(() => {
+				window.location.href = url.href;
+			}, 50);
+		});
+	});
+}
 
 function initProductsDropdown() {
 	const dropdownRoot = document.getElementById('productsDropdown');
