@@ -9,6 +9,8 @@ import filesRoutes from '../routes/files.Routes.js';
 import typeProductRoutes from '../routes/typeProduct.Routes.js';
 import productsRoutes from '../routes/product.Routes.js';
 import storeProductsRoutes from '../routes/storeProducts.Routes.js';
+import contactoRoutes from '../routes/contacto.Routes.js';
+import mensajesContactoRoutes from '../routes/mensajesContacto.Routes.js';
 import cookieParser from 'cookie-parser';
 import { verifyToken } from '../middleware/authMiddleware.js';  
 
@@ -32,6 +34,7 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/mySystem', rolesRoutes);
 app.use('/mySystem', usersRoutes);
@@ -40,6 +43,9 @@ app.use('/mySystem', filesRoutes);
 app.use('/mySystem', typeProductRoutes); 
 app.use('/mySystem', productsRoutes);
 app.use('/mySystem', storeProductsRoutes);
+app.use('/mySystem', mensajesContactoRoutes);
+
+app.use(contactoRoutes);
 
 
 // Redirección de la raíz a la página de inicio
@@ -68,6 +74,10 @@ app.get('/dashboard/archivos', (req, res) => {
 });
 app.get('/dashboard/gestion-productos', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/dashboard/gestionProductos/gestionProductos.html'));
+});
+
+app.get('/dashboard/mensajes-contacto', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/dashboard/mensajesContacto/mensajesContacto.html'));
 });
 
 app.get('/dashboard/editor-web', (req, res) => {

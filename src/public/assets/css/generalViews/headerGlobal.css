@@ -12,7 +12,12 @@ body {
 
 .main-header {
 	width: 100%;
-	background: #fff;
+	background: linear-gradient(
+		180deg,
+		#F2E6E7 0%,
+		#D9B8BB 40%,
+		#FFFFFF 100%
+	);
 	color: #111;
 	padding: 0;
 	position: absolute;
