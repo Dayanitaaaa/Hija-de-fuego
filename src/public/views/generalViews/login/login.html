@@ -6,29 +6,35 @@
     <title>Iniciar Sesión</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../assets/css/generalViews/login.css">
     <link rel="stylesheet" href="../../../assets/css/loader.css">
 </head>
 <body>
+    <header>
+		<object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+	</header>
 
     <main class="login-main">
         <div class="login-wrapper">
             <div class="login-panel">
                 <div class="login-left">
                     <div class="login-logo">
-                        <img src="../../../assets/imgStatic/logo.png" alt="Logo Hija del Fuego">
+                        <img src="../../../assets/imgStatic/logo-circular.png" alt="Logo">
                     </div>
                     <div class="login-welcome">
-                        <h1>HIJA DEL FUEGO</h1>
-                        <p>Bienvenido. Inicia sesión para continuar.</p>
+                        <h1>HIJA DEl FUEGO</h1>
+                        <div class="brand-subtitle">Allison Serrano</div>
                     </div>
                 </div>
 
                 <div class="login-right">
-                    <h2>Iniciar Sesión</h2>
-                    <p class="login-desc">Ingresa tus credenciales para acceder a tu cuenta.</p>
                     <form class="login-form">
+                        <a href="/generalViews/home" class="back-home-btn" title="Volver al Home">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                        <h2>Iniciar Sesión</h2>
+                        <p class="login-desc">Ingresa tus credenciales para acceder a tu cuenta.</p>
                         <div class="input-group">
                             <label class="login-label">Correo electrónico</label>
                             <input type="email" class="login-input" placeholder="Correo electrónico" required>

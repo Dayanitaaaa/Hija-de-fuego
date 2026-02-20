@@ -7,7 +7,6 @@ body, html {
 .contact-main {
     position: relative;
     min-height: 100vh;
-    background-image: url('../../../assets/imgStatic/imgKitchen.png');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -28,12 +27,47 @@ body, html {
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid #000000;
 }
 
 .contact-form-container, .contact-info-container {
     padding: 40px;
     flex: 1;
+}
+
+.contact-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.contact-logo-wrapper {
+    text-align: center;
+    color: #96353B;
+}
+
+.contact-logo {
+    width: 350px;
+    height: auto;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 15px 35px rgba(0,0,0,0.4));
+}
+
+.contact-brand h1 {
+    font-family: 'Aboreto', cursive;
+    font-size: 3rem;
+    letter-spacing: 8px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.contact-brand span {
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    opacity: 0.95;
+    text-transform: uppercase;
+    font-weight: 300;
 }
 
 .contact-form-container {
