@@ -4,8 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comida con Alma</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../assets/css/generalViews/comidaConAlma.css">
+    <style>
+        /* Diseño Artesanal Equilibrado */
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        body {
+            background-color: #faf7f2 !important;
+            background-image: 
+                url("https://www.transparenttextures.com/patterns/cream-paper.png"),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(245, 235, 220, 0.8) 100%) !important;
+            background-attachment: fixed !important;
+        }
+
+        /* Viñeta sutil para dar profundidad sin oscurecer demasiado */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 100px rgba(150, 53, 59, 0.05);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .comida-alma-main {
+            position: relative;
+            z-index: 2;
+            padding-top: 140px;
+            padding-bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .comida-alma-container {
+            width: min(1200px, 95%);
+            margin: 0 auto;
+        }
+
+        .comida-alma-title {
+            font-family: 'Aboreto', serif !important;
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            color: #96353b;
+            text-align: center;
+            margin-bottom: 50px;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        /* Línea decorativa artesanal bajo el título */
+        .comida-alma-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 2px;
+            background: #96353b;
+            margin: 15px auto 0;
+            opacity: 0.3;
+        }
+
+        .comida-alma-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            justify-items: center;
+        }
+
+        /* Tarjetas Estilo Artesanal / Polaroid */
+        .comida-alma-card {
+            background: #ffffff;
+            padding: 15px 15px 25px 15px;
+            border-radius: 2px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(150, 53, 59, 0.1);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 320px;
+            position: relative;
+            transform: rotate(-1deg);
+        }
+
+        .comida-alma-card:nth-child(even) {
+            transform: rotate(1.5deg);
+        }
+
+        .comida-alma-card:hover {
+            transform: translateY(-12px) rotate(0deg) scale(1.02);
+            box-shadow: 0 25px 50px rgba(150, 53, 59, 0.15);
+            z-index: 10;
+        }
+
+        .comida-alma-card-image-container {
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            background: #fdfaf6;
+            margin-bottom: 20px;
+            border: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        /* Efecto de sombra interna en la imagen */
+        .comida-alma-card-image-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+            pointer-events: none;
+        }
+
+        .comida-alma-card-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .comida-alma-card-info {
+            padding: 5px;
+            text-align: center;
+        }
+
+        .comida-alma-card-title {
+            font-family: 'Aboreto', serif !important;
+            font-size: 1.2rem;
+            color: #222;
+            margin: 0 0 12px 0;
+            display: block;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .comida-alma-card-price {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #96353b;
+            font-size: 1.15rem;
+            display: inline-block;
+            padding: 4px 15px;
+            background: rgba(150, 53, 59, 0.05);
+            border-radius: 20px;
+        }
+
+        /* Botón de acción artesanal flotante */
+        .comida-alma-card-btn {
+            margin-top: 20px;
+            padding: 12px;
+            background: #96353b;
+            color: white;
+            border-radius: 2px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .comida-alma-card:hover .comida-alma-card-btn {
+            opacity: 1;
+            background: #7a2a2f;
+        }
+    </style>
 </head>
 <body>
     <header>

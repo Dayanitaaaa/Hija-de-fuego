@@ -49,7 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
 				btn.addEventListener('click', () => verDetalle(btn.dataset.id));
 			});
 		} catch (e) {
-			alert(e.message);
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: e.message,
+				confirmButtonColor: '#96353B'
+			});
 		}
 	}
 
@@ -71,7 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			containerRespuesta.classList.remove('d-none');
 			textoRespuesta.value = '';
 		} catch (e) {
-			alert(e.message);
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: e.message,
+				confirmButtonColor: '#96353B'
+			});
 		}
 	}
 
@@ -97,10 +107,24 @@ document.addEventListener('DOMContentLoaded', () => {
 			const data = await res.json();
 			if (!res.ok) throw new Error(data.message || 'Error al enviar respuesta');
 
-			alert('Respuesta enviada con éxito al correo del cliente');
+			Swal.fire({
+				icon: 'success',
+				title: '¡Enviado!',
+				text: 'Respuesta enviada con éxito y mensaje eliminado',
+				confirmButtonColor: '#96353B'
+			});
+
 			textoRespuesta.value = '';
+			containerRespuesta.classList.add('d-none');
+			detalle.innerHTML = 'Selecciona un mensaje para ver el detalle.';
+			cargarMensajes();
 		} catch (error) {
-			alert('Error: ' + error.message);
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: error.message,
+				confirmButtonColor: '#96353B'
+			});
 		} finally {
 			btn.disabled = false;
 			btn.innerHTML = originalText;

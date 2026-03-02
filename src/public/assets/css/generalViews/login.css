@@ -1,4 +1,83 @@
-/* Estilos base */
+.social-login-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.9em;
+}
+
+.social-login-separator::before,
+.social-login-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.social-login-separator span {
+    padding: 0 10px;
+}
+
+.social-login-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 30px;
+    background: #ffffff;
+    color: #333;
+    font-weight: 500;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.social-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.social-btn i {
+    font-size: 1.2em;
+}
+
+.social-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.facebook-btn i {
+    color: #1877f2;
+}
+
+.apple-btn i {
+    color: #000000;
+}
+
+.google-btn img {
+    margin-right: 2px;
+}
+
+/* Ajustes responsivos para botones sociales */
+@media (max-width: 480px) {
+    .social-btn {
+        font-size: 0.85em;
+        padding: 10px;
+    }
+}
+
 
 body {
     font-family: 'Poppins', Arial, sans-serif;

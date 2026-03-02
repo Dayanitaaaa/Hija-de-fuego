@@ -5,7 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recetas: Familiares</title>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../assets/css/generalViews/blogProduct.css">
+    <style>
+        /* Definición manual de la fuente Aboreto */
+        @font-face {
+            font-family: 'Aboreto';
+            src: url('https://fonts.gstatic.com/s/aboreto/v3/6xKtdS39LXvu7OXsh8w3_696.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Aplicación forzada a todos los títulos y subtítulos */
+        .region-page-title, 
+        .region-page-subtitle,
+        .dish-panel h2, 
+        #dish-title,
+        .dish-panel h3 {
+            font-family: 'Aboreto', serif !important;
+            font-weight: 400 !important;
+            text-transform: none !important;
+            letter-spacing: 1px !important;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,8 +43,8 @@
     <main class="recipes-main">
         <div class="recipes-content-container">
             <a class="region-back" href="/generalViews/recipes">Volver</a>
-            <h1 class="region-page-title">Recetas familiares</h1>
-            <p class="region-page-subtitle">Selecciona una receta para ver ingredientes y preparación.</p>
+    <h1 class="region-page-title" style="font-family: 'Aboreto', serif !important;">Recetas familiares</h1>
+    <p class="region-page-subtitle" style="font-family: 'Aboreto', serif !important;">Selecciona una plato para ver ingredientes y preparación.</p>
 
             <div class="dish-chips" id="dish-chips">
                 <button class="dish-chip" type="button" data-dish="tamal-tolimense">Tamal Tolimense (por mi abuela Alba)</button>
@@ -24,12 +52,12 @@
             </div>
 
             <section class="dish-panel" id="dish-panel" hidden>
-                <h2 id="dish-title"></h2>
+                <h2 id="dish-title" style="font-family: 'Aboreto', serif !important;"></h2>
 
-                <h3>Ingredientes</h3>
+                <h3 style="font-family: 'Aboreto', serif !important;">Ingredientes</h3>
                 <ul id="dish-ingredients"></ul>
 
-                <h3>Preparación</h3>
+                <h3 style="font-family: 'Aboreto', serif !important;">Preparación</h3>
                 <p id="dish-prep"></p>
             </section>
         </div>

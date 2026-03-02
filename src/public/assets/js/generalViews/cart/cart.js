@@ -27,13 +27,18 @@ function writeCart(items) {
 function normalizeItem(item) {
   const qty = Math.max(1, Math.floor(safeNumber(item.qty, 1)));
   const price = safeNumber(item.price, 0);
+  const stockRaw = item?.stock;
+  const stock = stockRaw === undefined || stockRaw === null || stockRaw === '' ? null : Math.floor(safeNumber(stockRaw, NaN));
+  const safeStock = Number.isFinite(stock) && stock >= 0 ? stock : null;
+  const safeQty = safeStock === null ? qty : Math.min(qty, safeStock);
   return {
     id: String(item.id ?? ''),
     name: String(item.name ?? ''),
     price,
-    qty,
+    qty: safeQty,
     image: String(item.image ?? ''),
-    type: String(item.type ?? 'item')
+    type: String(item.type ?? 'item'),
+    stock: safeStock
   };
 }
 
@@ -93,6 +98,20 @@ function bindEvents() {
   const form = document.querySelector('[data-checkout-form]');
   const hint = document.querySelector('[data-checkout-hint]');
 
+  const requireLoginOrRedirect = () => {
+    const token = localStorage.getItem('token');
+    if (token) return token;
+
+    try {
+      localStorage.setItem('post_login_redirect', window.location.pathname || '/generalViews/cart');
+    } catch {
+      // ignore
+    }
+
+    window.location.href = '/generalViews/login';
+    return null;
+  };
+
   clearBtn?.addEventListener('click', () => {
     writeCart([]);
     render();
@@ -125,7 +144,9 @@ function bindEvents() {
     }
 
     if (target.matches('[data-qty-plus]')) {
-      items[idx].qty = Math.max(1, safeNumber(items[idx].qty, 1) + 1);
+      const next = Math.max(1, safeNumber(items[idx].qty, 1) + 1);
+      const limit = Number.isFinite(items[idx].stock) ? items[idx].stock : null;
+      items[idx].qty = limit === null ? next : Math.min(next, limit);
       writeCart(items);
       render();
     }
@@ -143,13 +164,18 @@ function bindEvents() {
     const idx = items.findIndex((it) => it.id === id);
     if (idx === -1) return;
 
-    items[idx].qty = Math.max(1, Math.floor(safeNumber(target.value, 1)));
+    const requested = Math.max(1, Math.floor(safeNumber(target.value, 1)));
+    const limit = Number.isFinite(items[idx].stock) ? items[idx].stock : null;
+    items[idx].qty = limit === null ? requested : Math.min(requested, limit);
     writeCart(items);
     render();
   });
 
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    const token = requireLoginOrRedirect();
+    if (!token) return;
 
     const items = readCart().map(normalizeItem).filter((it) => it.id);
     if (!items.length) {
@@ -189,16 +215,41 @@ function bindEvents() {
       return;
     }
 
-    if (hint) hint.textContent = 'Pedido listo. (Por ahora se guarda localmente)';
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Procesando...';
 
-    localStorage.setItem('checkout_draft_v1', JSON.stringify(payload));
-    writeCart([]);
-    render();
-    form.reset();
+    if (typeof HOST === 'undefined') window.HOST = 'http://localhost:3000';
 
-    setTimeout(() => {
-      if (hint) hint.textContent = '';
-    }, 4000);
+    fetch(`${HOST}/mySystem/tiendaProductos/checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al procesar pedido');
+
+        if (hint) hint.textContent = '¡Pedido realizado con éxito! El stock ha sido actualizado.';
+        writeCart([]);
+        render();
+        form.reset();
+        localStorage.setItem('checkout_draft_v1', JSON.stringify(payload));
+      })
+      .catch((err) => {
+        if (hint) hint.textContent = 'Error: ' + err.message;
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = originalText;
+        setTimeout(() => {
+          if (hint) hint.textContent = '';
+        }, 5000);
+      });
   });
 }
 

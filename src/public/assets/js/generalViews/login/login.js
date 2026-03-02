@@ -12,9 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
 	// 	return;
 	// }
 	const form = document.querySelector('.login-form');
+	const socialGoogleBtn = document.querySelector('.google-btn');
+	const socialFacebookBtn = document.querySelector('.facebook-btn');
 	const inputs = document.querySelectorAll('.login-input');
 	const emailInput = inputs[0];
 	const passwordInput = inputs[1];
+
+	socialGoogleBtn?.addEventListener('click', () => {
+		window.location.href = '/auth/google';
+	});
+
+	socialFacebookBtn?.addEventListener('click', () => {
+		// Por ahora redirigimos a una ruta informativa o alert
+		alert('El login con Facebook requiere configuración adicional de SSL y dominio.');
+	});
 
 	form.addEventListener('submit', async (e) => {
 		e.preventDefault();
@@ -54,11 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 				showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
 				setTimeout(() => {
+					// Verificar si hay una redirección pendiente del carrito
+					const redirectUrl = localStorage.getItem('post_login_redirect');
+					if (redirectUrl) {
+						localStorage.removeItem('post_login_redirect');
+						window.location.href = redirectUrl;
+						return;
+					}
+
 					if (data.role && (data.role.id === 1 || data.role.name === 'Administrador')) {
 						window.location.href = URL_DASHBOARD_HOME;
 					} else if (data.role && (data.role.id === 2 || data.role.name === 'Cliente')) {
-						// Redirigir también a los clientes al dashboard
-						window.location.href = URL_DASHBOARD_HOME;
+						window.location.href = '/generalViews/home';
 					} else {
 						showMessage('Rol no permitido', 'error');
 					}

@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             <img src="${image}" alt="${escapeHtml(p.nombre)}">
           </div>
           <div class="comida-alma-card-info">
-            <p class="comida-alma-card-title">${escapeHtml(p.nombre)}</p>
-            <p class="comida-alma-card-price">COP ${price}$</p>
+            <span class="comida-alma-card-title">${escapeHtml(p.nombre)}</span>
+            <span class="comida-alma-card-price">COP ${price}$</span>
+            <div class="comida-alma-card-btn">Ver detalle</div>
           </div>
         </a>
       `;
