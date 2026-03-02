@@ -197,8 +197,12 @@
               </div>
 
               <div class="col-12 col-md-4">
-                <label class="form-label" for="storeProductPrice">Precio (COP)</label>
-                <input class="form-control" id="storeProductPrice" type="number" min="0" step="1" required />
+                <label class="form-label" for="storeProductPrice">Precio (Pesos Colombianos - COP)</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input class="form-control" id="storeProductPrice" type="number" min="0" step="1" placeholder="Ej: 30000" required />
+                </div>
+                <div class="form-text">Ingresa el valor sin puntos ni comas.</div>
               </div>
               <div class="col-12 col-md-4">
                 <label class="form-label" for="storeProductStock">Stock</label>
