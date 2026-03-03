@@ -34,7 +34,22 @@
 					<li>
 						<div class="btn-group-contact">
 							<a href="/generalViews/contact" class="header-btn">Contacto</a>
-							<a href="/generalViews/register" class="header-btn">Registrarse</a>
+							<div id="auth-buttons-global">
+								<a href="/generalViews/register" class="header-btn">Registrarse</a>
+							</div>
+							<div id="user-menu-global">
+								<div class="header-dropdown">
+									<button type="button" class="header-btn header-dropdown__trigger user-btn-global" id="userDropdownTriggerGlobal" aria-haspopup="true" aria-expanded="false">
+										<i class="bi bi-person-circle"></i> Mi Cuenta
+									</button>
+									<div class="header-dropdown__menu" role="menu">
+										<a class="header-dropdown__item" href="/generalViews/perfil" role="menuitem"><i class="bi bi-person"></i> Mi Perfil</a>
+										<a class="header-dropdown__item" href="/generalViews/perfil#pedidos" role="menuitem"><i class="bi bi-bag-check"></i> Mis Pedidos</a>
+										<a class="header-dropdown__item" href="/generalViews/perfil#direcciones" role="menuitem"><i class="bi bi-geo-alt"></i> Direcciones</a>
+										<a class="header-dropdown__item text-danger" href="#" id="logout-btn-global" role="menuitem"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+									</div>
+								</div>
+							</div>
 						</div>
 					</li>
 					<li class="icon-li"><a href="/generalViews/cart" aria-label="Carrito" title="Carrito"><i class="bi bi-cart-fill header-icon"></i></a></li>

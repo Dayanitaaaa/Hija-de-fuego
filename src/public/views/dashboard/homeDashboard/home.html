@@ -60,9 +60,29 @@
     <div class="main-content">
         <div class="container-fluid">
             <!-- Header del dashboard -->
-            <div class="dashboard-header">
-                <h1><i class="fas fa-tachometer-alt"></i> Panel de Administración</h1>
-                <p class="text-muted">Gestiona todos los módulos del sistema desde aquí</p>
+            <div class="dashboard-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <h1><i class="fas fa-tachometer-alt"></i> Panel de Administración</h1>
+                    <p class="text-muted">Gestiona todos los módulos del sistema desde aquí</p>
+                </div>
+                <div class="admin-notifications" id="adminNotifications">
+                    <button type="button" class="admin-notifications__btn" id="adminNotificationsBtn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="admin-notifications__badge" id="adminNotificationsBadge" hidden>0</span>
+                    </button>
+                    <div class="admin-notifications__menu" id="adminNotificationsMenu" hidden>
+                        <div class="admin-notifications__title">Notificaciones</div>
+                        <a class="admin-notifications__item" href="/dashboard/pedidos" id="adminNotifPedidos">
+                            <span>Pedidos nuevos</span>
+                            <strong id="adminNotifPedidosCount">0</strong>
+                        </a>
+                        <a class="admin-notifications__item" href="/dashboard/mensajes-contacto" id="adminNotifMensajes">
+                            <span>Mensajes nuevos</span>
+                            <strong id="adminNotifMensajesCount">0</strong>
+                        </a>
+                        <button type="button" class="admin-notifications__clear" id="adminNotificationsClear">Marcar como visto</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Cards de módulos -->
@@ -133,6 +153,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../../../assets/js/dashboard/homeDashboard/homeDashboard.js"></script>
     <script src="../../../assets/js/dashboard/userBadge.js"></script>
+    <script src="../../../assets/js/dashboard/adminNotifications.js"></script>
     <script src="../../../assets/js/system/constans.js"></script>
     <script src="../../../assets/js/dashboard/homeDashboard/sidebar.js"></script>
     <script src="../../../assets/js/logOut/logOut.js"></script>

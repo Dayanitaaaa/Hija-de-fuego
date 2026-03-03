@@ -137,7 +137,72 @@ body {
     padding: 18px 18px;
     z-index: 2000;
     display: none;
- }
+}
+
+#auth-buttons-desktop, #user-menu-desktop, #user-menu-mobile {
+    display: none;
+}
+
+#auth-buttons-desktop {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Estilos especiales para el botón de usuario logueado */
+.user-logged-btn {
+    background: linear-gradient(135deg, #a97c2f 0%, #d6b36a 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 8px 18px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(169, 124, 47, 0.3) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-logged-btn i {
+    font-size: 1.2rem;
+}
+
+.user-logged-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(169, 124, 47, 0.4) !important;
+}
+
+/* Mejora del dropdown de usuario */
+#user-menu-desktop .nav-dropdown__menu {
+    border: 1px solid rgba(169, 124, 47, 0.2);
+    overflow: hidden;
+    padding: 0;
+}
+
+#user-menu-desktop .nav-dropdown__item {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f5f5f5;
+    transition: all 0.2s ease;
+}
+
+#user-menu-desktop .nav-dropdown__item:hover {
+    background-color: #fdfaf0;
+    padding-left: 25px;
+}
+
+#user-menu-desktop .nav-dropdown__item i {
+    margin-right: 10px;
+    color: #a97c2f;
+}
+
+.mobile-menu hr {
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin: 10px 0;
+}
+
+.text-danger {
+    color: #ff4d4d !important;
+}
 
  .nav-dropdown.is-open .nav-dropdown__menu {
     display: block;

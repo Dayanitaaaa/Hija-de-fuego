@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const images = Array.isArray(p.imagenes) ? p.imagenes : [];
     const mainImage = p.imagen_principal || (images[0]?.url_imagen) || '/assets/imgStatic/logo-circular.png';
-    const chips = Array.isArray(p.sabores) ? p.sabores.map(s => `<span class="product__chip" role="listitem">${escapeHtml(s)}</span>`).join('') : '';
+    const flavors = Array.isArray(p.sabores) ? p.sabores : [];
+    const flavorOptions = flavors.map((s) => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
 
     root.innerHTML = `
       <div class="shop-header">
@@ -50,12 +51,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             <p class="product__price">$${Number(p.precio_cop || 0).toLocaleString('es-CO')} <span class="product__currency">COP</span></p>
             <p class="product__meta">${escapeHtml(p.descripcion || 'Disponible en Santa Marta. Ideal para nutrir y disfrutar.')}</p>
 
-            ${chips ? `
+            ${flavors.length ? `
               <div class="product__section">
                 <h2 class="product__subtitle">Sabores</h2>
-                <div class="product__chips" role="list">
-                  ${chips}
-                </div>
+                <label class="product__selectWrap">
+                  <select class="product__select" data-flavor-select required>
+                    <option value="" selected disabled>Selecciona un sabor</option>
+                    ${flavorOptions}
+                  </select>
+                </label>
               </div>
             ` : ''}
 
@@ -77,25 +81,66 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     initCarousel(root);
     initQty(root);
-    initAddToCart(root, p);
+    initAddToCart(root, p, mainImage);
   } catch (_err) {
     // silencioso
   }
 });
 
-function initAddToCart(scope, product) {
+function initAddToCart(scope, product, fallbackImage) {
   const btn = scope.querySelector('[data-add-to-cart]');
   const qtyInput = scope.querySelector('.product__qtyInput');
+  const flavorSelect = scope.querySelector('[data-flavor-select]');
   if (!btn || !qtyInput) return;
 
+	const showNiceAlert = (title, text) => {
+		if (window.Swal && typeof window.Swal.fire === 'function') {
+			window.Swal.fire({
+				icon: 'error',
+				title,
+				text,
+				confirmButtonText: 'Entendido',
+				confirmButtonColor: '#96353b',
+				background: '#fffaf2'
+			});
+			return;
+		}
+		alert(`${title}\n\n${text}`);
+	};
+
+	let roleRaw = null;
+	try {
+		roleRaw = JSON.parse(localStorage.getItem('role'));
+	} catch {
+		roleRaw = localStorage.getItem('role');
+	}
+	const roleName = (roleRaw && (roleRaw.name || roleRaw.Roles_name || roleRaw.role)) || String(roleRaw || '');
+	const isAdmin = /admin/i.test(roleName) || (roleRaw && Number(roleRaw.id) === 1);
+	const viewAs = (localStorage.getItem('view_as') || '').toLowerCase();
+	const effectiveAdmin = isAdmin && viewAs !== 'cliente';
+
   btn.addEventListener('click', () => {
+		if (effectiveAdmin) {
+			showNiceAlert('Acción no permitida', 'Tu sesión es de Administrador. Para realizar compras, entra como cliente.');
+			return;
+		}
     const qty = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
+
+    const selectedFlavor = flavorSelect ? String(flavorSelect.value || '').trim() : '';
+    if (flavorSelect && !selectedFlavor) {
+		showNiceAlert('Selecciona un sabor', 'Por favor selecciona un sabor para continuar.');
+      flavorSelect.focus();
+      return;
+    }
+
+    const itemImage = String(product?.imagen_principal || fallbackImage || '');
     const item = {
       id: String(product?.producto_id ?? ''),
       name: String(product?.nombre ?? 'Producto'),
       price: Number(product?.precio_cop ?? 0),
       qty,
-      image: String(product?.imagen_principal ?? ''),
+      image: itemImage,
+      flavor: selectedFlavor,
       type: 'comida-con-alma'
     };
 
@@ -117,6 +162,8 @@ function initAddToCart(scope, product) {
     const idx = cart.findIndex((x) => String(x?.id) === item.id);
     if (idx >= 0) {
       cart[idx].qty = Math.max(1, Number(cart[idx].qty || 1) + item.qty);
+		cart[idx].flavor = item.flavor;
+		cart[idx].image = item.image;
     } else {
       cart.push(item);
     }

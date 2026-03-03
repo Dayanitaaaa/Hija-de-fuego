@@ -22,6 +22,26 @@ export const getPedidos = async (req, res) => {
 	}
 };
 
+export const getPedidosByUser = async (req, res) => {
+	const connection = await connect.getConnection();
+	try {
+		const { email } = req.params;
+		const [rows] = await connection.query(
+			`SELECT pedido_id, total, estado, fecha_pedido 
+			 FROM ${TABLE_PEDIDOS} 
+			 WHERE cliente_email = ?
+			 ORDER BY fecha_pedido DESC`,
+			[email]
+		);
+		res.json(rows);
+	} catch (error) {
+		console.error('Error al obtener pedidos del usuario:', error);
+		res.status(500).json({ error: 'Error al obtener tus pedidos' });
+	} finally {
+		connection.release();
+	}
+};
+
 export const getPedidoById = async (req, res) => {
 	const connection = await connect.getConnection();
 	try {

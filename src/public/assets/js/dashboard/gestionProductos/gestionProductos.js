@@ -39,6 +39,27 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentProductImages = [];
   let allInventoryMovements = [];
 
+  function parseCopToNumber(raw) {
+    const digits = String(raw ?? '').replace(/[^0-9]/g, '');
+    return digits ? Number(digits) : 0;
+  }
+
+  function formatCopInput(value) {
+    const n = parseCopToNumber(value);
+    return n ? n.toLocaleString('es-CO') : '';
+  }
+
+  function setPriceInputFormatted(n) {
+    if (!storeProductPrice) return;
+    const num = Number(n);
+    storeProductPrice.value = Number.isFinite(num) && num > 0 ? num.toLocaleString('es-CO') : '';
+  }
+
+  storeProductPrice?.addEventListener('input', () => {
+    const formatted = formatCopInput(storeProductPrice.value);
+    storeProductPrice.value = formatted;
+  });
+
   function shouldShowFlavors() {
     const cat = storeProductCategory?.value?.trim() || '';
     return ['Alimentos', 'Bebidas', 'Postres', 'Snacks', 'Lácteos', 'Cereales'].includes(cat);
@@ -318,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
       storeProductModalLabel.textContent = 'Editar producto';
       storeProductId.value = data.producto_id;
       storeProductName.value = data.nombre || '';
-      storeProductPrice.value = data.precio_cop ?? '';
+      setPriceInputFormatted(data.precio_cop);
       storeProductStock.value = data.stock ?? 0;
       storeProductDescription.value = data.descripcion || '';
       storeProductActive.checked = Number(data.activo) === 1;
@@ -447,10 +468,12 @@ document.addEventListener('DOMContentLoaded', () => {
   storeProductForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = storeProductId.value;
+
+    const priceNumber = parseCopToNumber(storeProductPrice.value);
     const payload = {
       nombre: (storeProductName.value || '').trim(),
       categoria: storeProductCategory.value || null,
-      precio_cop: Number(storeProductPrice.value || 0),
+      precio_cop: priceNumber,
       stock: Number(storeProductStock.value || 0),
       descripcion: (storeProductDescription.value || '').trim() || null,
       sabores: currentFlavors,

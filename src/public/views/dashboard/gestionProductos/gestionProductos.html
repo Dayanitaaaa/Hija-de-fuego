@@ -196,7 +196,7 @@
                 </select>
               </div>
 
-              <div class="col-12 col-md-4">
+              <div class="col-12 col-md-4 d-flex flex-column justify-content-end">
                 <label class="form-label" for="storeProductPrice">Precio (Pesos Colombianos - COP)</label>
                 <div class="input-group">
                   <span class="input-group-text">$</span>
@@ -204,9 +204,13 @@
                 </div>
                 <div class="form-text">Ingresa el valor sin puntos ni comas.</div>
               </div>
-              <div class="col-12 col-md-4">
+              <div class="col-12 col-md-4 d-flex flex-column justify-content-end">
                 <label class="form-label" for="storeProductStock">Stock</label>
-                <input class="form-control" id="storeProductStock" type="number" min="0" step="1" />
+                <div class="input-group">
+					<span class="input-group-text"><i class="fa-solid fa-box"></i></span>
+					<input class="form-control" id="storeProductStock" type="number" min="0" step="1" />
+				</div>
+				<div class="form-text">&nbsp;</div>
               </div>
               <div class="col-12 col-md-4 d-flex align-items-end">
                 <div class="form-check">

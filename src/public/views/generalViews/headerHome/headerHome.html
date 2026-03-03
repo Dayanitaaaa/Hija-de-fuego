@@ -31,12 +31,28 @@
                     <span class="logo">Hija del Fuego</span>
                 </a>
                 
-                <div class="nav-right">
+                <div class="nav-right" id="nav-right-desktop">
                     <a href="/generalViews/contact" class="nav-link">Contacto</a>
-                    <a href="/generalViews/register" class="nav-link">Registrarse</a>
-                    <a href="/generalViews/login" class="nav-link nav-icon-link" aria-label="Iniciar Sesión" title="Iniciar Sesión"><i class="bi bi-person-circle"></i></a>
+                    <div id="auth-buttons-desktop">
+                        <a href="/generalViews/register" class="nav-link">Registrarse</a>
+                        <a href="/generalViews/login" class="nav-link nav-icon-link" aria-label="Iniciar Sesión" title="Iniciar Sesión"><i class="bi bi-person-circle"></i></a>
+                    </div>
+                    <div id="user-menu-desktop">
+                        <div class="nav-dropdown">
+                            <button type="button" class="nav-link nav-dropdown__trigger user-logged-btn" id="userDropdownTrigger" aria-haspopup="true" aria-expanded="false">
+                                <i class="bi bi-person-circle"></i> Mi Cuenta
+                            </button>
+                            <div class="nav-dropdown__menu" role="menu">
+                                <a class="nav-dropdown__item" href="/generalViews/perfil" role="menuitem"><i class="bi bi-person"></i> Mi Perfil</a>
+                                <a class="nav-dropdown__item" href="/generalViews/perfil#pedidos" role="menuitem"><i class="bi bi-bag-check"></i> Mis Pedidos</a>
+                                <a class="nav-dropdown__item" href="/generalViews/perfil#direcciones" role="menuitem"><i class="bi bi-geo-alt"></i> Direcciones</a>
+                                <a class="nav-dropdown__item text-danger" href="#" id="logout-btn-desktop" role="menuitem"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+                            </div>
+                        </div>
+                    </div>
                     <a href="/generalViews/cart" class="cart-icon" aria-label="Carrito" title="Carrito">
                         <i class="bi bi-cart-fill"></i>
+						<span class="cart-badge" data-cart-count hidden>0</span>
                     </a>
                 </div>
             </nav>
@@ -55,6 +71,7 @@
                 
                 <a href="/generalViews/cart" class="cart-icon mobile-cart" aria-label="Carrito" title="Carrito">
                     <i class="bi bi-cart-fill"></i>
+					<span class="cart-badge" data-cart-count hidden>0</span>
                 </a>
                 
                 <div id="mobile-menu" class="mobile-menu">
@@ -68,8 +85,19 @@
                     <a href="/generalViews/gastronomic" class="mobile-link">Mi Marca</a>
                     <a href="/generalViews/blog" class="mobile-link">Blog</a>
                     <a href="/generalViews/contact" class="mobile-link">Contacto</a>
-                    <a href="/generalViews/login" class="mobile-link mobile-icon-link" aria-label="Iniciar Sesión"><i class="bi bi-person-circle"></i> Iniciar Sesión</a>
-                    <a href="/generalViews/register" class="mobile-link">Registrarse</a>
+                    
+                    <div id="auth-buttons-mobile">
+                        <a href="/generalViews/login" class="mobile-link mobile-icon-link" aria-label="Iniciar Sesión"><i class="bi bi-person-circle"></i> Iniciar Sesión</a>
+                        <a href="/generalViews/register" class="mobile-link">Registrarse</a>
+                    </div>
+
+                    <div id="user-menu-mobile">
+                        <hr>
+                        <a href="/generalViews/perfil" class="mobile-link"><i class="bi bi-person"></i> Mi Perfil</a>
+                        <a href="/generalViews/perfil#pedidos" class="mobile-link"><i class="bi bi-bag"></i> Mis Pedidos</a>
+                        <a href="/generalViews/perfil#direcciones" class="mobile-link"><i class="bi bi-geo-alt"></i> Direcciones</a>
+                        <a href="#" id="logout-btn-mobile" class="mobile-link text-danger"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+                    </div>
                 </div>
             </div>
         </div>

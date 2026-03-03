@@ -35,15 +35,23 @@
 						<input type="email" class="register-input" placeholder="Correo electrónico" required>
 					</div>
 					<div class="input-group register-input-group">
+						<input type="tel" class="register-input" placeholder="Número de celular" required>
+					</div>
+					<div class="input-group register-input-group">
 						<input type="password" class="register-input" placeholder="Contraseña" required>
 					</div>
 					<div class="input-group register-input-group">
 						<input type="password" class="register-input" placeholder="Confirmar contraseña" required>
 					</div>
-					<!-- Selector de Rol -->
-					<div class="input-group register-input-group">
-					</div>
 					<button type="submit" class="login-btn">Registrarse</button>
+					<div class="social-login">
+						<div class="divider">
+							<span>o regístrate con</span>
+						</div>
+						<a href="/auth/google" class="google-btn">
+							<i class="bi bi-google"></i> Google
+						</a>
+					</div>
 					<div class="login-register">
 						<span>¿Ya tienes cuenta?</span> <a href="/generalViews/login">Inicia sesión</a>
 					</div>
@@ -52,6 +60,7 @@
 		</div>
 	</div>
 	<footer></footer>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
 	 <script src="../../../assets/js/generalViews/register/register.js"></script>
 	 <script src="../../../assets/js/system/constans.js"></script>

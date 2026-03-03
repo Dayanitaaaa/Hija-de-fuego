@@ -10,6 +10,7 @@ import storeProductsRoutes from '../routes/storeProducts.Routes.js';
 import contactoRoutes from '../routes/contacto.Routes.js';
 import mensajesContactoRoutes from '../routes/mensajesContacto.Routes.js';
 import pedidosRoutes from '../routes/pedidos.Routes.js';
+import addressesRoutes from '../routes/addresses.Routes.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from '../config/passport.js';
@@ -55,6 +56,7 @@ app.use('/mySystem', productsRoutes);
 app.use('/mySystem', storeProductsRoutes);
 app.use('/mySystem', mensajesContactoRoutes);
 app.use('/mySystem/pedidos', pedidosRoutes);
+app.use('/mySystem/addresses', addressesRoutes);
 
 app.use(contactoRoutes);
 
@@ -221,6 +223,14 @@ app.get('/generalViews/recipes', (req, res) => {
 });
 app.get('/generalViews/comida-con-alma', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/comidaConAlma/comidaConAlma.html'));
+});
+
+app.get('/generalViews/forgot-password', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/login/forgot-password.html'));
+});
+
+app.get('/generalViews/reset-password/:token', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/login/reset-password.html'));
 });
 
 app.get('/generalViews/comida-con-alma/producto/:id', (req, res) => {

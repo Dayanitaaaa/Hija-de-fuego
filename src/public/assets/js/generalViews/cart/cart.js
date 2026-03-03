@@ -37,6 +37,7 @@ function normalizeItem(item) {
     price,
     qty: safeQty,
     image: String(item.image ?? ''),
+    flavor: String(item.flavor ?? ''),
     type: String(item.type ?? 'item'),
     stock: safeStock
   };
@@ -66,13 +67,15 @@ function render() {
   itemsRoot.innerHTML = items.map((it) => {
     const img = it.image || '/assets/imgStatic/logo-circular.png';
     const line = safeNumber(it.price, 0) * safeNumber(it.qty, 0);
+    const metaParts = [it.type, formatCOP(it.price)];
+    if (it.flavor) metaParts.unshift(`Sabor: ${it.flavor}`);
 
     return `
       <article class="cart-item" data-cart-item data-id="${encodeURIComponent(it.id)}">
         <img class="cart-item__img" src="${img}" alt="${escapeHtml(it.name)}">
         <div>
           <h3 class="cart-item__name">${escapeHtml(it.name)}</h3>
-          <p class="cart-item__meta">${escapeHtml(it.type)} · ${formatCOP(it.price)}</p>
+          <p class="cart-item__meta">${escapeHtml(metaParts.join(' · '))}</p>
         </div>
         <div class="cart-item__actions">
           <div class="cart-item__price">${formatCOP(line)}</div>
@@ -97,6 +100,32 @@ function bindEvents() {
   const clearBtn = document.querySelector('[data-cart-clear]');
   const form = document.querySelector('[data-checkout-form]');
   const hint = document.querySelector('[data-checkout-hint]');
+
+	const showNiceAlert = (title, text) => {
+		if (window.Swal && typeof window.Swal.fire === 'function') {
+			window.Swal.fire({
+				icon: 'error',
+				title,
+				text,
+				confirmButtonText: 'Entendido',
+				confirmButtonColor: '#96353b',
+				background: '#fffaf2'
+			});
+			return;
+		}
+		alert(`${title}\n\n${text}`);
+	};
+
+	let roleRaw = null;
+	try {
+		roleRaw = JSON.parse(localStorage.getItem('role'));
+	} catch {
+		roleRaw = localStorage.getItem('role');
+	}
+	const roleName = (roleRaw && (roleRaw.name || roleRaw.Roles_name || roleRaw.role)) || String(roleRaw || '');
+	const isAdmin = /admin/i.test(roleName) || (roleRaw && Number(roleRaw.id) === 1);
+	const viewAs = (localStorage.getItem('view_as') || '').toLowerCase();
+	const effectiveAdmin = isAdmin && viewAs !== 'cliente';
 
   const requireLoginOrRedirect = () => {
     const token = localStorage.getItem('token');
@@ -173,6 +202,12 @@ function bindEvents() {
 
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
+
+		if (effectiveAdmin) {
+			if (hint) hint.textContent = 'Tu sesión es de Administrador. Para comprar, entra como cliente.';
+			showNiceAlert('Acción no permitida', 'Tu sesión es de Administrador. Para realizar compras, entra como cliente.');
+			return;
+		}
 
     const token = requireLoginOrRedirect();
     if (!token) return;
