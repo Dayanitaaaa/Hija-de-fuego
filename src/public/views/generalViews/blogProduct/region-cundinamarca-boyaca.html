@@ -27,7 +27,10 @@
             </div>
 
             <section class="dish-panel" id="dish-panel" hidden>
-                <h2 id="dish-title"></h2>
+                <div class="dish-header-content">
+                    <div id="dish-image-container" class="dish-image-container" hidden></div>
+                    <h2 id="dish-title"></h2>
+                </div>
 
                 <h3>Ingredientes</h3>
                 <ul id="dish-ingredients"></ul>
@@ -44,21 +47,25 @@
             const DATA = {
                 "canelazo": {
                     title: "Canelazo",
+                    image: "../../../assets/imgStatic/canelazo.png",
                     ingredients: ["Agua de panela", "Aguardiente", "Canela en astillas"],
                     prep: "Se hierve agua con panela y canela. Se le añade aguardiente al gusto."
                 },
                 "almojabana": {
                     title: "Almojábana",
+                    image: "../../../assets/imgStatic/Almojabana.png",
                     ingredients: ["500 g de masa de maíz", "1 kg de cuajada", "1 cda de sal", "1 cda de polvo de hornear", "2 huevos batidos"],
                     prep: "Se mezclan los ingredientes hasta formar una masa homogénea. Se moldean y se hornean hasta estar doradas y esponjosas."
                 },
                 "pan-de-yuca": {
                     title: "Pan de Yuca",
+                    image: "../../../assets/imgStatic/Pan de yuca.jpg",
                     ingredients: ["1 libra de almidón de yuca agrio", "½ libra de queso blanco", "3 cdas de mantequilla", "1 huevo", "Leche (cantidad necesaria)"],
                     prep: "Se mezclan los ingredientes hasta obtener una masa moldeable. Se forman pequeños panes y se hornean hasta que estén crocantes por fuera y suaves por dentro."
                 },
                 "ajiaco-bogotano": {
                     title: "Ajiaco (Bogotano)",
+                    image: "../../../assets/imgStatic/ajiaco.png",
                     ingredients: [
                         "Papa criolla, sabanera y pastusa",
                         "Pollo",
@@ -76,6 +83,7 @@
                 },
                 "costilla-de-cordero": {
                     title: "Costilla de Cordero Asada",
+                    image: "../../../assets/imgStatic/Costilla de cordero asada.png",
                     ingredients: ["Costilla de cordero", "Cerveza", "Adobo: cebolla larga, ajo, laurel, orégano, limón, sal, pimienta, comino"],
                     prep: "Las costillas se adoban con especias, limón y cerveza, se dejan reposar y luego se asan lentamente hasta estar doradas y tiernas."
                 }
@@ -86,6 +94,7 @@
             const title = document.getElementById('dish-title');
             const ingredients = document.getElementById('dish-ingredients');
             const prep = document.getElementById('dish-prep');
+            const imageContainer = document.getElementById('dish-image-container');
 
             function setActive(el) {
                 chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
@@ -95,8 +104,19 @@
             function renderDish(key) {
                 const dish = DATA[key];
                 title.textContent = dish?.title || 'Pendiente por agregar';
-                ingredients.innerHTML = '';
 
+                // Renderizar imagen si existe
+                if (dish?.image) {
+                    const imgClass = dish.isCropped ? 'dish-detail-image is-cropped' : 'dish-detail-image';
+                    const imgStyle = dish.cropPosition ? `style="object-position: ${dish.cropPosition};"` : '';
+                    imageContainer.innerHTML = `<img src="${dish.image}" alt="${dish.title}" class="${imgClass}" ${imgStyle}>`;
+                    imageContainer.hidden = false;
+                } else {
+                    imageContainer.innerHTML = '';
+                    imageContainer.hidden = true;
+                }
+
+                ingredients.innerHTML = '';
                 if (dish?.ingredients?.length) {
                     dish.ingredients.forEach(text => {
                         const li = document.createElement('li');

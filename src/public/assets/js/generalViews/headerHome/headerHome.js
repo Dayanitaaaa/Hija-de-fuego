@@ -6,6 +6,7 @@ fetch('/generalViews/headerHome')
 		if (headerContainer) {
 			headerContainer.innerHTML = data;
 			updateHeaderForLogin();
+			updateCartCountBadge();
 			initProductsDropdown();
 			initBrandLoaderNavigation(headerContainer);
 
@@ -18,6 +19,46 @@ fetch('/generalViews/headerHome')
 					mobileMenu.classList.toggle('open');
 				});
 			}
+
+function updateCartCountBadge() {
+	const badges = document.querySelectorAll('[data-cart-count]');
+	if (!badges.length) return;
+
+	let roleRaw = null;
+	try {
+		roleRaw = JSON.parse(localStorage.getItem('role'));
+	} catch {
+		roleRaw = localStorage.getItem('role');
+	}
+	const roleName = (roleRaw && (roleRaw.name || roleRaw.Roles_name || roleRaw.role)) || String(roleRaw || '');
+	const isAdmin = /admin/i.test(roleName) || (roleRaw && Number(roleRaw.id) === 1);
+	const viewAs = (localStorage.getItem('view_as') || '').toLowerCase();
+	const effectiveAdmin = isAdmin && viewAs !== 'cliente';
+	if (effectiveAdmin) {
+		badges.forEach((b) => {
+			b.hidden = true;
+		});
+		return;
+	}
+
+	let items = [];
+	try {
+		const raw = localStorage.getItem('cart_items_v1');
+		items = raw ? JSON.parse(raw) : [];
+		if (!Array.isArray(items)) items = [];
+	} catch {
+		items = [];
+	}
+	const count = items.reduce((acc, it) => acc + Math.max(0, Number(it?.qty || 0)), 0);
+	badges.forEach((b) => {
+		b.textContent = String(count);
+		b.hidden = count <= 0;
+	});
+}
+
+window.addEventListener('storage', (e) => {
+	if (e.key === 'cart_items_v1') updateCartCountBadge();
+});
 		}
 	});
 
@@ -142,55 +183,138 @@ function initProductsDropdown() {
 }
 
 function updateHeaderForLogin() {
-	// Si hay token, modificar el header
 	const token = localStorage.getItem('token');
+	let roleRaw = null;
+	try {
+		roleRaw = JSON.parse(localStorage.getItem('role'));
+	} catch {
+		roleRaw = localStorage.getItem('role');
+	}
+	const roleName = (roleRaw && (roleRaw.name || roleRaw.Roles_name || roleRaw.role)) || String(roleRaw || '');
+	const isAdmin = /admin/i.test(roleName) || (roleRaw && Number(roleRaw.id) === 1);
+	const viewAs = (localStorage.getItem('view_as') || '').toLowerCase();
+	const effectiveAdmin = isAdmin && viewAs !== 'cliente';
+	
+	// Elementos Header Home
+	const authButtonsDesktop = document.getElementById('auth-buttons-desktop');
+	const userMenuDesktop = document.getElementById('user-menu-desktop');
+	const authButtonsMobile = document.getElementById('auth-buttons-mobile');
+	const userMenuMobile = document.getElementById('user-menu-mobile');
+
+	// Elementos Header Global
+	const authButtonsGlobal = document.getElementById('auth-buttons-global');
+	const userMenuGlobal = document.getElementById('user-menu-global');
+
+	const handleLogout = (e) => {
+		if (e) e.preventDefault();
+		localStorage.removeItem('token');
+		localStorage.removeItem('user');
+		localStorage.removeItem('role');
+		window.location.href = '/generalViews/home';
+	};
+
 	if (token) {
-		// Ocultar botón de Registrarse
-		const registerBtn = document.querySelector('.btn-group-contact a[href="register.html"]');
-		if (registerBtn) {
-			registerBtn.style.display = 'none';
-		}
-		// Mover el carrito a la posición del botón de registrarse
-		const cartLi = document.querySelector('.icon-li');
-		const contactDiv = document.querySelector('.btn-group-contact');
-		if (cartLi && contactDiv) {
-			// Eliminar el carrito de su posición original
-			cartLi.parentNode.removeChild(cartLi);
-			// Insertar el carrito después del botón de contacto
-			contactDiv.appendChild(cartLi.querySelector('a'));
-			// Eliminar el <li> vacío si queda
-		}
-		// Crear dropdown de usuario en la posición original del carrito
-		const navMenu = document.querySelector('.nav-menu');
-		if (navMenu) {
-			const userDropdownLi = document.createElement('li');
-			userDropdownLi.className = 'user-dropdown-li';
-			userDropdownLi.innerHTML = `
-				<div class="dropdown user-dropdown">
-					<a href="#" class="header-btn user-btn">Usuario <i class="bi bi-person-circle"></i></a>
-					<ul class="dropdown-menu">
-						<li><a href="/perfil">Perfil</a></li>
-						<li><a href="#" id="logout-btn">Cerrar sesión</a></li>
-					</ul>
-				</div>
-			`;
-			// Insertar el dropdown en la posición original del carrito (último <li>)
-			navMenu.appendChild(userDropdownLi);
-			// Evento para cerrar sesión
-			const logoutBtn = userDropdownLi.querySelector('#logout-btn');
-			if (logoutBtn) {
-				logoutBtn.addEventListener('click', function(e) {
-					e.preventDefault();
-					if (window.logOutUser) {
-						window.logOutUser();
-					} else {
-						localStorage.removeItem('token');
-						localStorage.removeItem('role');
-						window.location.href = '/generalViews/login';
-					}
+		// Mostrar menús de usuario, ocultar botones de auth
+		if (authButtonsDesktop) authButtonsDesktop.style.display = 'none';
+		if (userMenuDesktop) userMenuDesktop.style.display = 'block';
+		if (authButtonsMobile) authButtonsMobile.style.display = 'none';
+		if (userMenuMobile) userMenuMobile.style.display = 'block';
+		if (authButtonsGlobal) authButtonsGlobal.style.display = 'none';
+		if (userMenuGlobal) userMenuGlobal.style.display = 'block';
+
+		if (effectiveAdmin) {
+			document.body.classList.add('is-admin');
+			const forceCleanupAdminMenu = () => {
+				const desktopMenu = userMenuDesktop?.querySelector?.('.nav-dropdown__menu, .header-dropdown__menu');
+				const globalMenu = userMenuGlobal?.querySelector?.('.header-dropdown__menu, .nav-dropdown__menu');
+				const mobileMenuLinks = document.querySelectorAll('#user-menu-mobile a[href*="/perfil"], #user-menu-mobile a[href*="/pedidos"], #user-menu-mobile a[href*="/direcciones"]');
+				
+				mobileMenuLinks.forEach((a) => {
+					a.style.setProperty('display', 'none', 'important');
 				});
+
+				const contactDesktop = document.querySelector('.desktop-nav a[href*="/contact"]');
+				if (contactDesktop) contactDesktop.style.setProperty('display', 'none', 'important');
+				const contactMobile = document.querySelector('#mobile-menu a[href*="/contact"]');
+				if (contactMobile) contactMobile.style.setProperty('display', 'none', 'important');
+				
+				const cartDesktop = document.querySelector('.desktop-nav a[href*="/cart"]');
+				if (cartDesktop) cartDesktop.style.setProperty('display', 'none', 'important');
+				const cartMobile = document.querySelector('.mobile-nav a[href*="/cart"]');
+				if (cartMobile) cartMobile.style.setProperty('display', 'none', 'important');
+				const cartGlobal = document.querySelector('a[href*="/cart"]');
+				if (cartGlobal) cartGlobal.style.setProperty('display', 'none', 'important');
+
+				[desktopMenu, globalMenu].forEach((menu) => {
+					if (!menu) return;
+					
+					// Ocultar links de cliente para administrador
+					const customerLinks = menu.querySelectorAll('a');
+					customerLinks.forEach((a) => {
+						const href = a.getAttribute('href') || '';
+						if (href.includes('/perfil') || href.includes('/pedidos') || href.includes('/direcciones')) {
+							a.style.setProperty('display', 'none', 'important');
+						}
+					});
+
+					const existing = menu.querySelector('[data-admin-link]');
+					if (existing) return;
+					const a = document.createElement('a');
+					a.className = menu.classList.contains('nav-dropdown__menu') ? 'nav-dropdown__item' : 'header-dropdown__item';
+					a.href = '/dashboard/homeDashboard';
+					a.setAttribute('role', 'menuitem');
+					a.setAttribute('data-admin-link', '1');
+					a.innerHTML = '<i class="bi bi-speedometer2"></i> Ir al Dashboard';
+					menu.insertBefore(a, menu.firstChild);
+				});
+			};
+
+			// Ejecutar limpieza inmediata
+			forceCleanupAdminMenu();
+
+			// Observador para mantener los cambios si el DOM se actualiza
+			const observer = new MutationObserver(forceCleanupAdminMenu);
+			if (userMenuDesktop) observer.observe(userMenuDesktop, { childList: true, subtree: true });
+			if (userMenuGlobal) observer.observe(userMenuGlobal, { childList: true, subtree: true });
+			if (userMenuMobile) observer.observe(userMenuMobile, { childList: true, subtree: true });
+		}
+
+		// Configurar logout
+		const logoutDesktop = document.getElementById('logout-btn-desktop');
+		const logoutMobile = document.getElementById('logout-btn-mobile');
+		const logoutGlobal = document.getElementById('logout-btn-global');
+
+		if (logoutDesktop) logoutDesktop.addEventListener('click', handleLogout);
+		if (logoutMobile) logoutMobile.addEventListener('click', handleLogout);
+		if (logoutGlobal) logoutGlobal.addEventListener('click', handleLogout);
+
+		// Mostrar nombre de usuario
+		const userData = localStorage.getItem('user');
+		if (userData) {
+			try {
+				const user = JSON.parse(userData);
+				const triggerDesktop = document.getElementById('userDropdownTrigger');
+				const triggerGlobal = document.getElementById('userDropdownTriggerGlobal');
+				const adminTag = effectiveAdmin ? ' <span style="font-weight:700; opacity:.85;">(Admin)</span>' : '';
+				
+				if (triggerDesktop && user.User_name) {
+					triggerDesktop.innerHTML = `<i class="bi bi-person-circle"></i> Hola, ${user.User_name.split(' ')[0]}${adminTag}`;
+				}
+				if (triggerGlobal && user.User_name) {
+					triggerGlobal.innerHTML = `<i class="bi bi-person-circle"></i> Hola, ${user.User_name.split(' ')[0]}${adminTag}`;
+				}
+			} catch (e) {
+				console.error("Error parsing user data", e);
 			}
 		}
+	} else {
+		// Mostrar botones de auth, ocultar menús de usuario
+		if (authButtonsDesktop) authButtonsDesktop.style.display = 'flex';
+		if (userMenuDesktop) userMenuDesktop.style.display = 'none';
+		if (authButtonsMobile) authButtonsMobile.style.display = 'block';
+		if (userMenuMobile) userMenuMobile.style.display = 'none';
+		if (authButtonsGlobal) authButtonsGlobal.style.display = 'flex';
+		if (userMenuGlobal) userMenuGlobal.style.display = 'none';
 	}
 }
 });

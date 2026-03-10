@@ -18,11 +18,12 @@ export const verifyToken = (req, res, next) => {
     }
 
     if (!token) {
-        // Si es una vista HTML (dashboard), mostrar error 401
-        if (req.accepts && req.accepts(['html', 'json']) === 'html') {
-            return res.status(401).send('Acceso denegado. No se proporcionó token.');
+        // Si la solicitud espera JSON (como desde el carrito o API), devolver JSON
+        if (req.headers.accept && req.headers.accept.includes('application/json')) {
+            return res.status(401).json({ error: "Acceso denegado. No se proporcionó token de autenticación." });
         }
-        return res.status(401).json({ error: "Access denied. No token provided." });
+        // Si es una navegación directa en el navegador
+        return res.status(401).send('Acceso denegado. No se proporcionó token.');
     }
 
     try {
@@ -32,9 +33,10 @@ export const verifyToken = (req, res, next) => {
         next(); // Continuar con la ruta protegida
     } catch (err) {
         console.error("JWT verification failed:", err.message);
-        if (req.accepts && req.accepts(['html', 'json']) === 'html') {
-            return res.status(401).send('Token inválido o expirado.');
+        // Si la solicitud espera JSON
+        if (req.headers.accept && req.headers.accept.includes('application/json')) {
+            return res.status(401).json({ error: "Token inválido o expirado. Por favor, inicia sesión nuevamente." });
         }
-        return res.status(400).json({ error: "Invalid or expired token." });
+        return res.status(401).send('Token inválido o expirado.');
     }
 };

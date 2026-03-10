@@ -1,9 +1,38 @@
 import { connect } from '../config/db/connect.js';
 import { upload } from '../services/upload.js';
+import { sendNewOrderAdminNotification } from '../config/mailer.js';
 
 const TABLE_PRODUCTS = 'tienda_productos';
 const TABLE_IMAGES = 'tienda_productos_imagenes';
+const TABLE_MOVEMENTS = 'inventario_movimientos';
+const TABLE_PEDIDOS = 'tienda_pedidos';
+const TABLE_PEDIDOS_DETALLES = 'tienda_pedido_detalles';
 const MAX_IMAGES_PER_PRODUCT = 3;
+
+function safeJsonParseValue(str) {
+	try {
+		return JSON.parse(str);
+	} catch {
+		return null;
+	}
+}
+
+function normalizeFlavorsArray(flavorsRaw) {
+	const flavors = typeof flavorsRaw === 'string' ? safeJsonParseValue(flavorsRaw) : flavorsRaw;
+	if (!Array.isArray(flavors)) return [];
+	return flavors
+		.map((f) => {
+			if (typeof f === 'string') return { nombre: f, stock: 0 };
+			if (f && typeof f === 'object') {
+				return {
+					nombre: String(f.nombre ?? f.name ?? ''),
+					stock: Number(f.stock ?? 0) || 0
+				};
+			}
+			return { nombre: '', stock: 0 };
+		})
+		.filter((f) => f.nombre);
+}
 
 async function registrarAuditoria({
 	id_producto,
@@ -191,22 +220,266 @@ export const updateStoreProduct = async (req, res) => {
 export const updateStoreProductStock = async (req, res) => {
 	try {
 		const id = req.params.id;
-		const { stock } = req.body;
+		const { stock, motivo, tipo_movimiento } = req.body;
 		const stockValue = stock === undefined || stock === null || stock === '' ? null : Number(stock);
 		if (stockValue === null || Number.isNaN(stockValue) || !Number.isFinite(stockValue) || stockValue < 0) {
 			return res.status(400).json({ error: 'El stock debe ser un número válido mayor o igual a 0' });
 		}
 
-		const [result] = await connect.query(
+		// Obtener stock actual para calcular diferencia
+		const [rows] = await connect.query(`SELECT stock, nombre FROM ${TABLE_PRODUCTS} WHERE producto_id = ?`, [id]);
+		if (!rows.length) return res.status(404).json({ error: 'Producto no encontrado' });
+		
+		const currentStock = rows[0].stock;
+		const diff = stockValue - currentStock;
+
+		if (diff !== 0) {
+			const type = diff > 0 ? 'ENTRADA' : 'SALIDA';
+			const qty = Math.abs(diff);
+			const mot = motivo || (diff > 0 ? 'Ajuste de entrada' : 'Ajuste de salida');
+
+			await connect.query(
+				`INSERT INTO ${TABLE_MOVEMENTS} (producto_fk, tipo_movimiento, cantidad, motivo, usuario_fk) VALUES (?, ?, ?, ?, ?)`,
+				[id, type, qty, mot, req.user?.id ?? null]
+			);
+		}
+
+		await connect.query(
 			`UPDATE ${TABLE_PRODUCTS} SET stock = ? WHERE producto_id = ?`,
 			[stockValue, id]
 		);
 
-		if (result.affectedRows === 0) return res.status(404).json({ error: 'Producto no encontrado' });
-
 		res.status(200).json({ data: [{ producto_id: Number(id), stock: stockValue }], status: 200 });
 	} catch (error) {
 		res.status(500).json({ error: 'Error al actualizar stock', details: error.message });
+	}
+};
+
+export const addInventoryMovement = async (req, res) => {
+	try {
+		const { producto_id, tipo_movimiento, cantidad, motivo, sabor } = req.body;
+		if (!producto_id || !tipo_movimiento || !cantidad) {
+			return res.status(400).json({ error: 'Faltan campos: producto_id, tipo_movimiento, cantidad' });
+		}
+
+		const qty = Number(cantidad);
+		if (Number.isNaN(qty) || !Number.isFinite(qty) || qty <= 0) {
+			return res.status(400).json({ error: 'La cantidad debe ser un número válido mayor a 0' });
+		}
+
+		const sign = tipo_movimiento === 'ENTRADA' ? '+' : '-';
+		const delta = tipo_movimiento === 'ENTRADA' ? qty : -qty;
+
+		// Detectar sabor por body o por texto en motivo (compatibilidad con frontend)
+		let flavorName = typeof sabor === 'string' ? sabor.trim() : '';
+		if (!flavorName && typeof motivo === 'string') {
+			const match = motivo.match(/\(\s*Sabor:\s*([^\)]+)\)/i);
+			if (match && match[1]) flavorName = String(match[1]).trim();
+		}
+
+		// Actualizar stock en tabla principal
+		await connect.query(
+			`UPDATE ${TABLE_PRODUCTS} SET stock = stock ${sign} ? WHERE producto_id = ?`,
+			[qty, producto_id]
+		);
+
+		// Si hay sabor, actualizar también el JSON de sabores con stock por sabor
+		if (flavorName) {
+			const [rows] = await connect.query(
+				`SELECT sabores FROM ${TABLE_PRODUCTS} WHERE producto_id = ?`,
+				[producto_id]
+			);
+			const currentRaw = rows?.[0]?.sabores;
+			let flavors = typeof currentRaw === 'string' ? safeJsonParse(currentRaw) : currentRaw;
+			if (!Array.isArray(flavors)) flavors = [];
+
+			// Normalizar a objetos { nombre, stock }
+			const normalized = flavors.map((f) => {
+				if (typeof f === 'string') return { nombre: f, stock: 0 };
+				if (f && typeof f === 'object') {
+					return { nombre: String(f.nombre ?? f.name ?? ''), stock: Number(f.stock ?? 0) || 0 };
+				}
+				return { nombre: '', stock: 0 };
+			}).filter((f) => f.nombre);
+
+			const idx = normalized.findIndex((f) => f.nombre.toLowerCase() === flavorName.toLowerCase());
+			if (idx >= 0) {
+				normalized[idx].stock = Math.max(0, (Number(normalized[idx].stock) || 0) + delta);
+			} else {
+				normalized.push({ nombre: flavorName, stock: Math.max(0, delta) });
+			}
+
+			await connect.query(
+				`UPDATE ${TABLE_PRODUCTS} SET sabores = ? WHERE producto_id = ?`,
+				[JSON.stringify(normalized), producto_id]
+			);
+		}
+
+		// Registrar movimiento
+		await connect.query(
+			`INSERT INTO ${TABLE_MOVEMENTS} (producto_fk, tipo_movimiento, cantidad, motivo, usuario_fk) VALUES (?, ?, ?, ?, ?)`,
+			[producto_id, tipo_movimiento, qty, motivo || null, req.user?.id ?? null]
+		);
+
+		res.status(201).json({ message: 'Movimiento registrado correctamente' });
+	} catch (error) {
+		res.status(500).json({ error: 'Error al registrar movimiento', details: error.message });
+	}
+};
+
+export const listInventoryMovements = async (req, res) => {
+	try {
+		const { producto_id, mes, anio } = req.query;
+		let sql = `
+			SELECT m.*, p.nombre as producto_nombre 
+			FROM ${TABLE_MOVEMENTS} m
+			JOIN ${TABLE_PRODUCTS} p ON m.producto_fk = p.producto_id
+			WHERE 1=1
+		`;
+		const params = [];
+
+		if (producto_id) {
+			sql += ` AND m.producto_fk = ?`;
+			params.push(producto_id);
+		}
+		if (mes && anio) {
+			sql += ` AND MONTH(m.fecha) = ? AND YEAR(m.fecha) = ?`;
+			params.push(mes, anio);
+		}
+
+		sql += ` ORDER BY m.fecha DESC`;
+		const [rows] = await connect.query(sql, params);
+		res.json(rows);
+	} catch (error) {
+		res.status(500).json({ error: 'Error al listar movimientos', details: error.message });
+	}
+};
+
+export const processCheckout = async (req, res) => {
+	const connection = await connect.getConnection();
+	try {
+		await connection.beginTransaction();
+
+		const { items, customer, shipping } = req.body;
+
+		if (!items || !Array.isArray(items) || items.length === 0) {
+			throw new Error('El carrito está vacío');
+		}
+
+		// 1. Insertar cabecera del pedido
+		const [pedidoResult] = await connection.query(
+			`INSERT INTO ${TABLE_PEDIDOS} (cliente_nombre, cliente_email, cliente_telefono, direccion, ciudad, departamento, notas, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+			[customer.fullName, customer.email, customer.phone, shipping.address, shipping.city, shipping.state, shipping.notes, 0] // total se calcula después
+		);
+
+		const pedidoId = pedidoResult.insertId;
+
+		// 2. Insertar detalles y calcular total
+		let total = 0;
+		for (const item of items) {
+			const { id, qty, name, flavor } = item;
+			const flavorName = typeof flavor === 'string' ? flavor.trim() : '';
+			
+			// Verificar producto y obtener precio real de DB para seguridad
+			const [productRows] = await connection.query(
+				`SELECT producto_id, nombre, precio_cop, stock, sabores FROM ${TABLE_PRODUCTS} WHERE producto_id = ? FOR UPDATE`,
+				[id]
+			);
+
+			if (productRows.length === 0) {
+				throw new Error(`Producto ${name || 'ID: ' + id} no encontrado`);
+			}
+
+			const dbProduct = productRows[0];
+			const realPrice = dbProduct.precio_cop;
+			const flavorsArr = normalizeFlavorsArray(dbProduct.sabores);
+			const hasFlavorStock = flavorsArr.length > 0;
+			const subtotal = qty * realPrice;
+			total += subtotal;
+
+			// Insertar detalle del pedido
+			await connection.query(
+				`INSERT INTO ${TABLE_PEDIDOS_DETALLES} (pedido_fk, producto_fk, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?)`,
+				[pedidoId, id, qty, realPrice, subtotal]
+			);
+
+			// Validar y descontar stock (por sabor si aplica)
+			if (hasFlavorStock && flavorName) {
+				const idx = flavorsArr.findIndex((f) => f.nombre.toLowerCase() === flavorName.toLowerCase());
+				if (idx === -1) {
+					throw new Error(`Sabor no válido para ${dbProduct.nombre}: ${flavorName}`);
+				}
+				const currentFlavorStock = Number(flavorsArr[idx].stock) || 0;
+				if (currentFlavorStock < qty) {
+					throw new Error(`Stock insuficiente para ${dbProduct.nombre} (${flavorName}). Disponible: ${currentFlavorStock}`);
+				}
+				flavorsArr[idx].stock = currentFlavorStock - qty;
+
+				// Sincronizar stock general como suma de sabores
+				const newGeneralStock = flavorsArr.reduce((acc, f) => acc + (Number(f.stock) || 0), 0);
+				await connection.query(
+					`UPDATE ${TABLE_PRODUCTS} SET sabores = ?, stock = ? WHERE producto_id = ?`,
+					[JSON.stringify(flavorsArr), newGeneralStock, id]
+				);
+			} else {
+				const currentStock = dbProduct.stock;
+				if (currentStock < qty) {
+					throw new Error(`Stock insuficiente para ${dbProduct.nombre}. Disponible: ${currentStock}`);
+				}
+
+				// Descontar stock general
+				await connection.query(
+					`UPDATE ${TABLE_PRODUCTS} SET stock = stock - ? WHERE producto_id = ?`,
+					[qty, id]
+				);
+			}
+
+			// Registrar movimiento de SALIDA vinculado al pedido
+			await connection.query(
+				`INSERT INTO ${TABLE_MOVEMENTS} (producto_fk, tipo_movimiento, cantidad, motivo, pedido_fk) VALUES (?, ?, ?, ?, ?)`,
+				[id, 'SALIDA', qty, `Venta Web - Pedido #${pedidoId} - Cliente: ${customer?.fullName || 'Anonimo'}${flavorName ? ` (Sabor: ${flavorName})` : ''}`, pedidoId]
+			);
+		}
+
+		// 3. Actualizar total en la cabecera
+		await connection.query(
+			`UPDATE ${TABLE_PEDIDOS} SET total = ? WHERE pedido_id = ?`,
+			[total, pedidoId]
+		);
+
+		await connection.commit();
+
+		// 4. Notificar al administrador (fuera de la transacción para no bloquear)
+		sendNewOrderAdminNotification({
+			pedidoId,
+			customer,
+			total,
+			items
+		}).catch(err => console.error('Error enviando notificación al admin:', err));
+
+		res.status(200).json({ message: 'Pedido procesado y stock actualizado correctamente', pedidoId });
+	} catch (error) {
+		if (connection) await connection.rollback();
+		console.error('DETALLE ERROR CHECKOUT:', error);
+		
+		// Determinar el tipo de error para dar una respuesta más útil
+		let statusCode = 500;
+		let errorMessage = 'Error al procesar el pedido';
+		
+		if (error.message.includes('Stock insuficiente') || 
+			error.message.includes('no encontrado') || 
+			error.message.includes('vacío')) {
+			statusCode = 400;
+			errorMessage = error.message;
+		}
+
+		res.status(statusCode).json({ 
+			error: errorMessage, 
+			details: error.message,
+			code: error.code || 'CHECKOUT_ERROR'
+		});
+	} finally {
+		if (connection) connection.release();
 	}
 };
 

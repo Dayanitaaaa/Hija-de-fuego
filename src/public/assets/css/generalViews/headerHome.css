@@ -37,8 +37,17 @@
     box-sizing: border-box;
 }
 
-body {
+body, html {
+    margin: 0;
+    padding: 0;
     font-family: 'Cinzel', 'Georgia', serif;
+    overflow-x: hidden !important;
+    width: 100%;
+    position: relative;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 /* Header Styles */
@@ -46,11 +55,14 @@ body {
     width: 100%;
     background: var(--bg-gradient);
     color: var(--text-color);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
-    padding: 1.5rem 0;
+    z-index: 1000;
+    padding: 1rem 0;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: background 0.3s ease;
 }
 
 .header-container {
@@ -136,19 +148,97 @@ body {
     box-shadow: 0 22px 50px rgba(0,0,0,0.22);
     padding: 18px 18px;
     z-index: 2000;
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.18s ease, visibility 0s linear 0.18s;
+}
+
+#auth-buttons-desktop, #user-menu-desktop, #user-menu-mobile {
     display: none;
- }
+}
+
+#auth-buttons-desktop {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Estilos especiales para el botón de usuario logueado */
+.user-logged-btn {
+    background: linear-gradient(135deg, #a97c2f 0%, #d6b36a 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 8px 18px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(169, 124, 47, 0.3) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-logged-btn i {
+    font-size: 1.2rem;
+}
+
+.user-logged-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(169, 124, 47, 0.4) !important;
+}
+
+/* Mejora del dropdown de usuario */
+#user-menu-desktop .nav-dropdown__menu {
+    border: 1px solid rgba(169, 124, 47, 0.2);
+    overflow: hidden;
+    padding: 0;
+}
+
+#user-menu-desktop .nav-dropdown__item {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f5f5f5;
+    transition: all 0.2s ease;
+}
+
+#user-menu-desktop .nav-dropdown__item:hover {
+    background-color: #fdfaf0;
+    padding-left: 25px;
+}
+
+#user-menu-desktop .nav-dropdown__item i {
+    margin-right: 10px;
+    color: #a97c2f;
+}
+
+.mobile-menu hr {
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin: 10px 0;
+}
+
+.text-danger {
+    color: #ff4d4d !important;
+}
 
  .nav-dropdown.is-open .nav-dropdown__menu {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.18s ease;
  }
 
  .nav-dropdown:hover .nav-dropdown__menu {
-	display: block;
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+	transition: opacity 0.18s ease;
  }
 
  .nav-dropdown:focus-within .nav-dropdown__menu {
-	display: block;
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+	transition: opacity 0.18s ease;
  }
 
  .nav-dropdown__item {

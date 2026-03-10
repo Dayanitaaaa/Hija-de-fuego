@@ -13,9 +13,9 @@ export const enviarContacto = async (req, res) => {
 		const sql = 'INSERT INTO mensajes_contacto (nombre, email, mensaje) VALUES (?, ?, ?)';
 		await connect.query(sql, [nombre, email, mensaje]);
 
-		return res.redirect(303, '/generalViews/contact');
+		return res.redirect(303, '/generalViews/contact?sent=1');
 	} catch (error) {
 		console.error('Error al guardar mensaje de contacto:', error);
-		return res.status(500).send('Error al guardar el mensaje');
+		return res.redirect(303, '/generalViews/contact?error=1');
 	}
 };

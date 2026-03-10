@@ -41,7 +41,36 @@
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('sent') === '1') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Enviado!',
+                    text: 'Tu mensaje fue enviado correctamente.',
+                    confirmButtonColor: '#96353B'
+                }).then(() => {
+                    params.delete('sent');
+                    const q = params.toString();
+                    history.replaceState({}, '', window.location.pathname + (q ? `?${q}` : ''));
+                });
+            } else if (params.get('error') === '1') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo enviar el mensaje. Intenta más tarde.',
+                    confirmButtonColor: '#96353B'
+                }).then(() => {
+                    params.delete('error');
+                    const q = params.toString();
+                    history.replaceState({}, '', window.location.pathname + (q ? `?${q}` : ''));
+                });
+            }
+        })();
+    </script>
 
 </body>
 </html>

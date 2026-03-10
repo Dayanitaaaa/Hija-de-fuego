@@ -216,6 +216,25 @@
 .modal .btn-success:hover {
 	background: #7a2d30;
 }
+
+ .modal-header--brand {
+	background: linear-gradient(135deg, #2d5a27 0%, #1e3d1b 100%);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+ }
+
+ .btn-brand-save {
+	background: linear-gradient(135deg, #96353b 0%, #7a2d30 100%);
+	border: none;
+	box-shadow: 0 10px 22px rgba(150, 53, 59, 0.22);
+	font-weight: 800;
+	letter-spacing: 0.01em;
+ }
+
+ .btn-brand-save:hover,
+ .btn-brand-save:focus {
+	background: linear-gradient(135deg, #7a2d30 0%, #5c1b1b 100%);
+	box-shadow: 0 14px 28px rgba(150, 53, 59, 0.28);
+ }
 /* Fondo general y layout */
 body {
 	background: linear-gradient(135deg, #fffbe6 0%, #fff 100%);
@@ -414,6 +433,46 @@ body {
 	color: #fff !important;
 	border: none;
 }
+
+/* Mensajes de contacto (detalle + responder) */
+#detalleMensaje {
+	font-family: var(--fuente-montserrat);
+	line-height: 1.45;
+	color: #1f1f1f;
+}
+
+#detalleMensaje strong {
+	color: #96353B;
+}
+
+#containerRespuesta .card-header,
+.card .card-header.bg-dark.text-white {
+	background: linear-gradient(180deg, #96353B, #7a2d30) !important;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+#containerRespuesta .card-body {
+	background: rgba(150, 53, 59, 0.03);
+}
+
+#textoRespuesta.form-control {
+	border-radius: 12px;
+	border: 1px solid rgba(0,0,0,0.14);
+	box-shadow: none;
+}
+
+#textoRespuesta.form-control:focus {
+	border-color: #96353B;
+	box-shadow: 0 0 0 4px rgba(150,53,59,0.14);
+}
+
+#btnEnviarRespuesta.btn-primary {
+	border-radius: 12px;
+	padding: 12px 16px;
+	font-weight: 800;
+	letter-spacing: 0.02em;
+	box-shadow: 0 14px 30px rgba(150, 53, 59, 0.18);
+}
 .btn-success {
 	background: #4caf50;
 	color: #fff;
@@ -555,6 +614,10 @@ body {
 }
 
 /* Botón de cerrar sesión */
+.nav-dropdown__item.text-danger i {
+    color: #dc3545 !important;
+}
+
 .logout-button {
 	background: #dc3545 !important;
 	color: white !important;

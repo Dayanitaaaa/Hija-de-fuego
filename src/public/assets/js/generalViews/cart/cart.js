@@ -27,13 +27,19 @@ function writeCart(items) {
 function normalizeItem(item) {
   const qty = Math.max(1, Math.floor(safeNumber(item.qty, 1)));
   const price = safeNumber(item.price, 0);
+  const stockRaw = item?.stock;
+  const stock = stockRaw === undefined || stockRaw === null || stockRaw === '' ? null : Math.floor(safeNumber(stockRaw, NaN));
+  const safeStock = Number.isFinite(stock) && stock >= 0 ? stock : null;
+  const safeQty = safeStock === null ? qty : Math.min(qty, safeStock);
   return {
     id: String(item.id ?? ''),
     name: String(item.name ?? ''),
     price,
-    qty,
+    qty: safeQty,
     image: String(item.image ?? ''),
-    type: String(item.type ?? 'item')
+    flavor: String(item.flavor ?? ''),
+    type: String(item.type ?? 'item'),
+    stock: safeStock
   };
 }
 
@@ -61,13 +67,15 @@ function render() {
   itemsRoot.innerHTML = items.map((it) => {
     const img = it.image || '/assets/imgStatic/logo-circular.png';
     const line = safeNumber(it.price, 0) * safeNumber(it.qty, 0);
+    const metaParts = [it.type, formatCOP(it.price)];
+    if (it.flavor) metaParts.unshift(`Sabor: ${it.flavor}`);
 
     return `
       <article class="cart-item" data-cart-item data-id="${encodeURIComponent(it.id)}">
         <img class="cart-item__img" src="${img}" alt="${escapeHtml(it.name)}">
         <div>
           <h3 class="cart-item__name">${escapeHtml(it.name)}</h3>
-          <p class="cart-item__meta">${escapeHtml(it.type)} · ${formatCOP(it.price)}</p>
+          <p class="cart-item__meta">${escapeHtml(metaParts.join(' · '))}</p>
         </div>
         <div class="cart-item__actions">
           <div class="cart-item__price">${formatCOP(line)}</div>
@@ -92,6 +100,46 @@ function bindEvents() {
   const clearBtn = document.querySelector('[data-cart-clear]');
   const form = document.querySelector('[data-checkout-form]');
   const hint = document.querySelector('[data-checkout-hint]');
+
+	const showNiceAlert = (title, text) => {
+		if (window.Swal && typeof window.Swal.fire === 'function') {
+			window.Swal.fire({
+				icon: 'error',
+				title,
+				text,
+				confirmButtonText: 'Entendido',
+				confirmButtonColor: '#96353b',
+				background: '#fffaf2'
+			});
+			return;
+		}
+		alert(`${title}\n\n${text}`);
+	};
+
+	let roleRaw = null;
+	try {
+		roleRaw = JSON.parse(localStorage.getItem('role'));
+	} catch {
+		roleRaw = localStorage.getItem('role');
+	}
+	const roleName = (roleRaw && (roleRaw.name || roleRaw.Roles_name || roleRaw.role)) || String(roleRaw || '');
+	const isAdmin = /admin/i.test(roleName) || (roleRaw && Number(roleRaw.id) === 1);
+	const viewAs = (localStorage.getItem('view_as') || '').toLowerCase();
+	const effectiveAdmin = isAdmin && viewAs !== 'cliente';
+
+  const requireLoginOrRedirect = () => {
+    const token = localStorage.getItem('token');
+    if (token) return token;
+
+    try {
+      localStorage.setItem('post_login_redirect', window.location.pathname || '/generalViews/cart');
+    } catch {
+      // ignore
+    }
+
+    window.location.href = '/generalViews/login';
+    return null;
+  };
 
   clearBtn?.addEventListener('click', () => {
     writeCart([]);
@@ -125,7 +173,9 @@ function bindEvents() {
     }
 
     if (target.matches('[data-qty-plus]')) {
-      items[idx].qty = Math.max(1, safeNumber(items[idx].qty, 1) + 1);
+      const next = Math.max(1, safeNumber(items[idx].qty, 1) + 1);
+      const limit = Number.isFinite(items[idx].stock) ? items[idx].stock : null;
+      items[idx].qty = limit === null ? next : Math.min(next, limit);
       writeCart(items);
       render();
     }
@@ -143,13 +193,24 @@ function bindEvents() {
     const idx = items.findIndex((it) => it.id === id);
     if (idx === -1) return;
 
-    items[idx].qty = Math.max(1, Math.floor(safeNumber(target.value, 1)));
+    const requested = Math.max(1, Math.floor(safeNumber(target.value, 1)));
+    const limit = Number.isFinite(items[idx].stock) ? items[idx].stock : null;
+    items[idx].qty = limit === null ? requested : Math.min(requested, limit);
     writeCart(items);
     render();
   });
 
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
+
+		if (effectiveAdmin) {
+			if (hint) hint.textContent = 'Tu sesión es de Administrador. Para comprar, entra como cliente.';
+			showNiceAlert('Acción no permitida', 'Tu sesión es de Administrador. Para realizar compras, entra como cliente.');
+			return;
+		}
+
+    const token = requireLoginOrRedirect();
+    if (!token) return;
 
     const items = readCart().map(normalizeItem).filter((it) => it.id);
     if (!items.length) {
@@ -189,16 +250,65 @@ function bindEvents() {
       return;
     }
 
-    if (hint) hint.textContent = 'Pedido listo. (Por ahora se guarda localmente)';
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Procesando...';
 
-    localStorage.setItem('checkout_draft_v1', JSON.stringify(payload));
-    writeCart([]);
-    render();
-    form.reset();
+    if (typeof HOST === 'undefined') window.HOST = 'http://localhost:3000';
 
-    setTimeout(() => {
-      if (hint) hint.textContent = '';
-    }, 4000);
+    fetch(`${HOST}/mySystem/tiendaProductos/checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(async (res) => {
+        const contentType = res.headers.get('content-type');
+        let data;
+        
+        if (contentType && contentType.includes('application/json')) {
+          data = await res.json();
+        } else {
+          const text = await res.text();
+          console.error('Respuesta no JSON recibida:', text);
+          throw new Error('El servidor devolvió una respuesta inesperada. Por favor, intenta de nuevo.');
+        }
+
+        if (!res.ok) {
+          // Si el token es inválido o expiró, redirigir al login
+          if (res.status === 401) {
+            showNiceAlert('Sesión expirada', 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+            setTimeout(() => {
+              localStorage.removeItem('token');
+              window.location.href = '/generalViews/login';
+            }, 3000);
+            return;
+          }
+          throw new Error(data.error || data.message || 'Error al procesar pedido');
+        }
+
+        if (hint) hint.textContent = '¡Pedido realizado con éxito! El stock ha sido actualizado.';
+        writeCart([]);
+        render();
+        form.reset();
+        localStorage.setItem('checkout_draft_v1', JSON.stringify(payload));
+      })
+      .catch((err) => {
+        console.error('Error en checkout:', err);
+        if (hint) hint.textContent = 'Error: ' + err.message;
+        showNiceAlert('Error en el pedido', err.message);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = originalText;
+        setTimeout(() => {
+          if (hint) hint.textContent = '';
+        }, 5000);
+      });
   });
 }
 

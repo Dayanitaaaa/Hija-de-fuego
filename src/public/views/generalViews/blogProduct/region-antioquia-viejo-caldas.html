@@ -34,7 +34,10 @@
             </div>
 
             <section class="dish-panel" id="dish-panel" hidden>
-                <h2 id="dish-title"></h2>
+                <div class="dish-header-content">
+                    <h2 id="dish-title"></h2>
+                    <div id="dish-image-container" class="dish-image-container" hidden></div>
+                </div>
 
                 <h3>Ingredientes</h3>
                 <ul id="dish-ingredients"></ul>
@@ -51,6 +54,7 @@
             const DATA = {
                 "crema-de-cafe": {
                     title: "Crema de Café",
+                    image: "../../../assets/imgStatic/Crema de café.jpg",
                     ingredients: [
                         "2 ½ tazas de crema de leche",
                         "2 cucharadas de café",
@@ -61,6 +65,7 @@
                 },
                 "lengua-en-salsa": {
                     title: "Lengua en Salsa",
+                    image: "../../../assets/imgStatic/Lengua en salsa.png",
                     ingredients: [
                         "Lengua",
                         "Ahogo",
@@ -77,6 +82,7 @@
                 },
                 "arroz-con-pollo": {
                     title: "Arroz con Pollo (Antioqueño)",
+                    image: "../../../assets/imgStatic/Arroz con pollo.png",
                     ingredients: [
                         "1 pollo",
                         "2 lb de arroz (lavado 3 veces)",
@@ -99,21 +105,26 @@
                 },
                 "migao": {
                     title: "Migao",
+                    image: "../../../assets/imgStatic/migao.png",
                     ingredients: ["Chocolate espeso", "Queso fresco", "Arepa blanca", "Pandebono", "Según la región: buñuelos, achiras o galletas"],
                     prep: "Se prepara con un chocolate espeso recién batido, al que se sumergen trozos de pan, pandebono, arepa o buñuelos."
                 },
                 "arepa-de-arriero": {
                     title: "Arepa de Arriero",
+                    image: "../../../assets/imgStatic/Antioquia.png",
+                    isCropped: true,
                     ingredients: ["Maíz trillado fermentado por 5 días", "Chicharrón de armolleja de res", "Sal al gusto"],
                     prep: "Muele el maíz fermentado hasta obtener una masa suave. Forma arepas y ásalas en una plancha caliente. Acompaña con chicharrón de armolleja bien crocante."
                 },
                 "bunuelos": {
                     title: "Buñuelos",
+                    image: "../../../assets/imgStatic/Buñuelo.jpg",
                     ingredients: ["2 lb de queso molido", "4 huevos batidos", "Harina de maíz", "2 cucharadas de almidón"],
                     prep: "Mezcla el queso con los huevos, el almidón y la harina hasta obtener una masa manejable. Forma bolitas y fríe en abundante aceite caliente hasta dorar."
                 },
                 "chorizo-santarrosano": {
                     title: "Chorizo Santarrosano",
+                    image: "../../../assets/imgStatic/Chorizo santarrosano.png",
                     ingredients: [
                         "2 lb de pulpa de cerdo",
                         "250 g de tocino",
@@ -128,21 +139,25 @@
                 },
                 "hogao-antioqueno": {
                     title: "Hogao Antioqueño",
+                    image: "../../../assets/imgStatic/Hogao antioqueño.png",
                     ingredients: ["Tomate", "Cebolla larga", "Aceite", "Sal", "Pimienta", "Azafrán"],
                     prep: "Sofríe la cebolla y el tomate en aceite. Añade sal, pimienta y azafrán al gusto. Cocina hasta espesar."
                 },
                 "frijoles-blancos": {
                     title: "Frijoles Blancos",
+                    image: "../../../assets/imgStatic/Frijoles blancos.png",
                     ingredients: ["Fríjol blanco", "Panela", "Costilla", "Tocineta", "Cebolla", "Huevo", "Ajo", "Sal y pimienta", "Salsa de tomate"],
-                    prep: "Pendiente por agregar."
+                    prep: "Cocina los fríjoles blancos con la costilla y la tocineta hasta que ablanden. Prepara un guiso con cebolla y ajo, agrégalo a los fríjoles junto con la panela y la salsa de tomate. Deja espesar y sirve con huevo picado por encima."
                 },
                 "orejas-de-cerdo": {
                     title: "Orejas de cerdo",
+                    image: "../../../assets/imgStatic/Oreja de cerdo.png",
                     ingredients: ["Orejas de cerdo", "Cebolla", "Huevo", "Apio", "Orégano", "Laurel", "Sal y pimienta"],
                     prep: "Cocina las orejas en agua con laurel, cebolla y apio hasta ablandar. Retira del fuego y corta en tiras. Puedes servirlas solas, empanizadas o con guiso."
                 },
                 "chorizo-casero": {
                     title: "Chorizo casero",
+                    image: "../../../assets/imgStatic/Chorizo casero.jpg",
                     ingredients: [
                         "1 kg de carne molida de cerdo",
                         "1 kg de carne molida de res",
@@ -158,6 +173,7 @@
                 },
                 "frisoles-antioquenos": {
                     title: "Frisoles Antioqueños",
+                    image: "../../../assets/imgStatic/Fijoles antioqueños.jpg",
                     ingredients: ["Fríjol cargamanto", "Patitas de cerdo", "Plátano verde", "Zanahoria rallada", "1 taza de hogao (licuado)", "Sal", "Pimienta", "Comino"],
                     prep: "Cocina los fríjoles con costilla, ajo y cebolla. Añade tocineta, huevo picado, salsa de tomate y un toque de panela. Deja cocinar hasta espesar y servir bien calientico."
                 }
@@ -177,6 +193,19 @@
             function renderDish(key) {
                 const dish = DATA[key];
                 title.textContent = dish?.title || 'Pendiente por agregar';
+                
+                // Renderizar imagen si existe
+                const imageContainer = document.getElementById('dish-image-container');
+                if (dish?.image) {
+                    const imgClass = dish.isCropped ? 'dish-detail-image is-cropped' : 'dish-detail-image';
+                    const imgStyle = dish.cropPosition ? `style="object-position: ${dish.cropPosition};"` : '';
+                    imageContainer.innerHTML = `<img src="${dish.image}" alt="${dish.title}" class="${imgClass}" ${imgStyle}>`;
+                    imageContainer.hidden = false;
+                } else {
+                    imageContainer.innerHTML = '';
+                    imageContainer.hidden = true;
+                }
+
                 ingredients.innerHTML = '';
 
                 if (dish?.ingredients?.length) {

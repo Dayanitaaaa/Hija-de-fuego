@@ -38,6 +38,55 @@
     display: block;
 }
 
+ .book-cover-slider {
+    position: relative;
+    width: 100%;
+ }
+
+ .book-cover-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid rgba(150, 53, 59, 0.18);
+    background: rgba(255, 255, 255, 0.82);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #96353b;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.14);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+    z-index: 2;
+ }
+
+ .book-cover-nav--prev {
+    left: 10px;
+ }
+
+ .book-cover-nav--next {
+    right: 10px;
+ }
+
+ .book-cover-nav:hover {
+    transform: translateY(-50%) scale(1.04);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+ }
+
+ .book-cover-nav:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(45, 90, 39, 0.18), 0 14px 34px rgba(0,0,0,0.18);
+ }
+
+ .book-cover-nav:disabled {
+    opacity: 0;
+    pointer-events: none;
+ }
+
 .book-title {
     font-family: 'Aboreto', cursive;
     font-size: clamp(2rem, 4vw, 3rem);

@@ -26,7 +26,10 @@
             </div>
 
             <section class="dish-panel" id="dish-panel" hidden>
-                <h2 id="dish-title"></h2>
+                <div class="dish-header-content">
+                    <div id="dish-image-container" class="dish-image-container" hidden></div>
+                    <h2 id="dish-title"></h2>
+                </div>
 
                 <h3>Ingredientes</h3>
                 <ul id="dish-ingredients"></ul>
@@ -43,6 +46,7 @@
             const DATA = {
                 "lechona": {
                     title: "Lechona",
+                    image: "../../../assets/imgStatic/lechona.png",
                     ingredients: [
                         "Manteca de cerdo",
                         "Cebolla larga (sin punta verde)",
@@ -55,6 +59,7 @@
                 },
                 "pan-batido": {
                     title: "Pan Batido",
+                    image: "../../../assets/imgStatic/Pan batido.png",
                     ingredients: [
                         "½ taza de agua tibia",
                         "½ taza de leche",
@@ -67,6 +72,7 @@
                 },
                 "insulso": {
                     title: "Insulso",
+                    image: "../../../assets/imgStatic/insulso.png",
                     ingredients: [
                         "1 taza de azúcar",
                         "1 libra de harina de maíz",
@@ -80,6 +86,7 @@
                 },
                 "asado-huilense": {
                     title: "Asado Huilense",
+                    image: "../../../assets/imgStatic/Asado huilense.png",
                     ingredients: [
                         "Pulpa de cerdo",
                         "Sal",
@@ -107,6 +114,7 @@
             const title = document.getElementById('dish-title');
             const ingredients = document.getElementById('dish-ingredients');
             const prep = document.getElementById('dish-prep');
+            const imageContainer = document.getElementById('dish-image-container');
 
             function setActive(el) {
                 chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
@@ -116,8 +124,19 @@
             function renderDish(key) {
                 const dish = DATA[key];
                 title.textContent = dish?.title || 'Pendiente por agregar';
-                ingredients.innerHTML = '';
 
+                // Renderizar imagen si existe
+                if (dish?.image) {
+                    const imgClass = dish.isCropped ? 'dish-detail-image is-cropped' : 'dish-detail-image';
+                    const imgStyle = dish.cropPosition ? `style="object-position: ${dish.cropPosition};"` : '';
+                    imageContainer.innerHTML = `<img src="${dish.image}" alt="${dish.title}" class="${imgClass}" ${imgStyle}>`;
+                    imageContainer.hidden = false;
+                } else {
+                    imageContainer.innerHTML = '';
+                    imageContainer.hidden = true;
+                }
+
+                ingredients.innerHTML = '';
                 if (dish?.ingredients?.length) {
                     dish.ingredients.forEach(text => {
                         const li = document.createElement('li');

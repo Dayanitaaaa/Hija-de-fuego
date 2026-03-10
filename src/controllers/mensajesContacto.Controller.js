@@ -62,11 +62,22 @@ export const responderMensajeContacto = async (req, res) => {
 		const { email, nombre } = rows[0];
 
 		// 2. Enviar email
-		await enviarEmailRespuesta(email, `Re: Mensaje de contacto - Hija del Fuego`, respuesta);
+		try {
+			await enviarEmailRespuesta(email, `Re: Mensaje de contacto - Hija del Fuego`, respuesta);
+		} catch (mailError) {
+			console.error('Error detallado de Nodemailer:', mailError);
+			return res.status(500).json({ 
+				message: 'Error de conexión con el servidor de correo. Verifica las credenciales en el archivo .env',
+				error: mailError.message 
+			});
+		}
 
-		return res.json({ message: 'Respuesta enviada correctamente al correo del cliente' });
+		// 3. Eliminar mensaje inmediatamente de la base de datos
+		await connect.query('DELETE FROM mensajes_contacto WHERE id = ?', [id]);
+
+		return res.json({ message: 'Respuesta enviada correctamente. El mensaje ha sido eliminado automáticamente.' });
 	} catch (error) {
-		console.error('Error al responder mensaje:', error);
-		return res.status(500).json({ message: 'Error al enviar la respuesta por correo' });
+		console.error('Error general al responder mensaje:', error);
+		return res.status(500).json({ message: 'Error interno del servidor', error: error.message });
 	}
 };

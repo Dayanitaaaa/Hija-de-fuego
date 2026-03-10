@@ -378,25 +378,25 @@ section {
 }
 
 .blog-title {
-	font-family: 'Cormorant Garamond', serif;
-	font-size: 3rem;
-	font-weight: 400;
-	letter-spacing: 0.2em;
-	color: #222;
-	text-align: center;
-	margin-top: 100px;
-	margin-bottom: 100px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: #222;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 60px;
 }
 
 .blog-hero {
-    padding: 2vh 0;
-    flex-shrink: 0; /* Evita que se encoja */
+    padding: 0;
+    flex-shrink: 0;
     position: relative;
     z-index: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-	margin-top: clamp(40px, 8vh, 60px);
+    margin-top: 20px;
 }
 
 .blog-hero + .blog-cards-container {

@@ -28,7 +28,10 @@
             </div>
 
             <section class="dish-panel" id="dish-panel" hidden>
-                <h2 id="dish-title"></h2>
+                <div class="dish-header-content">
+                    <h2 id="dish-title"></h2>
+                    <div id="dish-image-container" class="dish-image-container" hidden></div>
+                </div>
 
                 <h3>Ingredientes</h3>
                 <ul id="dish-ingredients"></ul>
@@ -45,6 +48,7 @@
             const DATA = {
                 "mulata-paseadora": {
                     title: "Mulata Paseadora",
+                    image: "../../../assets/imgStatic/Mulata paseadora.png",
                     ingredients: [
                         "Carne de res",
                         "Trocitos de carne de cerdo",
@@ -65,26 +69,31 @@
                 },
                 "arroz-clavao": {
                     title: "Arroz Clavao",
+                    image: "../../../assets/imgStatic/Arroz clavao.png",
                     ingredients: ["Arroz (lavado)", "Cebolla cabezona", "Cebolla larga", "Ajo", "Tomate maduro", "Longaniza", "Queso", "Aceite", "Bija", "Sal", "Pimienta"],
                     prep: "Sofríe las cebollas y el ajo, agrega la longaniza y cocina. Añade el arroz y condimenta."
                 },
                 "fresco-guanabana": {
                     title: "Fresco de Guanábana (Tumaco)",
+                    image: "../../../assets/imgStatic/Fresco de guanabana.png",
                     ingredients: ["Guanábana", "Leche", "Canela", "Azúcar", "Hielo"],
                     prep: "Se licúa la pulpa de guanábana con agua fría y azúcar al gusto. Luego se cuela y se sirve bien frío, con hielo si se desea."
                 },
                 "rellena-guapi": {
                     title: "Rellena (Guapi, Cauca)",
+                    image: "../../../assets/imgStatic/Rellena.png",
                     ingredients: ["1 litro de sangre", "Arroz cocido", "Cebolla larga", "Chillangua", "Poleo", "Orégano fresco", "Sal", "Pimienta", "Comino"],
                     prep: "Se lava bien el arroz y se mezcla con sangre fresca, cebolla, ajo, comino y otros condimentos. Esta mezcla se introduce en tripas limpias de cerdo y se amarran por porciones. Luego se cocinan en agua caliente sin hervir hasta que estén cocidas y firmes."
                 },
                 "tamal-gallina-cerdo": {
                     title: "Tamal de Gallina y Cerdo",
+                    image: "../../../assets/imgStatic/Tamal de gallina.png",
                     ingredients: ["Plátanos hartones", "Leche de coco", "Ajo", "Carne de cerdo", "Gallina", "Huevos duros", "Papa cocida en cubos", "Pimienta al gusto", "Chumbes"],
                     prep: "Con una base de leche de coco y plátano hartón, se mezcla un guiso de gallina, cerdo, papa, huevos y especias. Se envuelve en hojas (chumbes) y se cocina al vapor hasta lograr una masa tierna y llena de sabor."
                 },
                 "tamal-masa-arroz": {
                     title: "Tamal de Masa de Arroz",
+                    image: "../../../assets/imgStatic/Tamal de arroz.png",
                     ingredients: ["Arroz", "Leche de coco", "Agua de coco", "Refrito (tomate, cebolla, ajo, ají)", "Costilla de cerdo", "Huevos duros", "Pan", "Papas pastusas", "Sal y pimienta"],
                     prep: "El arroz se mezcla con leche y agua de coco. Se incorpora un refrito con costilla, huevo duro y papas. Se envuelve en hojas y se cuece al vapor, obteniendo un tamal cremoso, sabroso y muy tradicional."
                 }
@@ -104,6 +113,17 @@
             function renderDish(key) {
                 const dish = DATA[key];
                 title.textContent = dish?.title || 'Pendiente por agregar';
+                
+                // Renderizar imagen si existe
+                const imageContainer = document.getElementById('dish-image-container');
+                if (dish?.image) {
+                    imageContainer.innerHTML = `<img src="${dish.image}" alt="${dish.title}" class="dish-detail-image">`;
+                    imageContainer.hidden = false;
+                } else {
+                    imageContainer.innerHTML = '';
+                    imageContainer.hidden = true;
+                }
+
                 ingredients.innerHTML = '';
 
                 if (dish?.ingredients?.length) {

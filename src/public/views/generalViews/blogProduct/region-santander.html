@@ -31,7 +31,10 @@
             </div>
 
             <section class="dish-panel" id="dish-panel" hidden>
-                <h2 id="dish-title"></h2>
+                <div class="dish-header-content">
+                    <h2 id="dish-title"></h2>
+                    <div id="dish-image-container" class="dish-image-container" hidden></div>
+                </div>
 
                 <h3>Ingredientes</h3>
                 <ul id="dish-ingredients"></ul>
@@ -48,6 +51,7 @@
             const DATA = {
                 "pepitoria": {
                     title: "Pepitoria",
+                    image: "../../../assets/imgStatic/Pepitoria.png",
                     ingredients: [
                         "Sangre y menudo de cabro (riñones, hígado, corazón, etc.)",
                         "Cebolla larga",
@@ -64,6 +68,7 @@
                 },
                 "hallacas": {
                     title: "Hallacas",
+                    image: "../../../assets/imgStatic/Hallacas.png",
                     ingredients: [
                         "Masa de maíz pilado",
                         "Grasa de cerdo",
@@ -82,16 +87,19 @@
                 },
                 "bocadillo-veleno": {
                     title: "Bocadillo Veleño",
+                    image: "../../../assets/imgStatic/Bocadilllo Veleño.png",
                     ingredients: ["Guayabas maduras", "Azúcar", "Jugo de naranja", "Agua"],
                     prep: "Cocine las guayabas por 15 minutos en el agua, luego licúe, cuele y agregue el jugo de naranja. Ponga a fuego lento con el azúcar, revolviendo constantemente, hasta que deje los lados de la vasija y se recoja en el centro. Ponga en una vasija rectangular y cuando esté frío, parta en panelitas."
                 },
                 "chocolate-jiron": {
                     title: "Chocolate Jirón",
+                    image: "../../../assets/imgStatic/Chocolate Jiron.png",
                     ingredients: ["Cacao en semilla", "Azúcar (se muele junto al cacao)", "Agua o leche"],
                     prep: "Se tuesta el cacao, se pela y se muele junto con azúcar. Para servir, se hierve en agua o leche y se bate hasta que haga espuma. Se toma caliente."
                 },
                 "sancocho-santandereano": {
                     title: "Sancocho Santandereano",
+                    image: "../../../assets/imgStatic/Sancocho Santandereano.png",
                     ingredients: [
                         "Gallina",
                         "Costilla de res",
@@ -123,6 +131,7 @@
                 },
                 "mute-santandereano": {
                     title: "Mute Santandereano",
+                    image: "../../../assets/imgStatic/Mute Santandereano.png",
                     ingredients: [
                         "Costilla de res",
                         "Pulpa de cerdo",
@@ -159,6 +168,7 @@
                 },
                 "cabro-al-horno": {
                     title: "Cabro al Horno",
+                    image: "../../../assets/imgStatic/Cabro al Horno.png",
                     ingredients: ["Cabro (costilla o pernil)", "Sal nitro", "Comino", "Ajo", "Pimienta", "Pan rallado", "Sal y pimienta"],
                     prep: "Adobar cabro, cubrir con pan rallado, hornear hasta dorar."
                 }
@@ -178,6 +188,17 @@
             function renderDish(key) {
                 const dish = DATA[key];
                 title.textContent = dish?.title || 'Pendiente por agregar';
+                
+                // Renderizar imagen si existe
+                const imageContainer = document.getElementById('dish-image-container');
+                if (dish?.image) {
+                    imageContainer.innerHTML = `<img src="${dish.image}" alt="${dish.title}" class="dish-detail-image">`;
+                    imageContainer.hidden = false;
+                } else {
+                    imageContainer.innerHTML = '';
+                    imageContainer.hidden = true;
+                }
+
                 ingredients.innerHTML = '';
 
                 if (dish?.ingredients?.length) {

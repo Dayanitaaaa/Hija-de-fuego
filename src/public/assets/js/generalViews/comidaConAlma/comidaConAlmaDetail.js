@@ -19,7 +19,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const images = Array.isArray(p.imagenes) ? p.imagenes : [];
     const mainImage = p.imagen_principal || (images[0]?.url_imagen) || '/assets/imgStatic/logo-circular.png';
-    const chips = Array.isArray(p.sabores) ? p.sabores.map(s => `<span class="product__chip" role="listitem">${escapeHtml(s)}</span>`).join('') : '';
+    const flavors = Array.isArray(p.sabores) ? p.sabores : [];
+    const flavorOptions = flavors.map((f) => {
+      const name = typeof f === 'object' ? f.nombre : f;
+      const stock = typeof f === 'object' ? f.stock : 0;
+      return `<option value="${escapeHtml(name)}" data-stock="${stock}">${escapeHtml(name)} ${stock > 0 ? `(${stock} disponibles)` : '(Agotado)'}</option>`;
+    }).join('');
 
     root.innerHTML = `
       <div class="shop-header">
@@ -50,12 +55,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             <p class="product__price">$${Number(p.precio_cop || 0).toLocaleString('es-CO')} <span class="product__currency">COP</span></p>
             <p class="product__meta">${escapeHtml(p.descripcion || 'Disponible en Santa Marta. Ideal para nutrir y disfrutar.')}</p>
 
-            ${chips ? `
+            ${flavors.length ? `
               <div class="product__section">
                 <h2 class="product__subtitle">Sabores</h2>
-                <div class="product__chips" role="list">
-                  ${chips}
-                </div>
+                <label class="product__selectWrap">
+                  <select class="product__select" data-flavor-select required>
+                    <option value="" selected disabled>Selecciona un sabor</option>
+                    ${flavorOptions}
+                  </select>
+                </label>
+                <p id="stock-availability-msg" style="margin-top: 8px; font-size: 0.9rem; font-weight: 600;"></p>
               </div>
             ` : ''}
 
@@ -77,25 +86,104 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     initCarousel(root);
     initQty(root);
-    initAddToCart(root, p);
+    initAddToCart(root, p, mainImage);
+    initFlavorStockLogic(root);
   } catch (_err) {
     // silencioso
   }
 });
 
-function initAddToCart(scope, product) {
+function initFlavorStockLogic(scope) {
+  const flavorSelect = scope.querySelector('[data-flavor-select]');
+  const stockMsg = scope.querySelector('#stock-availability-msg');
+  const qtyInput = scope.querySelector('.product__qtyInput');
+  const buyBtn = scope.querySelector('[data-add-to-cart]');
+
+  if (!flavorSelect || !stockMsg) return;
+
+  flavorSelect.addEventListener('change', () => {
+    const selectedOption = flavorSelect.options[flavorSelect.selectedIndex];
+    const stock = parseInt(selectedOption.getAttribute('data-stock') || '0');
+
+    if (stock <= 0) {
+      stockMsg.textContent = 'Agotado para este sabor';
+      stockMsg.style.color = '#e74c3c';
+      buyBtn.disabled = true;
+      buyBtn.style.opacity = '0.5';
+      qtyInput.value = '0';
+      qtyInput.max = '0';
+    } else {
+      stockMsg.textContent = `${stock} unidades disponibles`;
+      stockMsg.style.color = '#27ae60';
+      buyBtn.disabled = false;
+      buyBtn.style.opacity = '1';
+      qtyInput.value = '1';
+      qtyInput.max = stock;
+    }
+  });
+}
+
+function initAddToCart(scope, product, fallbackImage) {
   const btn = scope.querySelector('[data-add-to-cart]');
   const qtyInput = scope.querySelector('.product__qtyInput');
+  const flavorSelect = scope.querySelector('[data-flavor-select]');
   if (!btn || !qtyInput) return;
 
+	const showNiceAlert = (title, text) => {
+		if (window.Swal && typeof window.Swal.fire === 'function') {
+			window.Swal.fire({
+				icon: 'error',
+				title,
+				text,
+				confirmButtonText: 'Entendido',
+				confirmButtonColor: '#96353b',
+				background: '#fffaf2'
+			});
+			return;
+		}
+		alert(`${title}\n\n${text}`);
+	};
+
+	let roleRaw = null;
+	try {
+		roleRaw = JSON.parse(localStorage.getItem('role'));
+	} catch {
+		roleRaw = localStorage.getItem('role');
+	}
+	const roleName = (roleRaw && (roleRaw.name || roleRaw.Roles_name || roleRaw.role)) || String(roleRaw || '');
+	const isAdmin = /admin/i.test(roleName) || (roleRaw && Number(roleRaw.id) === 1);
+	const viewAs = (localStorage.getItem('view_as') || '').toLowerCase();
+	const effectiveAdmin = isAdmin && viewAs !== 'cliente';
+
   btn.addEventListener('click', () => {
+		if (effectiveAdmin) {
+			showNiceAlert('Acción no permitida', 'Tu sesión es de Administrador. Para realizar compras, entra como cliente.');
+			return;
+		}
+    const selectedFlavor = flavorSelect ? String(flavorSelect.value || '').trim() : '';
+    if (flavorSelect && !selectedFlavor) {
+		showNiceAlert('Selecciona un sabor', 'Por favor selecciona un sabor para continuar.');
+      flavorSelect.focus();
+      return;
+    }
+
     const qty = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
+    const selectedOption = flavorSelect ? flavorSelect.options[flavorSelect.selectedIndex] : null;
+    const stock = selectedOption ? parseInt(selectedOption.getAttribute('data-stock') || '999') : 999;
+
+    if (qty > stock) {
+      showNiceAlert('Stock insuficiente', `Lo sentimos, solo quedan ${stock} unidades de este sabor.`);
+      return;
+    }
+
+    const itemImage = String(product?.imagen_principal || fallbackImage || '');
     const item = {
       id: String(product?.producto_id ?? ''),
       name: String(product?.nombre ?? 'Producto'),
       price: Number(product?.precio_cop ?? 0),
       qty,
-      image: String(product?.imagen_principal ?? ''),
+      image: itemImage,
+      flavor: selectedFlavor,
       type: 'comida-con-alma'
     };
 
@@ -117,6 +205,8 @@ function initAddToCart(scope, product) {
     const idx = cart.findIndex((x) => String(x?.id) === item.id);
     if (idx >= 0) {
       cart[idx].qty = Math.max(1, Number(cart[idx].qty || 1) + item.qty);
+		cart[idx].flavor = item.flavor;
+		cart[idx].image = item.image;
     } else {
       cart.push(item);
     }

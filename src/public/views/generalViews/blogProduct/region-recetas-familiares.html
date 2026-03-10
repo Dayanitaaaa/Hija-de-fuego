@@ -5,7 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recetas: Familiares</title>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../assets/css/generalViews/blogProduct.css">
+    <style>
+        /* Definición manual de la fuente Aboreto */
+        @font-face {
+            font-family: 'Aboreto';
+            src: url('https://fonts.gstatic.com/s/aboreto/v3/6xKtdS39LXvu7OXsh8w3_696.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Aplicación forzada a todos los títulos y subtítulos */
+        .region-page-title, 
+        .region-page-subtitle,
+        .dish-panel h2, 
+        #dish-title,
+        .dish-panel h3 {
+            font-family: 'Aboreto', serif !important;
+            font-weight: 400 !important;
+            text-transform: none !important;
+            letter-spacing: 1px !important;
+        }
+
+        /* Estilos para el efecto de intercambio de imagen (Hover) */
+        .dish-image-container.has-secondary {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dish-image-container.has-secondary .secondary-portrait {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 2;
+            background-color: white; /* Fondo para que la imagen se vea limpia si no llena el espacio */
+        }
+
+        .dish-image-container.has-secondary .main-dish-img {
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1;
+        }
+
+        .dish-image-container.has-secondary:hover .secondary-portrait {
+            opacity: 1;
+        }
+
+        .dish-image-container.has-secondary:hover .main-dish-img {
+            opacity: 0;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,8 +76,9 @@
     <main class="recipes-main">
         <div class="recipes-content-container">
             <a class="region-back" href="/generalViews/recipes">Volver</a>
-            <h1 class="region-page-title">Recetas familiares</h1>
-            <p class="region-page-subtitle">Selecciona una receta para ver ingredientes y preparación.</p>
+    <h1 class="region-page-title">Recetas familiares</h1>
+    <p class="region-page-subtitle">Selecciona un plato para ver ingredientes y preparación. (Pasa el mouse por la imagen para ver a la autora)</p>
+
 
             <div class="dish-chips" id="dish-chips">
                 <button class="dish-chip" type="button" data-dish="tamal-tolimense">Tamal Tolimense (por mi abuela Alba)</button>
@@ -24,7 +86,10 @@
             </div>
 
             <section class="dish-panel" id="dish-panel" hidden>
-                <h2 id="dish-title"></h2>
+                <div class="dish-header-content">
+                    <div id="dish-image-container" class="dish-image-container" hidden></div>
+                    <h2 id="dish-title"></h2>
+                </div>
 
                 <h3>Ingredientes</h3>
                 <ul id="dish-ingredients"></ul>
@@ -41,6 +106,8 @@
             const DATA = {
                 "tamal-tolimense": {
                     title: "Tamal Tolimense (por mi abuela Alba)",
+                    image: "../../../assets/imgStatic/Tamal tolimence por mi abuela .png",
+                    secondaryImage: "../../../assets/imgStatic/alba.png",
                     ingredients: [
                         "Arroz",
                         "Arvejas verdes",
@@ -59,6 +126,7 @@
                 },
                 "lechona-tolimense": {
                     title: "Lechona Tolimense (por mi abuelo Raúl)",
+                    image: "../../../assets/imgStatic/Lechona del abuelo.png",
                     ingredients: [
                         "Carne y cuero de cerdo",
                         "Arroz blanco cocido",
@@ -81,6 +149,7 @@
             const title = document.getElementById('dish-title');
             const ingredients = document.getElementById('dish-ingredients');
             const prep = document.getElementById('dish-prep');
+            const imageContainer = document.getElementById('dish-image-container');
 
             function setActive(el) {
                 chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
@@ -90,8 +159,29 @@
             function renderDish(key) {
                 const dish = DATA[key];
                 title.textContent = dish?.title || 'Pendiente por agregar';
-                ingredients.innerHTML = '';
 
+                // Renderizar imagen si existe con soporte para hover (secundaria)
+                if (dish?.image) {
+                    if (dish.secondaryImage) {
+                        imageContainer.classList.add('has-secondary');
+                        imageContainer.innerHTML = `
+                            <img src="${dish.image}" alt="${dish.title}" class="dish-detail-image main-dish-img">
+                            <img src="${dish.secondaryImage}" alt="Autora: ${dish.title}" class="secondary-portrait">
+                        `;
+                    } else {
+                        imageContainer.classList.remove('has-secondary');
+                        const imgClass = dish.isCropped ? 'dish-detail-image is-cropped' : 'dish-detail-image';
+                        const imgStyle = dish.cropPosition ? `style="object-position: ${dish.cropPosition};"` : '';
+                        imageContainer.innerHTML = `<img src="${dish.image}" alt="${dish.title}" class="${imgClass}" ${imgStyle}>`;
+                    }
+                    imageContainer.hidden = false;
+                } else {
+                    imageContainer.classList.remove('has-secondary');
+                    imageContainer.innerHTML = '';
+                    imageContainer.hidden = true;
+                }
+
+                ingredients.innerHTML = '';
                 if (dish?.ingredients?.length) {
                     dish.ingredients.forEach(text => {
                         const li = document.createElement('li');
