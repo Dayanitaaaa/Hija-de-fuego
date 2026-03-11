@@ -1,7 +1,12 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -15,17 +20,54 @@ const transporter = nodemailer.createTransport({
 
 export const enviarEmailRespuesta = async (to, subject, text) => {
     try {
+        const logoPath = path.join(__dirname, '../public/assets/imgStatic/logo-circular.png');
         const info = await transporter.sendMail({
             from: `"Hija del Fuego" <${process.env.SMTP_USER}>`,
             to,
             subject,
             text,
-            html: `<div style="font-family: sans-serif; padding: 20px; border: 1px solid #96353B; border-radius: 10px;">
-                    <h2 style="color: #96353B;">Hija del Fuego - Respuesta a tu mensaje</h2>
-                    <p>${text.replace(/\n/g, '<br>')}</p>
-                    <hr>
-                    <p style="font-size: 0.8em; color: #666;">Este es un mensaje automático, por favor no respondas directamente a este correo.</p>
-                   </div>`
+            attachments: [
+                {
+                    filename: 'logo-circular.png',
+                    path: logoPath,
+                    cid: 'hdf-logo'
+                }
+            ],
+            html: `
+                <div style="margin:0; padding:0; background:#f8f6f3;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f8f6f3; padding:24px 0;">
+                        <tr>
+                            <td align="center" style="padding:0 12px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; background:#ffffff; border:1px solid rgba(150,53,59,0.22); border-radius:16px; overflow:hidden;">
+                                    <tr>
+                                        <td style="background:linear-gradient(135deg,#5c1b1b 0%, #96353B 55%, #d6b36a 140%); padding:22px 22px 18px 22px; text-align:center;">
+                                            <img src="cid:hdf-logo" width="64" height="64" alt="Hija del Fuego" style="display:block; margin:0 auto 10px auto; border-radius:999px; background:#fffaf2; padding:6px;" />
+                                            <div style="font-family: 'Georgia', serif; color:#fffaf2; font-size:18px; letter-spacing:0.6px; font-weight:700;">Hija del Fuego</div>
+                                            <div style="font-family: Arial, sans-serif; color:rgba(255,250,242,0.92); font-size:13px; margin-top:4px;">Respuesta a tu mensaje</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:22px; font-family: Arial, sans-serif; color:#1f1f1f;">
+                                            <div style="font-size:14px; line-height:1.6; white-space:normal;">
+                                                ${String(text || '').replace(/\n/g, '<br>')}
+                                            </div>
+                                            <hr style="border:0; border-top:1px solid #eee; margin:18px 0;" />
+                                            <div style="font-size:12px; line-height:1.5; color:#6b6b6b;">
+                                                Este es un mensaje automático, por favor no respondas directamente a este correo.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background:#fffaf2; padding:14px 18px; text-align:center; font-family: Arial, sans-serif; font-size:12px; color:#6b6b6b;">
+                                            © ${new Date().getFullYear()} Hija del Fuego
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            `
         });
         return info;
     } catch (error) {

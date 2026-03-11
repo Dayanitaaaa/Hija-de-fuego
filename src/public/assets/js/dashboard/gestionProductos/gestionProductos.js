@@ -97,7 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'btn btn-sm btn-outline-secondary';
-      btn.textContent = flavor;
+      
+      // Corregir [object Object] extrayendo el nombre si es un objeto
+      const flavorName = (flavor && typeof flavor === 'object') ? (flavor.nombre || flavor.name) : flavor;
+      btn.textContent = flavorName;
+      
       btn.addEventListener('click', () => {
         currentFlavors.splice(idx, 1);
         renderFlavors();
@@ -377,6 +381,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('invProductId').value = id;
     const nameDisplay = document.getElementById('invProductNameDisplay');
     if (nameDisplay) nameDisplay.textContent = name;
+    
+    // Resetear selector de sabores
+    const flavorGroup = document.getElementById('invFlavorGroup');
+    const flavorSelect = document.getElementById('invFlavorSelect');
+    if (flavorGroup && flavorSelect) {
+      flavorGroup.style.display = 'none';
+      flavorSelect.innerHTML = '<option value="">Seleccione un sabor...</option>';
+      
+      // Buscar el producto para ver si tiene sabores
+      fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}`)
+        .then(r => r.json())
+        .then(p => {
+          if (p.sabores && Array.isArray(p.sabores) && p.sabores.length > 0) {
+            flavorGroup.style.display = 'block';
+            p.sabores.forEach(s => {
+              const opt = document.createElement('option');
+              // Manejar tanto string como objeto de sabor
+              const flavorName = (s && typeof s === 'object') ? (s.nombre || s.name) : s;
+              opt.value = flavorName;
+              opt.textContent = flavorName;
+              flavorSelect.appendChild(opt);
+            });
+          }
+        })
+        .catch(err => console.error('Error cargando sabores para stock:', err));
+    }
+
     document.getElementById('inventoryMovementForm').reset();
     bootstrap.Modal.getOrCreateInstance(document.getElementById('inventoryMovementModal')).show();
   }
@@ -439,8 +470,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = document.getElementById('invProductId').value;
     const type = document.getElementById('invType').value;
     const qty = document.getElementById('invQuantity').value;
+    const flavor = document.getElementById('invFlavorSelect')?.value || null;
     const adminName = getCurrentAdminName();
-    const reason = `Reposición Manual - Agregado por: ${adminName}`;
+    
+    let reason = `Reposición Manual - Agregado por: ${adminName}`;
+    if (flavor) {
+      reason += ` (Sabor: ${flavor})`;
+    }
     
     try {
       const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/movimientos`, {
@@ -450,7 +486,8 @@ document.addEventListener('DOMContentLoaded', () => {
           producto_id: id,
           tipo_movimiento: type,
           cantidad: qty,
-          motivo: reason
+          motivo: reason,
+          flavor: flavor // Enviamos el sabor para que el controlador lo procese
         })
       });
       if (!resp.ok) {
@@ -459,9 +496,46 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       bootstrap.Modal.getOrCreateInstance(document.getElementById('inventoryMovementModal')).hide();
       loadStoreProducts();
-      alert('Movimiento registrado con éxito');
+      
+      if (typeof Swal !== 'undefined') {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Movimiento registrado correctamente',
+          confirmButtonColor: '#2d5a27',
+          background: '#fffaf2'
+        });
+      } else if (window.Swal) {
+        window.Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Movimiento registrado correctamente',
+          confirmButtonColor: '#2d5a27',
+          background: '#fffaf2'
+        });
+      } else {
+        alert('Movimiento registrado con éxito');
+      }
     } catch (err) {
-      alert(err.message);
+      if (typeof Swal !== 'undefined') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: err.message,
+          confirmButtonColor: '#96353b',
+          background: '#fffaf2'
+        });
+      } else if (window.Swal) {
+        window.Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: err.message,
+          confirmButtonColor: '#96353b',
+          background: '#fffaf2'
+        });
+      } else {
+        alert(err.message);
+      }
     }
   });
 

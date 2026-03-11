@@ -6,7 +6,9 @@
   <title>Gestión de Productos</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="../../../assets/css/loader.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -138,27 +140,54 @@
 
   <!-- Modal Ajuste de Inventario -->
   <div class="modal fade" id="inventoryMovementModal" tabindex="-1" aria-labelledby="inventoryMovementModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-info text-white">
-          <h5 class="modal-title" id="inventoryMovementModalLabel">Añadir Stock</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background-color: #fffaf2;">
+        <div class="modal-header border-0" style="background: linear-gradient(135deg, #5c1b1b 0%, #96353b 100%); padding: 20px 25px;">
+          <h5 class="modal-title fs-4 fw-bold" id="inventoryMovementModalLabel" style="color: #fffaf2; font-family: 'Aboreto', cursive; letter-spacing: 1px;">
+            <i class="bi bi-box-seam me-2"></i>Añadir Stock
+          </h5>
+          <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close" style="filter: brightness(0) invert(1);"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding: 30px 25px;">
           <form id="inventoryMovementForm">
             <input type="hidden" id="invProductId">
             <input type="hidden" id="invType" value="ENTRADA">
-            <div class="mb-3">
-              <p class="mb-1 fw-bold">Producto: <span id="invProductNameDisplay" class="text-info"></span></p>
+            
+            <div class="product-info-box mb-4 p-3" style="background: rgba(150, 53, 59, 0.05); border-left: 4px solid #96353b; border-radius: 8px;">
+              <p class="mb-0 text-muted small text-uppercase fw-bold" style="letter-spacing: 0.5px;">Producto Seleccionado</p>
+              <p id="invProductNameDisplay" class="mb-0 fs-5 fw-bold" style="color: #5c1b1b;"></p>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Cantidad a ingresar:</label>
-              <input type="number" id="invQuantity" class="form-control" min="1" required placeholder="Ej: 10">
+
+            <!-- Selector de Sabor (Cargado dinámicamente) -->
+            <div id="invFlavorGroup" class="mb-4" style="display: none;">
+              <label class="form-label fw-bold" style="color: #5c1b1b; font-size: 0.95rem;">Seleccionar Sabor:</label>
+              <select id="invFlavorSelect" class="form-select shadow-sm" style="border-radius: 12px; border: 1px solid rgba(150, 53, 59, 0.2); padding: 12px;">
+                <option value="">Seleccione un sabor...</option>
+              </select>
             </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold" style="color: #5c1b1b; font-size: 0.95rem;">Cantidad a ingresar:</label>
+              <div class="input-group shadow-sm" style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(150, 53, 59, 0.2);">
+                <span class="input-group-text border-0" style="background: #fff; color: #96353b;">
+                  <i class="bi bi-plus-circle-fill"></i>
+                </span>
+                <input type="number" id="invQuantity" class="form-control border-0 py-3" min="1" required placeholder="Ej: 10" style="background: #fff; font-size: 1.1rem; focus: none;">
+              </div>
+              <div class="form-text mt-2 text-muted">Aumentará el stock actual del producto en el sistema.</div>
+            </div>
+
             <input type="hidden" id="invReason" value="Reposición Manual">
-            <div class="text-end">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-info">Añadir al Stock</button>
+            
+            <div class="d-flex gap-3 mt-4">
+              <button type="button" class="btn flex-grow-1 py-3 fw-bold" data-bs-dismiss="modal" 
+                      style="border-radius: 12px; background: #e9ecef; color: #495057; border: none; transition: all 0.3s ease;">
+                Cancelar
+              </button>
+              <button type="submit" class="btn flex-grow-1 py-3 fw-bold shadow-sm" 
+                      style="border-radius: 12px; background: linear-gradient(135deg, #2d5a27 0%, #1e3d1a 100%); color: white; border: none; transition: all 0.3s ease;">
+                Confirmar Ingreso
+              </button>
             </div>
           </form>
         </div>
@@ -169,82 +198,81 @@
   <!-- Modal crear/editar producto -->
   <div class="modal fade" id="storeProductModal" tabindex="-1" aria-labelledby="storeProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="storeProductModalLabel">Nuevo producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background-color: #fffaf2;">
+        <div class="modal-header border-0" style="background: linear-gradient(135deg, #5c1b1b 0%, #96353b 100%); padding: 20px 25px;">
+          <h5 class="modal-title fs-4 fw-bold" id="storeProductModalLabel" style="color: #fffaf2; font-family: 'Aboreto', cursive; letter-spacing: 1px;">Editar producto</h5>
+          <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal" aria-label="Close" style="filter: brightness(0) invert(1);"></button>
         </div>
-        <div class="modal-body">
-          <form id="storeProductForm">
-            <input type="hidden" id="storeProductId" />
+        <div class="modal-body" style="padding: 30px 25px;">
+          <form id="storeProductForm" class="row g-4">
+            <input type="hidden" id="storeProductId">
+            <input type="hidden" id="storeProductPage" value="comida-con-alma">
 
-            <div class="row g-3">
-              <div class="col-12 col-md-8">
-                <label class="form-label" for="storeProductName">Nombre</label>
-                <input class="form-control" id="storeProductName" type="text" required />
-              </div>
-              <div class="col-12 col-md-4">
-                <label class="form-label" for="storeProductCategory">Categoría</label>
-                <select class="form-select" id="storeProductCategory">
-                  <option value="">Seleccione una categoría</option>
-                  <option value="Alimentos">Alimentos</option>
-                  <option value="Bebidas">Bebidas</option>
-                  <option value="Postres">Postres</option>
-                  <option value="Snacks">Snacks</option>
-                  <option value="Lácteos">Lácteos</option>
-                  <option value="Otros">Otros</option>
-                </select>
-              </div>
+            <div class="col-md-8">
+              <label class="form-label fw-bold" style="color: #5c1b1b;">Nombre del Producto</label>
+              <input type="text" id="storeProductName" class="form-control shadow-sm" required style="border-radius: 12px; border: 1px solid rgba(150, 53, 59, 0.2); padding: 12px;">
+            </div>
 
-              <div class="col-12 col-md-4 d-flex flex-column justify-content-end">
-                <label class="form-label" for="storeProductPrice">Precio (Pesos Colombianos - COP)</label>
-                <div class="input-group">
-                  <span class="input-group-text">$</span>
-                  <input class="form-control" id="storeProductPrice" type="number" min="0" step="1" placeholder="Ej: 30000" required />
-                </div>
-                <div class="form-text">Ingresa el valor sin puntos ni comas.</div>
-              </div>
-              <div class="col-12 col-md-4 d-flex flex-column justify-content-end">
-                <label class="form-label" for="storeProductStock">Stock</label>
-                <div class="input-group">
-					<span class="input-group-text"><i class="fa-solid fa-box"></i></span>
-					<input class="form-control" id="storeProductStock" type="number" min="0" step="1" />
-				</div>
-				<div class="form-text">&nbsp;</div>
-              </div>
-              <div class="col-12 col-md-4 d-flex align-items-end">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="storeProductActive" checked>
-                  <label class="form-check-label" for="storeProductActive">Activo</label>
-                </div>
-              </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold" style="color: #5c1b1b;">Categoría</label>
+              <select id="storeProductCategory" class="form-select shadow-sm" style="border-radius: 12px; border: 1px solid rgba(150, 53, 59, 0.2); padding: 12px;">
+                <option value="Alimentos">Alimentos</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Postres">Postres</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Lácteos">Lácteos</option>
+                <option value="Cereales">Cereales</option>
+                <option value="libros">Libros</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
 
-              <div class="col-12">
-                <label class="form-label" for="storeProductDescription">Descripción</label>
-                <textarea class="form-control" id="storeProductDescription" rows="3"></textarea>
-              </div>
-
-              <div class="col-12">
-                <label class="form-label">Sabores</label>
-                <div class="input-group mb-2">
-                  <input class="form-control" id="flavorInput" type="text" placeholder="Escribe un sabor y presiona Agregar" />
-                  <button class="btn btn-outline-primary" type="button" id="addFlavorBtn">Agregar</button>
-                </div>
-                <div id="flavorsWrap" class="d-flex flex-wrap gap-2"></div>
-                <div class="form-text">Opcional: útil para alimentos con variantes de sabor.</div>
-              </div>
-
-              <div class="col-12">
-                <label class="form-label">Imágenes (máx 3)</label>
-                <input class="form-control" id="storeProductImages" type="file" accept="image/*" multiple />
-                <div class="form-text">Puedes subir imágenes después de guardar el producto.</div>
-                <div id="imagesList" class="mt-3 d-flex flex-column gap-2"></div>
+            <div class="col-md-5">
+              <label class="form-label fw-bold" style="color: #5c1b1b;">Precio (COP)</label>
+              <div class="input-group shadow-sm" style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(150, 53, 59, 0.2);">
+                <span class="input-group-text border-0" style="background: #fff; color: #96353b;">$</span>
+                <input type="text" id="storeProductPrice" class="form-control border-0 py-2" required style="background: #fff;">
               </div>
             </div>
 
-            <div class="d-flex justify-content-end gap-2 mt-4">
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-success">Guardar</button>
+            <div class="col-md-4">
+              <label class="form-label fw-bold" style="color: #5c1b1b;">Stock Inicial</label>
+              <div class="input-group shadow-sm" style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(150, 53, 59, 0.2);">
+                <span class="input-group-text border-0" style="background: #fff; color: #96353b;"><i class="bi bi-box-seam"></i></span>
+                <input type="number" id="storeProductStock" class="form-control border-0 py-2" value="0" style="background: #fff;">
+              </div>
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end pb-2">
+              <div class="form-check form-switch custom-switch">
+                <input class="form-check-input" type="checkbox" id="storeProductActive" checked>
+                <label class="form-check-label fw-bold" for="storeProductActive" style="color: #5c1b1b;">¿Activo?</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold" style="color: #5c1b1b;">Descripción</label>
+              <textarea id="storeProductDescription" class="form-control shadow-sm" rows="3" style="border-radius: 12px; border: 1px solid rgba(150, 53, 59, 0.2); padding: 12px;"></textarea>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold" style="color: #5c1b1b;">Sabores Disponibles</label>
+              <div class="input-group shadow-sm mb-2" style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(150, 53, 59, 0.2);">
+                <input type="text" id="flavorInput" class="form-control border-0 py-2" placeholder="Escriba un sabor y presione Agregar">
+                <button type="button" id="addFlavorBtn" class="btn btn-dark px-4" style="background: #1f1f1f; border: none;">Agregar</button>
+              </div>
+              <div id="flavorsWrap" class="d-flex flex-wrap gap-2 mt-2"></div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold" style="color: #5c1b1b;">Imágenes del Producto (Máx 3)</label>
+              <input type="file" id="storeProductImages" class="form-control shadow-sm" multiple accept="image/*" style="border-radius: 12px; border: 1px solid rgba(150, 53, 59, 0.2); padding: 10px;">
+              <div id="imagesList" class="mt-3 d-flex flex-column gap-2"></div>
+            </div>
+
+            <div class="col-12 d-flex gap-3 mt-4">
+              <button type="button" class="btn flex-grow-1 py-3 fw-bold" data-bs-dismiss="modal" style="border-radius: 12px; background: #e9ecef; color: #495057; border: none;">Cancelar</button>
+              <button type="submit" class="btn flex-grow-1 py-3 fw-bold" style="border-radius: 12px; background: linear-gradient(135deg, #5c1b1b 0%, #96353b 100%); color: white; border: none; box-shadow: 0 4px 15px rgba(150, 53, 59, 0.2);">Guardar Cambios</button>
             </div>
           </form>
         </div>

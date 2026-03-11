@@ -232,22 +232,73 @@ export const updateStoreProductStock = async (req, res) => {
 
 export const addInventoryMovement = async (req, res) => {
 	try {
-		const { producto_id, tipo_movimiento, cantidad, motivo } = req.body;
+		const { producto_id, tipo_movimiento, cantidad, motivo, flavor } = req.body;
 		if (!producto_id || !tipo_movimiento || !cantidad) {
 			return res.status(400).json({ error: 'Faltan campos: producto_id, tipo_movimiento, cantidad' });
 		}
 
-		// Actualizar stock en tabla principal
-		const sign = tipo_movimiento === 'ENTRADA' ? '+' : '-';
-		await connect.query(
-			`UPDATE ${TABLE_PRODUCTS} SET stock = stock ${sign} ? WHERE producto_id = ?`,
-			[Number(cantidad), producto_id]
-		);
+		// 1. Obtener el producto actual para manejar sabores
+		const [rows] = await connect.query(`SELECT sabores, stock FROM ${TABLE_PRODUCTS} WHERE producto_id = ?`, [producto_id]);
+		if (!rows.length) return res.status(404).json({ error: 'Producto no encontrado' });
 
-		// Registrar movimiento
+		const product = rows[0];
+		let saboresArr = typeof product.sabores === 'string' ? safeJsonParse(product.sabores) : product.sabores;
+		if (!Array.isArray(saboresArr)) saboresArr = [];
+
+		const qtyNum = Number(cantidad);
+		const sign = tipo_movimiento === 'ENTRADA' ? 1 : -1;
+
+		// 2. Si se especificó un sabor, actualizar su stock individual
+		if (flavor && saboresArr.length > 0) {
+			let flavorFound = false;
+			saboresArr = saboresArr.map(s => {
+				const sName = (s && typeof s === 'object') ? (s.nombre || s.name) : s;
+				if (String(sName).trim() === String(flavor).trim()) {
+					flavorFound = true;
+					const currentFlavorStock = (s && typeof s === 'object') ? Number(s.stock || 0) : 0;
+					return {
+						nombre: sName,
+						stock: Math.max(0, currentFlavorStock + (qtyNum * sign))
+					};
+				}
+				// Si era un string, lo convertimos a objeto para mantener consistencia de stock
+				return (s && typeof s === 'object') ? s : { nombre: s, stock: 0 };
+			});
+
+			if (flavorFound) {
+				// Actualizar el campo sabores en la BD
+				await connect.query(
+					`UPDATE ${TABLE_PRODUCTS} SET sabores = ? WHERE producto_id = ?`,
+					[JSON.stringify(saboresArr), producto_id]
+				);
+
+				// Sincronizar el stock general como la suma de todos los sabores
+				const totalStock = saboresArr.reduce((acc, s) => acc + Number(s.stock || 0), 0);
+				await connect.query(
+					`UPDATE ${TABLE_PRODUCTS} SET stock = ? WHERE producto_id = ?`,
+					[totalStock, producto_id]
+				);
+			} else {
+				// Si no se encontró el sabor, actualizamos el stock general normalmente
+				const sqlSign = tipo_movimiento === 'ENTRADA' ? '+' : '-';
+				await connect.query(
+					`UPDATE ${TABLE_PRODUCTS} SET stock = stock ${sqlSign} ? WHERE producto_id = ?`,
+					[qtyNum, producto_id]
+				);
+			}
+		} else {
+			// 3. No hay sabor o el producto no maneja sabores, actualizar stock general normalmente
+			const sqlSign = tipo_movimiento === 'ENTRADA' ? '+' : '-';
+			await connect.query(
+				`UPDATE ${TABLE_PRODUCTS} SET stock = stock ${sqlSign} ? WHERE producto_id = ?`,
+				[qtyNum, producto_id]
+			);
+		}
+
+		// 4. Registrar el movimiento en el historial
 		await connect.query(
 			`INSERT INTO ${TABLE_MOVEMENTS} (producto_fk, tipo_movimiento, cantidad, motivo, usuario_fk) VALUES (?, ?, ?, ?, ?)`,
-			[producto_id, tipo_movimiento, Number(cantidad), motivo || null, req.user?.id ?? null]
+			[producto_id, tipo_movimiento, qtyNum, motivo || null, req.user?.id ?? null]
 		);
 
 		res.status(201).json({ message: 'Movimiento registrado correctamente' });

@@ -17,16 +17,11 @@
     <main class="culture-main">
         <div class="culture-container">
             <h1 class="culture-title">NUESTROS LIBROS</h1>
-            <div class="culture-cards-container">
-                <a class="culture-card" href="/generalViews/book/raices-y-fogones">
-                    <div class="culture-card-image-container">
-                        <img src="../../../assets/imgStatic/imagen10.jpg" alt="Libro Raíces y Fogones">
-                    </div>
-                    <div class="culture-card-info">
-                        <p class="culture-card-title">Libro Raíces y Fogones</p>
-                        <p class="culture-card-price">COP 30.000$</p>
-                    </div>
-                </a>
+            <div id="books-dynamic-container" class="culture-cards-container">
+                <!-- Los libros se cargarán dinámicamente desde la base de datos -->
+                <div class="text-center w-100 py-5">
+                    <p class="text-muted">Cargando catálogo de libros...</p>
+                </div>
             </div>
         </div>
     </main>
@@ -34,5 +29,50 @@
     <footer></footer>
     <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
     <script src="../../../assets/js/system/constans.js"></script>
+    <script>
+        (async function() {
+            const container = document.getElementById('books-dynamic-container');
+            if (!container) return;
+
+            if (typeof HOST === 'undefined') window.HOST = 'http://localhost:3000';
+            const STORE_PRODUCTS_PATH = '/mySystem/tiendaProductos';
+
+            try {
+                // El usuario mencionó que la categoría es "libro" (en singular o plural según el dashboard)
+                // En el dashboard vimos que se usa "libros" en minúsculas para el filtro.
+                const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}?pagina=libros`);
+                if (!resp.ok) throw new Error('Error al cargar libros');
+                
+                const products = await resp.json();
+                
+                if (!products || products.length === 0) {
+                    container.innerHTML = '<div class="text-center w-100 py-5"><p class="text-muted">Próximamente nuevos libros...</p></div>';
+                    return;
+                }
+
+                container.innerHTML = products.map(p => {
+                    const price = p.precio_cop ? Number(p.precio_cop).toLocaleString('es-CO') : 'Consultar';
+                    const img = p.imagen_principal || '../../../assets/imgStatic/imagen10.jpg';
+                    const detailUrl = `/generalViews/book/raices-y-fogones`; // Por ahora redirige al detalle existente
+                    
+                    return `
+                        <a class="culture-card" href="${detailUrl}">
+                            <div class="culture-card-image-container">
+                                <img src="${img}" alt="${p.nombre}">
+                            </div>
+                            <div class="culture-card-info">
+                                <p class="culture-card-title">${p.nombre}</p>
+                                <p class="culture-card-price">COP ${price}$</p>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('Error:', err);
+                container.innerHTML = '<div class="text-center w-100 py-5"><p class="text-danger">Error al cargar los libros. Por favor intenta más tarde.</p></div>';
+            }
+        })();
+    </script>
 </body>
 </html>

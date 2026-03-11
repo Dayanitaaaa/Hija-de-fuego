@@ -20,7 +20,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const images = Array.isArray(p.imagenes) ? p.imagenes : [];
     const mainImage = p.imagen_principal || (images[0]?.url_imagen) || '/assets/imgStatic/logo-circular.png';
     const flavors = Array.isArray(p.sabores) ? p.sabores : [];
-    const flavorOptions = flavors.map((s) => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+    const toFlavorName = (s) => {
+      if (s && typeof s === 'object') return String(s.nombre ?? s.name ?? '').trim();
+      return String(s ?? '').trim();
+    };
+    const flavorOptions = flavors
+      .map((s) => {
+        const name = toFlavorName(s);
+        if (!name) return '';
+        return `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
+      })
+      .filter(Boolean)
+      .join('');
 
     root.innerHTML = `
       <div class="shop-header">

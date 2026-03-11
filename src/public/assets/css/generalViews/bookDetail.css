@@ -8,7 +8,6 @@
 .book-detail-main {
     position: relative;
     min-height: 100vh;
-    /* Textura de papel artesanal similar a las recetas */
     background-color: #faf7f2;
     background-image: 
         url("https://www.transparenttextures.com/patterns/cream-paper.png"),

@@ -12,12 +12,7 @@ body {
 
 .main-header {
 	width: 100%;
-	background: linear-gradient(
-		180deg,
-		#F2E6E7 0%,
-		#D9B8BB 40%,
-		#FFFFFF 100%
-	);
+	background: #fff;
 	color: #111;
 	padding: 0;
 	position: absolute;
@@ -76,7 +71,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 14px clamp(14px, 3vw, 24px);
+	padding: clamp(12px, 4vw, 28px);
 	height: auto;
 	min-height: 100px;
 	width: 100%;
@@ -108,7 +103,7 @@ body {
 
 .btn-group-products, .btn-group-contact {
 	display: flex;
-	gap: clamp(10px, 2.4vw, 18px);
+	gap: clamp(12px, 4vw, 26px);
 	justify-content: center;
 	align-items: center;
 	margin: 0;
@@ -119,9 +114,8 @@ body {
 .btn-group-products .header-btn,
 .btn-group-contact .header-btn {
 	display: inline-block;
-	padding: 0.20em 0.78em;
+	padding: clamp(0.12em, 1vw, 0.22em) clamp(0.6em, 3vw, 0.9em);
 	font-size: clamp(1rem, 2vw, 1.1rem);
-	line-height: 1.2;
 	color: #222;
 	background: linear-gradient(180deg, #fffbe6 60%, #fff 100%);
 	border: none;
@@ -133,23 +127,11 @@ body {
 	letter-spacing: 0.01em;
 	transition: background 0.3s, color 0.3s, box-shadow 0.3s;
 	text-align: center;
-	white-space: nowrap;
-	min-width: 86px;
 	background-clip: padding-box;
-	margin: 0;
+	margin: 0 0.5em;
 	position: relative;
 	z-index: 1;
 	box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-@media (max-width: 520px) {
-	.btn-group-products .header-btn,
-	.btn-group-contact .header-btn {
-		padding: 0.22em 0.78em;
-		font-size: 0.98rem;
-		line-height: 1.05;
-		min-width: 0;
-	}
 }
 
 .btn-group-products .header-btn:hover,
@@ -158,104 +140,6 @@ body {
 	color: #a97c2f;
 	box-shadow: 0 4px 16px rgba(75,24,24,0.18);
 	border-bottom: 4px solid #d6b36a;
-}
-
-.header-dropdown {
-	position: relative;
-	display: inline-block;
-}
-
-.header-dropdown__trigger {
-	cursor: pointer;
-}
-
-.header-dropdown__menu {
-	position: absolute;
-	top: calc(100% + 10px);
-	left: 0;
-	min-width: 220px;
-	background: #ffffff;
-	border-radius: 22px;
-	box-shadow: 0 22px 50px rgba(0,0,0,0.22);
-	padding: 18px 18px;
-	z-index: 2000;
-	display: none;
-}
-
-#auth-buttons-global, #user-menu-global {
-    display: none;
-}
-
-#auth-buttons-global {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-/* Estilo premium para el botón de usuario en header global */
-.user-btn-global {
-    background: linear-gradient(135deg, #a97c2f 0%, #d6b36a 100%) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 20px !important;
-    padding: 6px 16px !important;
-    font-weight: 500 !important;
-    box-shadow: 0 4px 10px rgba(169, 124, 47, 0.2) !important;
-    transition: all 0.3s ease !important;
-}
-
-.user-btn-global:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(169, 124, 47, 0.3) !important;
-    color: #fffbe6 !important;
-}
-
-/* Mejora del dropdown global */
-#user-menu-global .header-dropdown__menu {
-    border: 1px solid rgba(169, 124, 47, 0.1);
-    border-radius: 15px;
-    overflow: hidden;
-    padding: 0;
-}
-
-#user-menu-global .header-dropdown__item {
-    padding: 12px 20px;
-    border-bottom: 1px solid #f9f9f9;
-}
-
-#user-menu-global .header-dropdown__item:hover {
-    background-color: #fdfaf0;
-    color: #a97c2f;
-}
-
-.header-dropdown.is-open .header-dropdown__menu {
-	display: block;
-}
-
-.header-dropdown:hover .header-dropdown__menu {
-	display: block;
-}
-
-.header-dropdown:focus-within .header-dropdown__menu {
-	display: block;
-}
-
-.header-dropdown__item {
-	display: block;
-	color: #111;
-	text-decoration: none;
-	font-family: 'Cinzel', 'Georgia', serif;
-	font-size: 1.15rem;
-	padding: 14px 6px;
-	border-bottom: 2px solid rgba(0,0,0,0.18);
-}
-
-.header-dropdown__item:last-child {
-	border-bottom: none;
-}
-
-.header-dropdown__item:hover {
-	color: #d6b36a;
 }
 
 .navbar {
@@ -334,41 +218,6 @@ body {
 	   height: auto;
 	   padding: 20px;
    }
-
-	.menu-toggle {
-		display: flex;
-		align-self: flex-start;
-	}
-
-	.navbar {
-		width: 100%;
-	}
-
-	.nav-menu {
-		display: none;
-		flex-direction: column;
-		align-items: stretch;
-		justify-content: flex-start;
-		row-gap: 12px;
-	}
-
-	.nav-menu.open {
-		display: flex;
-		padding-top: 12px;
-	}
-
-	.nav-menu > li {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-	}
-
-	.btn-group-products,
-	.btn-group-contact {
-		width: 100%;
-		justify-content: center;
-	}
-
    .logo {
 	   font-size: 2rem;	
 	   margin-bottom: 0;
