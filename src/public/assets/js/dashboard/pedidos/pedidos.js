@@ -180,7 +180,37 @@ async function verDetalle(pedidoId) {
         document.getElementById('modalEstadoBadge').innerHTML = getEstadoBadge(pedido.estado);
         
         // Establecer estado actual en el select
-        document.getElementById('nuevoEstadoSelect').value = pedido.estado;
+        const select = document.getElementById('nuevoEstadoSelect');
+        select.value = pedido.estado;
+
+        // Bloquear estados anteriores
+        const estadosOrden = ['PENDIENTE', 'PREPARANDO', 'ENVIADO', 'ENTREGADO'];
+        const indexActual = estadosOrden.indexOf(pedido.estado);
+        const finalizados = ['ENTREGADO', 'CANCELADO'];
+
+        Array.from(select.options).forEach(option => {
+            const indexOption = estadosOrden.indexOf(option.value);
+            
+            // Si el pedido ya terminó, deshabilitar todo
+            if (finalizados.includes(pedido.estado)) {
+                option.disabled = true;
+            } 
+            // Si es un estado del flujo normal
+            else if (indexOption !== -1) {
+                // Deshabilitar si es menor o igual al actual (excepto el actual para que se vea)
+                option.disabled = indexOption < indexActual;
+            }
+            // Regla para CANCELADO
+            else if (option.value === 'CANCELADO') {
+                option.disabled = !['PENDIENTE', 'PREPARANDO'].includes(pedido.estado);
+            }
+        });
+
+        // Deshabilitar botón Guardar si ya está finalizado
+        const btnGuardar = document.querySelector('#detallePedidoModal .btn-primary[onclick="cambiarEstado()"]');
+        if (btnGuardar) {
+            btnGuardar.disabled = finalizados.includes(pedido.estado);
+        }
         
         // Llenar tabla de productos
         const productosBody = document.getElementById('modalProductosTableBody');

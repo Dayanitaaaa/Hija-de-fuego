@@ -81,13 +81,16 @@ export const updatePedidoEstado = async (req, res) => {
 		const { id } = req.params;
 		const { estado } = req.body;
 
-		if (!['PENDIENTE', 'PREPARANDO', 'ENVIADO', 'ENTREGADO', 'CANCELADO'].includes(estado)) {
+		const estadosOrden = ['PENDIENTE', 'PREPARANDO', 'ENVIADO', 'ENTREGADO'];
+		const finalizados = ['ENTREGADO', 'CANCELADO'];
+
+		if (![...estadosOrden, 'CANCELADO'].includes(estado)) {
 			return res.status(400).json({ error: 'Estado no válido' });
 		}
 
-		// Obtener datos del pedido para enviar email
+		// Obtener datos del pedido actual
 		const [pedidoRows] = await connection.query(
-			`SELECT cliente_email, cliente_nombre FROM ${TABLE_PEDIDOS} WHERE pedido_id = ?`,
+			`SELECT cliente_email, cliente_nombre, estado FROM ${TABLE_PEDIDOS} WHERE pedido_id = ?`,
 			[id]
 		);
 
@@ -95,8 +98,33 @@ export const updatePedidoEstado = async (req, res) => {
 			return res.status(404).json({ error: 'Pedido no encontrado' });
 		}
 
+		const estadoActual = pedidoRows[0].estado;
+
+		// 1. Si ya está finalizado, no permitir cambios (a menos que sea admin forzando, pero según regla general bloqueamos)
+		if (finalizados.includes(estadoActual)) {
+			return res.status(400).json({ error: `El pedido ya está en estado ${estadoActual} y no puede ser modificado.` });
+		}
+
+		// 2. Validar flujo secuencial para estados normales
+		if (estadosOrden.includes(estadoActual) && estadosOrden.includes(estado)) {
+			const indexActual = estadosOrden.indexOf(estadoActual);
+			const indexNuevo = estadosOrden.indexOf(estado);
+
+			if (indexNuevo <= indexActual) {
+				return res.status(400).json({ error: 'No se puede retroceder a un estado anterior.' });
+			}
+		}
+
+		// 3. Validación especial para CANCELADO
+		if (estado === 'CANCELADO') {
+			// Solo permitir cancelar si está en PENDIENTE o PREPARANDO
+			if (!['PENDIENTE', 'PREPARANDO'].includes(estadoActual)) {
+				return res.status(400).json({ error: 'No se puede cancelar un pedido que ya ha sido enviado.' });
+			}
+		}
+
 		// Actualizar estado
-		const [updateResult] = await connection.query(
+		await connection.query(
 			`UPDATE ${TABLE_PEDIDOS} SET estado = ? WHERE pedido_id = ?`,
 			[estado, id]
 		);
@@ -107,7 +135,6 @@ export const updatePedidoEstado = async (req, res) => {
 			await sendOrderStatusEmail(cliente_email, cliente_nombre, estado);
 		} catch (emailError) {
 			console.error('Error enviando email de estado:', emailError);
-			// No bloqueamos la respuesta si solo falla el email, pero avisamos en consola
 		}
 
 		res.json({ message: 'Estado actualizado correctamente', estado });
