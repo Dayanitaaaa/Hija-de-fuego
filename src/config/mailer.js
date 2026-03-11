@@ -13,14 +13,6 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const logoPath = path.join(__dirname, '../public/assets/imgStatic/logo-circular.png');
-
 export const enviarEmailRespuesta = async (to, subject, text) => {
     try {
         const info = await transporter.sendMail({
@@ -28,32 +20,12 @@ export const enviarEmailRespuesta = async (to, subject, text) => {
             to,
             subject,
             text,
-            html: `
-                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                    <div style="background-color: #5c1b1b; padding: 30px; text-align: center;">
-                        <img src="cid:logo_circular" alt="Hija del Fuego" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid white;">
-                        <h2 style="color: white; margin-top: 15px; font-weight: 600; letter-spacing: 1px;">Hija del Fuego</h2>
-                    </div>
-                    <div style="padding: 40px 30px; background-color: #ffffff;">
-                        <h3 style="color: #5c1b1b; margin-top: 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px;">Respuesta a tu consulta</h3>
-                        <div style="color: #334155; line-height: 1.6; font-size: 16px;">
-                            ${text.replace(/\n/g, '<br>')}
-                        </div>
-                        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #f1f5f9; text-align: center;">
-                            <p style="color: #64748b; font-size: 14px; margin-bottom: 5px;">Gracias por contactarnos.</p>
-                            <p style="color: #5c1b1b; font-weight: bold; margin: 0;">Equipo Hija del Fuego 🔥</p>
-                        </div>
-                    </div>
-                    <div style="background-color: #f8fafc; color: #94a3b8; padding: 20px; text-align: center; font-size: 12px;">
-                        <p style="margin: 0;">Este es un mensaje automático, por favor no respondas directamente a este correo.</p>
-                        <p style="margin: 5px 0 0 0;">© ${new Date().getFullYear()} Hija del Fuego. Todos los derechos reservados.</p>
-                    </div>
-                </div>`,
-            attachments: [{
-                filename: 'logo-circular.png',
-                path: logoPath,
-                cid: 'logo_circular'
-            }]
+            html: `<div style="font-family: sans-serif; padding: 20px; border: 1px solid #96353B; border-radius: 10px;">
+                    <h2 style="color: #96353B;">Hija del Fuego - Respuesta a tu mensaje</h2>
+                    <p>${text.replace(/\n/g, '<br>')}</p>
+                    <hr>
+                    <p style="font-size: 0.8em; color: #666;">Este es un mensaje automático, por favor no respondas directamente a este correo.</p>
+                   </div>`
         });
         return info;
     } catch (error) {
@@ -136,39 +108,12 @@ export const sendOrderStatusEmail = async (to, customerName, status) => {
             to,
             subject,
             text: message,
-            html: `
-                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                    <div style="background-color: #5c1b1b; padding: 30px; text-align: center;">
-                        <img src="cid:logo_circular" alt="Hija del Fuego" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid white;">
-                        <h2 style="color: white; margin-top: 15px; font-weight: 600; letter-spacing: 1px; margin-bottom: 0;">Hija del Fuego</h2>
-                    </div>
-                    <div style="padding: 40px 30px; background-color: #ffffff;">
-                        <div style="text-align: center; margin-bottom: 30px;">
-                            <span style="background-color: #f1f5f9; color: #5c1b1b; padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
-                                Actualización de Pedido
-                            </span>
-                        </div>
-                        <h2 style="color: #5c1b1b; margin-top: 0; text-align: center; font-size: 24px;">${subject}</h2>
-                        <div style="color: #334155; line-height: 1.8; font-size: 16px; text-align: center; margin-top: 20px;">
-                            ${message.replace(/\n/g, '<br>')}
-                        </div>
-                        <div style="margin-top: 40px; padding-top: 25px; border-top: 1px solid #f1f5f9; text-align: center;">
-                            <p style="color: #64748b; font-size: 14px; margin-bottom: 10px;">¿Tienes alguna duda sobre tu pedido?</p>
-                            <a href="mailto:${process.env.SMTP_USER}" style="color: #5c1b1b; text-decoration: none; font-weight: bold; font-size: 14px;">Contáctanos aquí</a>
-                        </div>
-                    </div>
-                    <div style="background-color: #f8fafc; color: #94a3b8; padding: 25px; text-align: center; font-size: 12px;">
-                        <p style="margin: 0; line-height: 1.5;">Este es un mensaje automático generado por nuestro sistema.<br>Por favor, no respondas directamente a este correo.</p>
-                        <div style="margin-top: 15px; border-top: 1px solid #e2e8f0; pt-15px;">
-                            <p style="margin: 10px 0 0 0; font-weight: 600; color: #64748b;">© ${new Date().getFullYear()} Hija del Fuego 🔥</p>
-                        </div>
-                    </div>
-                </div>`,
-            attachments: [{
-                filename: 'logo-circular.png',
-                path: logoPath,
-                cid: 'logo_circular'
-            }]
+            html: `<div style="font-family: sans-serif; padding: 20px; border: 1px solid #96353B; border-radius: 10px;">
+                    <h2 style="color: #96353B;">${subject}</h2>
+                    <p>${message.replace(/\n/g, '<br>')}</p>
+                    <hr>
+                    <p style="font-size: 0.8em; color: #666;">Este es un mensaje automático de Hija del Fuego.</p>
+                   </div>`
         });
         console.log('Correo enviado con éxito:', info.messageId);
         return info;

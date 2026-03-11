@@ -33,39 +33,6 @@
             text-transform: none !important;
             letter-spacing: 1px !important;
         }
-
-        /* Estilos para el efecto de intercambio de imagen (Hover) */
-        .dish-image-container.has-secondary {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .dish-image-container.has-secondary .secondary-portrait {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            z-index: 2;
-            background-color: white; /* Fondo para que la imagen se vea limpia si no llena el espacio */
-        }
-
-        .dish-image-container.has-secondary .main-dish-img {
-            transition: opacity 0.5s ease-in-out;
-            z-index: 1;
-        }
-
-        .dish-image-container.has-secondary:hover .secondary-portrait {
-            opacity: 1;
-        }
-
-        .dish-image-container.has-secondary:hover .main-dish-img {
-            opacity: 0;
-        }
     </style>
 </head>
 <body>
@@ -76,9 +43,8 @@
     <main class="recipes-main">
         <div class="recipes-content-container">
             <a class="region-back" href="/generalViews/recipes">Volver</a>
-    <h1 class="region-page-title">Recetas familiares</h1>
-    <p class="region-page-subtitle">Selecciona un plato para ver ingredientes y preparación. (Pasa el mouse por la imagen para ver a la autora)</p>
-
+    <h1 class="region-page-title" style="font-family: 'Aboreto', serif !important;">Recetas familiares</h1>
+    <p class="region-page-subtitle" style="font-family: 'Aboreto', serif !important;">Selecciona una plato para ver ingredientes y preparación.</p>
 
             <div class="dish-chips" id="dish-chips">
                 <button class="dish-chip" type="button" data-dish="tamal-tolimense">Tamal Tolimense (por mi abuela Alba)</button>
@@ -86,15 +52,12 @@
             </div>
 
             <section class="dish-panel" id="dish-panel" hidden>
-                <div class="dish-header-content">
-                    <div id="dish-image-container" class="dish-image-container" hidden></div>
-                    <h2 id="dish-title"></h2>
-                </div>
+                <h2 id="dish-title" style="font-family: 'Aboreto', serif !important;"></h2>
 
-                <h3>Ingredientes</h3>
+                <h3 style="font-family: 'Aboreto', serif !important;">Ingredientes</h3>
                 <ul id="dish-ingredients"></ul>
 
-                <h3>Preparación</h3>
+                <h3 style="font-family: 'Aboreto', serif !important;">Preparación</h3>
                 <p id="dish-prep"></p>
             </section>
         </div>
@@ -106,8 +69,6 @@
             const DATA = {
                 "tamal-tolimense": {
                     title: "Tamal Tolimense (por mi abuela Alba)",
-                    image: "../../../assets/imgStatic/Tamal tolimence por mi abuela .png",
-                    secondaryImage: "../../../assets/imgStatic/alba.png",
                     ingredients: [
                         "Arroz",
                         "Arvejas verdes",
@@ -126,7 +87,6 @@
                 },
                 "lechona-tolimense": {
                     title: "Lechona Tolimense (por mi abuelo Raúl)",
-                    image: "../../../assets/imgStatic/Lechona del abuelo.png",
                     ingredients: [
                         "Carne y cuero de cerdo",
                         "Arroz blanco cocido",
@@ -149,7 +109,6 @@
             const title = document.getElementById('dish-title');
             const ingredients = document.getElementById('dish-ingredients');
             const prep = document.getElementById('dish-prep');
-            const imageContainer = document.getElementById('dish-image-container');
 
             function setActive(el) {
                 chips.querySelectorAll('.dish-chip').forEach(btn => btn.classList.remove('is-active'));
@@ -159,29 +118,8 @@
             function renderDish(key) {
                 const dish = DATA[key];
                 title.textContent = dish?.title || 'Pendiente por agregar';
-
-                // Renderizar imagen si existe con soporte para hover (secundaria)
-                if (dish?.image) {
-                    if (dish.secondaryImage) {
-                        imageContainer.classList.add('has-secondary');
-                        imageContainer.innerHTML = `
-                            <img src="${dish.image}" alt="${dish.title}" class="dish-detail-image main-dish-img">
-                            <img src="${dish.secondaryImage}" alt="Autora: ${dish.title}" class="secondary-portrait">
-                        `;
-                    } else {
-                        imageContainer.classList.remove('has-secondary');
-                        const imgClass = dish.isCropped ? 'dish-detail-image is-cropped' : 'dish-detail-image';
-                        const imgStyle = dish.cropPosition ? `style="object-position: ${dish.cropPosition};"` : '';
-                        imageContainer.innerHTML = `<img src="${dish.image}" alt="${dish.title}" class="${imgClass}" ${imgStyle}>`;
-                    }
-                    imageContainer.hidden = false;
-                } else {
-                    imageContainer.classList.remove('has-secondary');
-                    imageContainer.innerHTML = '';
-                    imageContainer.hidden = true;
-                }
-
                 ingredients.innerHTML = '';
+
                 if (dish?.ingredients?.length) {
                     dish.ingredients.forEach(text => {
                         const li = document.createElement('li');

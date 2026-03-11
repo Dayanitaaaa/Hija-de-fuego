@@ -26,27 +26,40 @@ document.addEventListener("DOMContentLoaded", () => {
             userTableBody.innerHTML = "";
 
             users.forEach(user => {
-                const row = `
-                    <tr>
-                        <td>${user.User_id}</td>
-                        <td>${user.User_name}</td>
-                        <td>${user.User_email}</td>
-                        <td>${user.Roles_name}</td>
-                        <td>${user.Updated_at}</td>
-                        <td>
-                            <button class="btn-action btn-action-view btn-show" data-id="${user.User_id}"><i class="fas fa-eye"></i></button>
-                            <button class="btn-action btn-action-edit btn-edit" data-id="${user.User_id}" data-bs-toggle="modal" data-bs-target="#userModal"><i class="fas fa-edit"></i></button>
-                            <button class="btn-action btn-action-delete btn-delete" data-id="${user.User_id}"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
+                // Crear fila manualmente para asegurar que los atributos se asignen bien
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.User_id}</td>
+                    <td>${user.User_name}</td>
+                    <td>${user.User_email}</td>
+                    <td>${user.Roles_name}</td>
+                    <td>${user.Updated_at}</td>
+                    <td>
+                        <button class="btn-action btn-action-view btn-show" data-id="${user.User_id}" title="Ver Detalles"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action btn-action-edit btn-edit" data-id="${user.User_id}" data-bs-toggle="modal" data-bs-target="#userModal" title="Editar Usuario"><i class="fas fa-edit"></i></button>
+                        <button class="btn-action btn-action-delete btn-delete" data-id="${user.User_id}" title="Eliminar Usuario"><i class="fas fa-trash"></i></button>
+                    </td>
                 `;
-                userTableBody.insertAdjacentHTML("beforeend", row);
+                userTableBody.appendChild(tr);
             });
-            document.querySelectorAll(".btn-show").forEach(btn => btn.addEventListener("click", handleShowUser));
-            document.querySelectorAll(".btn-edit").forEach(btn => btn.addEventListener("click", handleEditUser));
-            document.querySelectorAll(".btn-delete").forEach(btn => btn.addEventListener("click", handleDeleteUser));
+            
+            // Re-vincular eventos buscando los botones dentro del tbody
+            userTableBody.querySelectorAll(".btn-show").forEach(btn => {
+                btn.addEventListener("click", handleShowUser);
+            });
+            userTableBody.querySelectorAll(".btn-edit").forEach(btn => {
+                btn.addEventListener("click", handleEditUser);
+            });
+            userTableBody.querySelectorAll(".btn-delete").forEach(btn => {
+                btn.addEventListener("click", handleDeleteUser);
+            });
         } catch (error) {
-            alert("Error al cargar usuarios: " + error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Error al cargar usuarios: " + error.message,
+                confirmButtonColor: '#96353B'
+            });
         }
     }
 
@@ -57,9 +70,28 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) throw new Error("Error al obtener usuario");
 
             const user = await response.json();
-            alert(`ID: ${user.User_id}\nNombre: ${user.User_name}\nEmail: ${user.User_email}\nContraseña: ${user.User_password}\nRol ID: ${user.Roles_name} \nÚltima Actualización: ${user.Updated_at}`);
+            
+            Swal.fire({
+                title: 'Detalles del Usuario',
+                html: `
+                    <div class="text-start">
+                        <p><strong>ID:</strong> ${user.User_id}</p>
+                        <p><strong>Nombre:</strong> ${user.User_name}</p>
+                        <p><strong>Email:</strong> ${user.User_email}</p>
+                        <p><strong>Rol:</strong> ${user.Roles_name}</p>
+                        <p><strong>Última Actualización:</strong> ${user.Updated_at}</p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonColor: '#96353B'
+            });
         } catch (error) {
-            alert("Error al mostrar usuario: " + error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Error al mostrar usuario: " + error.message,
+                confirmButtonColor: '#96353B'
+            });
         }
     }
 
@@ -78,21 +110,80 @@ document.addEventListener("DOMContentLoaded", () => {
             userPasswordInput.value = user.User_password;
             userRoleSelect.value = user.Roles_fk;
         } catch (error) {
-            alert("Error al cargar usuario: " + error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Error al cargar usuario: " + error.message,
+                confirmButtonColor: '#96353B'
+            });
         }
     }
 
     async function handleDeleteUser(e) {
-        const id = e.target.closest("button").dataset.id;
-        if (!confirm("¿Estás seguro de eliminar este usuario?")) return;
+        // Asegurarnos de obtener el botón incluso si se hace clic en el icono i
+        const btn = e.currentTarget; 
+        const id = btn.getAttribute("data-id");
+        
+        console.log("Intentando eliminar usuario con ID:", id);
+        
+        if (!id) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "No se pudo obtener el ID del usuario.",
+                confirmButtonColor: '#96353B'
+            });
+            return;
+        }
+        
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esta acción",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#96353B',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        });
 
-        try {
-            const response = await fetch(`${HOST}${URL_USERS}/${id}`, { method: "DELETE" });
-            if (!response.ok) throw new Error("Error al eliminar usuario");
+        if (result.isConfirmed) {
+            try {
+                const url = `${HOST}${URL_USERS}/${id}`;
+                console.log("Enviando petición DELETE a:", url);
 
-            loadUsers();
-        } catch (error) {
-            alert("Error al eliminar usuario: " + error.message);
+                const response = await fetch(url, { 
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                console.log("Status de respuesta:", response.status);
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error("Detalle error servidor:", errorData);
+                    throw new Error(errorData.error || `Error ${response.status}: No se pudo eliminar`);
+                }
+
+                await Swal.fire({
+                    title: '¡Eliminado!',
+                    text: 'El usuario ha sido eliminado correctamente.',
+                    icon: 'success',
+                    confirmButtonColor: '#96353B'
+                });
+                loadUsers();
+            } catch (error) {
+                console.error("Error en handleDeleteUser:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message,
+                    confirmButtonColor: '#96353B'
+                });
+            }
         }
     }
 
@@ -126,16 +217,33 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (response.status === 409) {
-                alert("El correo ingresado ya está registrado. Por favor, ingrese uno diferente.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Correo Duplicado',
+                    text: "El correo ingresado ya está registrado. Por favor, ingrese uno diferente.",
+                    confirmButtonColor: '#96353B'
+                });
                 return;
             }
 
             if (!response.ok) throw new Error("Error al guardar usuario");
 
+            Swal.fire({
+                icon: 'success',
+                title: '¡Guardado!',
+                text: 'El usuario ha sido guardado correctamente.',
+                confirmButtonColor: '#96353B'
+            });
+
             bootstrap.Modal.getInstance(userModal).hide();
             loadUsers();
         } catch (error) {
-            alert("Error al guardar usuario: " + error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Error al guardar usuario: " + error.message,
+                confirmButtonColor: '#96353B'
+            });
         }
     });
 
@@ -154,7 +262,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 userRoleSelect.appendChild(option);
             });
         } catch (error) {
-            alert("Error al cargar roles: " + error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Error al cargar roles: " + error.message,
+                confirmButtonColor: '#96353B'
+            });
         }
     }
 

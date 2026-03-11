@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos - Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../../../assets/css/loader.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="../../../assets/css/homeDashboard.css">
+  <link rel="stylesheet" href="../../../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../../../assets/css/pedidos.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Mostrar/Ocultar menú">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Menú lateral -->
+  <div class="sidebar" id="sidebar">
+    <h2>Menú</h2>
+    <ul>
+      <li><a class="menu-button" href="/generalViews/home"> <i class="fas fa-eye"></i> Ver página </a></li>
+      <li><button id="logoutBtn" class="menu-button logout-button"> <i class="fas fa-sign-out-alt"></i> Cerrar Sesión </button></li>
+      <li><hr></li>
+      <li><a class="menu-button" id="menu-dashboardHome" href="/dashboard/homeDashboard"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a class="menu-button" id="menu-users" href="/dashboard/users"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a class="menu-button" id="menu-roles" href="/dashboard/roles"> <i class="fas fa-user-tag"></i> Roles</a></li>
+      <li><a class="menu-button" id="menu-editorWeb" href="/dashboard/gestion-productos"><i class="fas fa-pen-to-square"></i> Gestión de Productos</a></li>
+      <li><a class="menu-button" id="menu-mensajesContacto" href="/dashboard/mensajes-contacto"><i class="fas fa-inbox"></i> Mensajes de Contacto</a></li>
+      <li><a class="menu-button active" id="menu-pedidos" href="/dashboard/pedidos"><i class="fas fa-shopping-cart"></i> Pedidos</a></li>
+      <li><hr></li>
+    </ul>
+
+    <div class="sidebar-profile" aria-label="Usuario logueado">
+      <div class="sidebar-profile__avatar" id="sidebarUserAvatar">UA</div>
+      <div class="sidebar-profile__meta">
+        <div class="sidebar-profile__name" id="sidebarUserName">Sesión activa</div>
+        <div class="sidebar-profile__role" id="sidebarUserRole">Rol</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="container-fluid">
+      <div class="dashboard-header">
+        <h1><i class="fas fa-shopping-cart"></i> Gestión de Pedidos</h1>
+        <p class="text-muted">Visualiza y gestiona todos los pedidos de los clientes</p>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
+                <input type="text" class="form-control" id="searchInput" placeholder="Buscar por cliente o email..." title="Buscar por cliente o email">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" id="estadoFilter" title="Filtrar por estado">
+                <option value="">Todos los estados</option>
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="PREPARANDO">Preparando</option>
+                <option value="ENVIADO">Enviado</option>
+                <option value="ENTREGADO">Entregado</option>
+                <option value="CANCELADO">Cancelado</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <input type="date" class="form-control" id="fechaFilter" title="Filtrar por fecha">
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-outline-secondary w-100" onclick="limpiarFiltros()" title="Limpiar filtros">
+                <i class="fas fa-sync-alt"></i> Limpiar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="ps-4"># Pedido</th>
+                  <th>Cliente</th>
+                  <th>Email</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                  <th>Fecha</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="pedidosTableBody">
+                <!-- Los pedidos se cargarán aquí dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <nav aria-label="Paginación de pedidos" class="mt-4">
+        <ul class="pagination justify-content-center" id="pagination"></ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Modal Detalle Pedido -->
+  <div class="modal fade" id="detallePedidoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-light border-0">
+          <h5 class="modal-title fw-bold">Detalle del Pedido #<span id="modalPedidoId"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <h6 class="text-uppercase text-muted fw-bold small mb-3">Información del Cliente</h6>
+              <div class="p-3 bg-light rounded">
+                <p class="mb-1"><strong>Nombre:</strong> <span id="modalClienteNombre"></span></p>
+                <p class="mb-1"><strong>Email:</strong> <span id="modalClienteEmail"></span></p>
+                <p class="mb-0"><strong>Teléfono:</strong> <span id="modalClienteTelefono"></span></p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h6 class="text-uppercase text-muted fw-bold small mb-3">Dirección de Envío</h6>
+              <div class="p-3 bg-light rounded">
+                <p class="mb-1"><strong>Dirección:</strong> <span id="modalDireccion"></span></p>
+                <p class="mb-1"><strong>Ciudad:</strong> <span id="modalCiudad"></span></p>
+                <p class="mb-1"><strong>Departamento:</strong> <span id="modalDepartamento"></span></p>
+                <p class="mb-0 text-muted small"><strong>Notas:</strong> <span id="modalNotas"></span></p>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="text-uppercase text-muted fw-bold small mb-3">Productos del Pedido</h6>
+          <div class="table-responsive rounded border mb-4">
+            <table class="table table-sm table-borderless align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th class="ps-3">Producto</th>
+                  <th class="text-center">Cantidad</th>
+                  <th class="text-end">Precio</th>
+                  <th class="text-end pe-3">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="modalProductosTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="row align-items-center g-3">
+            <div class="col-sm-6">
+              <h6 class="text-uppercase text-muted fw-bold small mb-2">Estado Actual</h6>
+              <div id="modalEstadoBadge"></div>
+            </div>
+            <div class="col-sm-6 text-sm-end">
+              <h6 class="text-uppercase text-muted fw-bold small mb-1">Total del Pedido</h6>
+              <h3 class="fw-bold text-primary mb-0">$<span id="modalTotal"></span></h3>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <h6 class="text-uppercase text-muted fw-bold small mb-3">Actualizar Estado</h6>
+          <div class="row g-2">
+            <div class="col-md-8">
+              <select class="form-select" id="nuevoEstadoSelect" title="Seleccionar nuevo estado">
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="PREPARANDO">Preparando</option>
+                <option value="ENVIADO">Enviado</option>
+                <option value="ENTREGADO">Entregado</option>
+                <option value="CANCELADO">Cancelado</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary w-100" onclick="cambiarEstado()" title="Actualizar estado">
+                <i class="fas fa-save me-2"></i> Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../../assets/js/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../../../assets/js/dashboard/userBadge.js"></script>
+  <script src="../../../assets/js/system/constans.js"></script>
+  <script src="../../../assets/js/dashboard/homeDashboard/sidebar.js"></script>
+  <script src="../../../assets/js/logOut/logOut.js"></script>
+  <script src="/assets/js/dashboard/pedidos/pedidos.js"></script>
+</body>
+</html>

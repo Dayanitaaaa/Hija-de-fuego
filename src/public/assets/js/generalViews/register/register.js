@@ -2,95 +2,110 @@ document.addEventListener('DOMContentLoaded', async () => {
     const form = document.querySelector('.register-form');
     const nameInput = document.querySelector('input[placeholder="Nombre completo"]');
     const emailInput = document.querySelector('input[placeholder="Correo electrónico"]');
+    const phoneInput = document.querySelector('input[placeholder="Número de celular"]');
     const passwordInput = document.querySelector('input[placeholder="Contraseña"]');
     const confirmInput = document.querySelector('input[placeholder="Confirmar contraseña"]');
-    const roleSelect = document.getElementById('role-select');
 
-    // --- 1. Cargar Roles Fijos ---
-    // Agregar roles fijos: Administrador y Cliente
-    const roles = [
-        { id: 1, name: 'Administrador' },
-        { id: 2, name: 'Cliente' }
-    ];
-    
-    roles.forEach(role => {
-        const option = document.createElement('option');
-        option.value = role.id;
-        option.textContent = role.name;
-        roleSelect.appendChild(option);
-    });
-
-    // --- 2. Manejar el Envío del Formulario ---
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const name = nameInput.value.trim();
         const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim();
         const password = passwordInput.value;
         const confirm = confirmInput.value;
-        const selectedRoleId = roleSelect.value;
+        const selectedRoleId = 2; // Forzado a Rol Cliente
 
-        // Validaciones
-        if (!name || !email || !password || !confirm || !selectedRoleId) {
-            showMessage('Todos los campos son obligatorios', 'error');
+        if (!name || !email || !phone || !password || !confirm) {
+            Swal.fire('Error', 'Todos los campos son obligatorios', 'error');
             return;
         }
         if (password !== confirm) {
-            showMessage('Las contraseñas no coinciden', 'error');
+            Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
             return;
         }
         if (!validateEmail(email)) {
-            showMessage('Correo electrónico no válido', 'error');
+            Swal.fire('Error', 'Correo electrónico no válido', 'error');
             return;
         }
 
-        // Enviar petición al backend
         try {
-            const payload = {
-                User_name: name,
-                User_email: email,
-                User_password: password,
-                Roles_fk: parseInt(selectedRoleId)
-            };
-            
-            console.log('Enviando:', payload);
-            
+            Swal.showLoading();
             const res = await fetch(HOST + '/mySystem/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify({
+                    User_name: name,
+                    User_email: email,
+                    User_phone: phone,
+                    User_password: password,
+                    Roles_fk: parseInt(selectedRoleId)
+                })
             });
 
             const data = await res.json();
-            console.log('Respuesta:', data);
 
             if (res.status === 201) {
-                showMessage('¡Registro exitoso! Redirigiendo...', 'success');
-                setTimeout(() => {
-                    window.location.href = '/generalViews/login';
-                }, 1500);
+                showOtpModal(email);
             } else {
-                showMessage(data.error || data.message || 'Error al registrar usuario', 'error');
+                Swal.fire('Error', data.error || 'Error al registrar', 'error');
             }
         } catch (err) {
-            console.error('Error:', err);
-            showMessage('Error de conexión con el servidor', 'error');
+            Swal.fire('Error', 'Error de conexión', 'error');
         }
     });
 });
 
-function validateEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+function showOtpModal(email) {
+    Swal.fire({
+        title: 'Verifica tu cuenta',
+        text: `Hemos enviado un código de 6 dígitos a ${email}. Este código verificará tu correo y celular.`,
+        input: 'text',
+        inputPlaceholder: 'Ingresa el código de 6 dígitos',
+        showCancelButton: true,
+        confirmButtonText: 'Verificar',
+        cancelButtonText: 'Reenviar código',
+        allowOutsideClick: false,
+        preConfirm: async (otp) => {
+            try {
+                const res = await fetch(HOST + '/mySystem/users/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ User_email: email, otp })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Código inválido');
+                return data;
+            } catch (error) {
+                Swal.showValidationMessage(error.message);
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire('¡Éxito!', 'Cuenta verificada correctamente (correo y celular)', 'success').then(() => {
+                window.location.href = '/generalViews/login';
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            resendOtp(email);
+        }
+    });
 }
 
-function showMessage(msg, type) {
-    let msgDiv = document.querySelector('.register-message');
-    if (!msgDiv) {
-        msgDiv = document.createElement('div');
-        msgDiv.className = 'register-message';
-        document.querySelector('.register-form').prepend(msgDiv);
+async function resendOtp(email) {
+    try {
+        const res = await fetch(HOST + '/mySystem/users/resend-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ User_email: email })
+        });
+        if (res.ok) {
+            Swal.fire('Enviado', 'Se ha enviado un nuevo código a tu correo.', 'success').then(() => showOtpModal(email));
+        }
+    } catch (err) {
+        Swal.fire('Error', 'No se pudo reenviar el código', 'error');
     }
-    msgDiv.textContent = msg;
-    msgDiv.style.color = type === 'error' ? 'red' : 'green';
-    msgDiv.style.marginBottom = '10px';
+}
+
+function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }

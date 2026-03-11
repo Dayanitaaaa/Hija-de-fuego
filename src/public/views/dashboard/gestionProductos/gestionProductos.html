@@ -15,7 +15,6 @@
 
   <link rel="stylesheet" href="../../../assets/css/homeDashboard.css">
   <link rel="stylesheet" href="../../../assets/css/dashboard.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -60,9 +59,9 @@
             <div class="d-flex align-items-center gap-3">
               <div>
                 <h3 class="h5 mb-1">Gestión de Productos</h3>
-                <div class="text-muted">Administra línea de bienestar, libros y stock</div>
+                <div class="text-muted">Administra platos, libros y stock</div>
               </div>
-              <select id="filterPageSelect" class="form-select form-select-sm w-auto" aria-label="Filtrar por página">
+              <select id="filterPageSelect" class="form-select form-select-sm" style="width: auto;" aria-label="Filtrar por página">
                 <option value="comida-con-alma">Comida con Alma</option>
                 <option value="libros">Libros</option>
               </select>
@@ -87,7 +86,7 @@
                   <th>Precio</th>
                   <th>Stock</th>
                   <th>Activo</th>
-                  <th class="actions-column">Acciones</th>
+                  <th style="width: 180px;">Acciones</th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -101,12 +100,12 @@
         <div class="card-header bg-light d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
           <h3 class="h5 mb-0"><i class="fas fa-history"></i> Movimientos de Inventario (Últimos 15 días)</h3>
           <div class="d-flex flex-wrap gap-2">
-            <select id="reportTypeFilter" class="form-select form-select-sm w-auto" title="Filtrar por tipo de movimiento">
+            <select id="reportTypeFilter" class="form-select form-select-sm" style="width: auto;" title="Filtrar por tipo de movimiento">
               <option value="TODOS">Todos los tipos</option>
               <option value="ENTRADA">Solo Entradas</option>
               <option value="SALIDA">Solo Salidas</option>
             </select>
-            <input type="date" id="reportDateFilter" class="form-control form-control-sm w-auto" title="Filtrar por fecha específica">
+            <input type="date" id="reportDateFilter" class="form-control form-control-sm" style="width: auto;" title="Filtrar por fecha específica">
             <button class="btn btn-sm btn-outline-info" id="openInventoryReportBtn" type="button">
               <i class="fas fa-file-pdf"></i> Descargar PDF
             </button>
@@ -141,7 +140,7 @@
   <div class="modal fade" id="inventoryMovementModal" tabindex="-1" aria-labelledby="inventoryMovementModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header text-white" style="background-color: #5c1b1b;">
+        <div class="modal-header bg-info text-white">
           <h5 class="modal-title" id="inventoryMovementModalLabel">Añadir Stock</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -150,22 +149,16 @@
             <input type="hidden" id="invProductId">
             <input type="hidden" id="invType" value="ENTRADA">
             <div class="mb-3">
-              <p class="mb-1 fw-bold">Producto: <span id="invProductNameDisplay" style="color: #2d5a27;"></span></p>
-            </div>
-            <div class="mb-3" id="invFlavorGroup" style="display: none;">
-              <label class="form-label fw-bold" for="invFlavorSelect">Sabor específico:</label>
-              <select id="invFlavorSelect" class="form-select border-2" style="border-color: #2d5a27; border-radius: 12px;">
-                <option value="">General (Sin sabor específico)</option>
-              </select>
+              <p class="mb-1 fw-bold">Producto: <span id="invProductNameDisplay" class="text-info"></span></p>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-bold">Cantidad a ingresar:</label>
-              <input type="number" id="invQuantity" class="form-control border-2" min="1" required placeholder="Ej: 10" style="border-color: #2d5a27; border-radius: 12px;">
+              <label class="form-label">Cantidad a ingresar:</label>
+              <input type="number" id="invQuantity" class="form-control" min="1" required placeholder="Ej: 10">
             </div>
             <input type="hidden" id="invReason" value="Reposición Manual">
-            <div class="text-end mt-4">
-              <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn text-white rounded-pill px-4" style="background-color: #2d5a27; border: none;">Añadir al Stock</button>
+            <div class="text-end">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-info">Añadir al Stock</button>
             </div>
           </form>
         </div>
@@ -176,87 +169,82 @@
   <!-- Modal crear/editar producto -->
   <div class="modal fade" id="storeProductModal" tabindex="-1" aria-labelledby="storeProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content" style="border-radius: 20px !important; overflow: hidden !important; border: none !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;">
-        <div class="modal-header text-white" style="background: linear-gradient(135deg, #2d5a27 0%, #1e3d1b 100%) !important; border-bottom: none !important; padding: 20px 30px !important;">
-          <h5 class="modal-title" id="storeProductModalLabel" style="color: white !important; font-weight: 800 !important; font-family: 'Poppins', sans-serif !important; letter-spacing: 0.5px !important; font-size: 1.4rem !important;">Editar producto</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="storeProductModalLabel">Nuevo producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <div class="modal-body p-4" style="background-color: #fffaf2 !important;">
+        <div class="modal-body">
           <form id="storeProductForm">
             <input type="hidden" id="storeProductId" />
 
-            <div class="row g-4">
-              <!-- Fila 1: Nombre y Categoría -->
+            <div class="row g-3">
               <div class="col-12 col-md-8">
-                <label class="form-label fw-bold" for="storeProductName" style="color: #5c1b1b !important; font-size: 0.95rem !important; margin-bottom: 8px !important; display: block !important;">Nombre del Producto</label>
-                <input class="form-control shadow-sm" id="storeProductName" type="text" style="border-radius: 12px !important; border: 1.5px solid #e2e8f0 !important; padding: 12px 16px !important; transition: all 0.2s !important; background: #fff !important;" placeholder="Ej: Raíces y Fogones" required />
+                <label class="form-label" for="storeProductName">Nombre</label>
+                <input class="form-control" id="storeProductName" type="text" required />
               </div>
               <div class="col-12 col-md-4">
-                <label class="form-label fw-bold" for="storeProductCategory" style="color: #5c1b1b !important; font-size: 0.95rem !important; margin-bottom: 8px !important; display: block !important;">Categoría</label>
-                <select class="form-select shadow-sm" id="storeProductCategory" style="border-radius: 12px !important; border: 1.5px solid #e2e8f0 !important; padding: 12px 16px !important; background: #fff !important;">
-                  <option value="">Seleccione...</option>
+                <label class="form-label" for="storeProductCategory">Categoría</label>
+                <select class="form-select" id="storeProductCategory">
+                  <option value="">Seleccione una categoría</option>
                   <option value="Alimentos">Alimentos</option>
                   <option value="Bebidas">Bebidas</option>
                   <option value="Postres">Postres</option>
                   <option value="Snacks">Snacks</option>
                   <option value="Lácteos">Lácteos</option>
-                  <option value="libros">Libros</option>
                   <option value="Otros">Otros</option>
                 </select>
               </div>
 
-              <!-- Fila 2: Precio, Stock y Activo alineados perfectamente -->
-              <div class="col-md-4">
-                <label class="form-label fw-bold" for="storeProductPrice" style="color: #5c1b1b !important; font-size: 0.95rem !important; margin-bottom: 8px !important; display: block !important;">Precio (COP)</label>
-                <div class="input-group shadow-sm" style="border-radius: 12px !important; overflow: hidden !important;">
-                  <span class="input-group-text" style="background: #fff !important; border: 1.5px solid #e2e8f0 !important; border-right: none !important; color: #2d5a27 !important; font-weight: bold !important; padding: 0 15px !important;">$</span>
-                  <input class="form-control" id="storeProductPrice" type="number" min="0" step="1" style="border: 1.5px solid #e2e8f0 !important; border-left: none !important; padding: 12px !important; background: #fff !important;" required />
+              <div class="col-12 col-md-4 d-flex flex-column justify-content-end">
+                <label class="form-label" for="storeProductPrice">Precio (Pesos Colombianos - COP)</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input class="form-control" id="storeProductPrice" type="number" min="0" step="1" placeholder="Ej: 30000" required />
                 </div>
+                <div class="form-text">Ingresa el valor sin puntos ni comas.</div>
               </div>
-              <div class="col-md-4">
-                <label class="form-label fw-bold" for="storeProductStock" style="color: #5c1b1b !important; font-size: 0.95rem !important; margin-bottom: 8px !important; display: block !important;">Stock Actual</label>
-                <div class="input-group shadow-sm" style="border-radius: 12px !important; overflow: hidden !important;">
-					<span class="input-group-text" style="background: #fff !important; border: 1.5px solid #e2e8f0 !important; border-right: none !important; color: #2d5a27 !important; padding: 0 15px !important;"><i class="fa-solid fa-box"></i></span>
-					<input class="form-control" id="storeProductStock" type="number" min="0" step="1" style="border: 1.5px solid #e2e8f0 !important; border-left: none !important; padding: 12px !important; background-color: #f1f5f9 !important;" readonly />
+              <div class="col-12 col-md-4 d-flex flex-column justify-content-end">
+                <label class="form-label" for="storeProductStock">Stock</label>
+                <div class="input-group">
+					<span class="input-group-text"><i class="fa-solid fa-box"></i></span>
+					<input class="form-control" id="storeProductStock" type="number" min="0" step="1" />
 				</div>
+				<div class="form-text">&nbsp;</div>
               </div>
-              <div class="col-md-4 d-flex align-items-end pb-2">
-                <div class="form-check form-switch" style="padding-left: 3.5em !important; background: #fff !important; border: 1.5px solid #e2e8f0 !important; border-radius: 12px !important; height: 50px !important; display: flex !important; align-items: center !important; width: 100% !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;">
-                  <input class="form-check-input" type="checkbox" id="storeProductActive" style="width: 2.8em !important; height: 1.4em !important; cursor: pointer !important; margin-left: -2.8em !important;" checked>
-                  <label class="form-check-label fw-bold ms-2" for="storeProductActive" style="color: #5c1b1b !important; font-size: 0.95rem !important; cursor: pointer !important;">Activo</label>
+              <div class="col-12 col-md-4 d-flex align-items-end">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="storeProductActive" checked>
+                  <label class="form-check-label" for="storeProductActive">Activo</label>
                 </div>
               </div>
 
-              <!-- Fila 3: Descripción -->
               <div class="col-12">
-                <label class="form-label fw-bold" for="storeProductDescription" style="color: #5c1b1b !important; font-size: 0.95rem !important; margin-bottom: 8px !important; display: block !important;">Descripción / Línea de bienestar</label>
-                <textarea class="form-control shadow-sm" id="storeProductDescription" rows="4" style="border-radius: 12px !important; border: 1.5px solid #e2e8f0 !important; padding: 12px 16px !important; background: #fff !important;" placeholder="Escribe los detalles del producto..."></textarea>
+                <label class="form-label" for="storeProductDescription">Descripción</label>
+                <textarea class="form-control" id="storeProductDescription" rows="3"></textarea>
               </div>
 
-              <!-- Fila 4: Sabores -->
               <div class="col-12">
-                <label class="form-label fw-bold" style="color: #5c1b1b !important; font-size: 0.95rem !important; margin-bottom: 8px !important; display: block !important;">Sabores / Variantes</label>
-                <div class="input-group mb-2 shadow-sm" style="border-radius: 12px !important; overflow: hidden !important;">
-                  <input class="form-control" id="flavorInput" type="text" style="border: 1.5px solid #e2e8f0 !important; border-right: none !important; padding: 12px 16px !important; background: #fff !important;" placeholder="Ej: Vainilla" />
-                  <button class="btn" type="button" id="addFlavorBtn" style="background-color: #2d5a27 !important; color: white !important; font-weight: 600 !important; padding: 0 25px !important; border: 1.5px solid #2d5a27 !important;">+ Agregar</button>
+                <label class="form-label">Sabores</label>
+                <div class="input-group mb-2">
+                  <input class="form-control" id="flavorInput" type="text" placeholder="Escribe un sabor y presiona Agregar" />
+                  <button class="btn btn-outline-primary" type="button" id="addFlavorBtn">Agregar</button>
                 </div>
-                <div id="flavorsWrap" class="d-flex flex-wrap gap-2 mt-3"></div>
+                <div id="flavorsWrap" class="d-flex flex-wrap gap-2"></div>
+                <div class="form-text">Opcional: útil para alimentos con variantes de sabor.</div>
               </div>
 
-              <!-- Fila 5: Imágenes -->
               <div class="col-12">
-                <label class="form-label fw-bold" style="color: #5c1b1b !important; font-size: 0.95rem !important; margin-bottom: 8px !important; display: block !important;">Gestión de Imágenes (Máx 3)</label>
-                <div class="p-3" style="background: #fff !important; border: 1.5px dashed #cbd5e1 !important; border-radius: 12px !important;">
-                  <input class="form-control" id="storeProductImages" type="file" accept="image/*" multiple style="border: none !important; background: transparent !important; padding: 0 !important;" />
-                </div>
-                <div id="imagesList" class="mt-4 d-flex flex-column gap-3"></div>
+                <label class="form-label">Imágenes (máx 3)</label>
+                <input class="form-control" id="storeProductImages" type="file" accept="image/*" multiple />
+                <div class="form-text">Puedes subir imágenes después de guardar el producto.</div>
+                <div id="imagesList" class="mt-3 d-flex flex-column gap-2"></div>
               </div>
             </div>
 
-            <!-- Footer con botones premium -->
-            <div class="d-flex justify-content-end gap-3 mt-5 pt-3" style="border-top: 1px solid #e2e8f0 !important;">
-              <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal" style="font-weight: 600 !important; color: #64748b !important; background: #f1f5f9 !important; border: none !important; height: 48px !important; transition: all 0.2s !important;">Cancelar</button>
-              <button type="submit" class="btn text-white rounded-pill px-5 shadow" style="background: linear-gradient(135deg, #96353b 0%, #7a2d30 100%) !important; border: none !important; font-weight: 800 !important; height: 48px !important; letter-spacing: 0.5px !important; transition: all 0.2s !important;">GUARDAR CAMBIOS</button>
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
             </div>
           </form>
         </div>

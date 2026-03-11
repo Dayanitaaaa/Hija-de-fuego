@@ -79,25 +79,15 @@ export const updatePedidoEstado = async (req, res) => {
 	const connection = await connect.getConnection();
 	try {
 		const { id } = req.params;
-		const { estado: nuevoEstado } = req.body;
+		const { estado } = req.body;
 
-		const estadosValidos = ['PENDIENTE', 'PREPARANDO', 'ENVIADO', 'ENTREGADO', 'CANCELADO'];
-		if (!estadosValidos.includes(nuevoEstado)) {
+		if (!['PENDIENTE', 'PREPARANDO', 'ENVIADO', 'ENTREGADO', 'CANCELADO'].includes(estado)) {
 			return res.status(400).json({ error: 'Estado no válido' });
 		}
 
-		// Definir el orden de los estados para validar que no retroceda
-		const ordenEstados = {
-			'PENDIENTE': 1,
-			'PREPARANDO': 2,
-			'ENVIADO': 3,
-			'ENTREGADO': 4,
-			'CANCELADO': 0 // Caso especial
-		};
-
-		// 1. Obtener estado actual del pedido
+		// Obtener datos del pedido para enviar email
 		const [pedidoRows] = await connection.query(
-			`SELECT estado, cliente_email, cliente_nombre FROM ${TABLE_PEDIDOS} WHERE pedido_id = ?`,
+			`SELECT cliente_email, cliente_nombre FROM ${TABLE_PEDIDOS} WHERE pedido_id = ?`,
 			[id]
 		);
 
@@ -105,46 +95,22 @@ export const updatePedidoEstado = async (req, res) => {
 			return res.status(404).json({ error: 'Pedido no encontrado' });
 		}
 
-		const estadoActual = pedidoRows[0].estado;
-
-		// 2. Validaciones de flujo
-		if (estadoActual === 'ENTREGADO') {
-			return res.status(400).json({ error: 'No se puede cambiar el estado de un pedido que ya ha sido entregado' });
-		}
-
-		if (estadoActual === 'CANCELADO') {
-			return res.status(400).json({ error: 'No se puede cambiar el estado de un pedido cancelado' });
-		}
-
-		// Si se intenta cancelar, solo permitir si no ha sido enviado
-		if (nuevoEstado === 'CANCELADO') {
-			if (ordenEstados[estadoActual] >= 3) {
-				return res.status(400).json({ error: 'No se puede cancelar un pedido que ya ha sido enviado' });
-			}
-		} else {
-			// Validar que el nuevo estado sea mayor al actual (que avance)
-			if (ordenEstados[nuevoEstado] <= ordenEstados[estadoActual]) {
-				return res.status(400).json({ 
-					error: `Flujo no permitido. El pedido ya está en estado "${estadoActual}" y no puede volver a "${nuevoEstado}"` 
-				});
-			}
-		}
-
-		// 3. Actualizar estado
-		await connection.query(
+		// Actualizar estado
+		const [updateResult] = await connection.query(
 			`UPDATE ${TABLE_PEDIDOS} SET estado = ? WHERE pedido_id = ?`,
-			[nuevoEstado, id]
+			[estado, id]
 		);
 
-		// 4. Enviar email al cliente
+		// Enviar email al cliente
 		const { cliente_email, cliente_nombre } = pedidoRows[0];
 		try {
-			await sendOrderStatusEmail(cliente_email, cliente_nombre, nuevoEstado);
+			await sendOrderStatusEmail(cliente_email, cliente_nombre, estado);
 		} catch (emailError) {
 			console.error('Error enviando email de estado:', emailError);
+			// No bloqueamos la respuesta si solo falla el email, pero avisamos en consola
 		}
 
-		res.json({ message: 'Estado actualizado correctamente', estado: nuevoEstado });
+		res.json({ message: 'Estado actualizado correctamente', estado });
 	} catch (error) {
 		console.error('DETALLE ERROR UPDATE PEDIDO:', error);
 		res.status(500).json({ error: 'Error al actualizar estado', details: error.message });

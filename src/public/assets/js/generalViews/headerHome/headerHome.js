@@ -223,60 +223,41 @@ function updateHeaderForLogin() {
 		if (userMenuGlobal) userMenuGlobal.style.display = 'block';
 
 		if (effectiveAdmin) {
-			document.body.classList.add('is-admin');
-			const forceCleanupAdminMenu = () => {
-				const desktopMenu = userMenuDesktop?.querySelector?.('.nav-dropdown__menu, .header-dropdown__menu');
-				const globalMenu = userMenuGlobal?.querySelector?.('.header-dropdown__menu, .nav-dropdown__menu');
-				const mobileMenuLinks = document.querySelectorAll('#user-menu-mobile a[href*="/perfil"], #user-menu-mobile a[href*="/pedidos"], #user-menu-mobile a[href*="/direcciones"]');
-				
-				mobileMenuLinks.forEach((a) => {
-					a.style.setProperty('display', 'none', 'important');
+			const desktopMenu = userMenuDesktop?.querySelector?.('.nav-dropdown__menu');
+			const globalMenu = userMenuGlobal?.querySelector?.('.header-dropdown__menu');
+			const mobileMenuLinks = document.querySelectorAll('#user-menu-mobile a[href^="/generalViews/perfil"]');
+			mobileMenuLinks.forEach((a) => {
+				a.style.display = 'none';
+			});
+
+			const contactDesktop = document.querySelector('.desktop-nav a[href="/generalViews/contact"]');
+			if (contactDesktop) contactDesktop.style.display = 'none';
+			const contactMobile = document.querySelector('#mobile-menu a[href="/generalViews/contact"]');
+			if (contactMobile) contactMobile.style.display = 'none';
+			const cartDesktop = document.querySelector('.desktop-nav a[href="/generalViews/cart"]');
+			if (cartDesktop) cartDesktop.style.display = 'none';
+			const cartMobile = document.querySelector('.mobile-nav a[href="/generalViews/cart"]');
+			if (cartMobile) cartMobile.style.display = 'none';
+			const cartGlobal = document.querySelector('a[href="/generalViews/cart"]');
+			if (cartGlobal) cartGlobal.style.display = 'none';
+
+			[desktopMenu, globalMenu].forEach((menu) => {
+				if (!menu) return;
+				const customerLinks = menu.querySelectorAll('a[href^="/generalViews/perfil"]');
+				customerLinks.forEach((a) => {
+					a.style.display = 'none';
 				});
 
-				const contactDesktop = document.querySelector('.desktop-nav a[href*="/contact"]');
-				if (contactDesktop) contactDesktop.style.setProperty('display', 'none', 'important');
-				const contactMobile = document.querySelector('#mobile-menu a[href*="/contact"]');
-				if (contactMobile) contactMobile.style.setProperty('display', 'none', 'important');
-				
-				const cartDesktop = document.querySelector('.desktop-nav a[href*="/cart"]');
-				if (cartDesktop) cartDesktop.style.setProperty('display', 'none', 'important');
-				const cartMobile = document.querySelector('.mobile-nav a[href*="/cart"]');
-				if (cartMobile) cartMobile.style.setProperty('display', 'none', 'important');
-				const cartGlobal = document.querySelector('a[href*="/cart"]');
-				if (cartGlobal) cartGlobal.style.setProperty('display', 'none', 'important');
-
-				[desktopMenu, globalMenu].forEach((menu) => {
-					if (!menu) return;
-					
-					// Ocultar links de cliente para administrador
-					const customerLinks = menu.querySelectorAll('a');
-					customerLinks.forEach((a) => {
-						const href = a.getAttribute('href') || '';
-						if (href.includes('/perfil') || href.includes('/pedidos') || href.includes('/direcciones')) {
-							a.style.setProperty('display', 'none', 'important');
-						}
-					});
-
-					const existing = menu.querySelector('[data-admin-link]');
-					if (existing) return;
-					const a = document.createElement('a');
-					a.className = menu.classList.contains('nav-dropdown__menu') ? 'nav-dropdown__item' : 'header-dropdown__item';
-					a.href = '/dashboard/homeDashboard';
-					a.setAttribute('role', 'menuitem');
-					a.setAttribute('data-admin-link', '1');
-					a.innerHTML = '<i class="bi bi-speedometer2"></i> Ir al Dashboard';
-					menu.insertBefore(a, menu.firstChild);
-				});
-			};
-
-			// Ejecutar limpieza inmediata
-			forceCleanupAdminMenu();
-
-			// Observador para mantener los cambios si el DOM se actualiza
-			const observer = new MutationObserver(forceCleanupAdminMenu);
-			if (userMenuDesktop) observer.observe(userMenuDesktop, { childList: true, subtree: true });
-			if (userMenuGlobal) observer.observe(userMenuGlobal, { childList: true, subtree: true });
-			if (userMenuMobile) observer.observe(userMenuMobile, { childList: true, subtree: true });
+				const existing = menu.querySelector('[data-admin-link]');
+				if (existing) return;
+				const a = document.createElement('a');
+				a.className = menu.classList.contains('nav-dropdown__menu') ? 'nav-dropdown__item' : 'header-dropdown__item';
+				a.href = '/dashboard/homeDashboard';
+				a.setAttribute('role', 'menuitem');
+				a.setAttribute('data-admin-link', '1');
+				a.innerHTML = '<i class="bi bi-speedometer2"></i> Ir al Dashboard';
+				menu.insertBefore(a, menu.firstChild);
+			});
 		}
 
 		// Configurar logout

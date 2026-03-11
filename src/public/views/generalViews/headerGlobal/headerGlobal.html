@@ -5,93 +5,56 @@
 
 <body>
 	<header class="main-header">
-		<div class="header-container">
-			<!-- Mobile Controls -->
-			<div class="mobile-nav-controls">
-				<button id="menu-toggle" class="hamburger" aria-label="Menú">
-					<span class="hamburger-line"></span>
-					<span class="hamburger-line"></span>
-					<span class="hamburger-line"></span>
-				</button>
-				
-				<a href="/generalViews/home" class="logo-link mobile-logo">
-					<span class="logo">Hija del Fuego</span>
-				</a>
-				
-				<a href="/generalViews/cart" class="cart-icon mobile-cart" aria-label="Carrito" title="Carrito">
-					<i class="bi bi-cart-fill"></i>
-				</a>
-			</div>
-
-			<!-- Desktop Navigation -->
-			<nav class="desktop-nav">
-				<div class="nav-left">
-					<div class="nav-dropdown" id="globalProductsDropdown">
-						<button type="button" class="nav-link nav-dropdown__trigger" id="globalProductsDropdownTrigger" aria-haspopup="true" aria-expanded="false">
-							Productos
-						</button>
-						<div class="nav-dropdown__menu" id="globalProductsDropdownMenu" role="menu">
-							<a class="nav-dropdown__item" href="/generalViews/recipes" role="menuitem">Recetas</a>
-							<a class="nav-dropdown__item" href="/generalViews/book" role="menuitem">Libros</a>
+		<div class="header-content">
+			<button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+			<nav class="navbar">
+				<ul class="nav-menu" id="nav-menu">
+					<li>
+						<div class="btn-group-products">
+							<div class="header-dropdown" id="globalProductsDropdown">
+								<button type="button" class="header-btn header-dropdown__trigger" id="globalProductsDropdownTrigger" aria-haspopup="true" aria-expanded="false">
+									Productos
+								</button>
+								<div class="header-dropdown__menu" id="globalProductsDropdownMenu" role="menu" aria-label="Categorías de productos">
+									<a class="header-dropdown__item" href="/generalViews/recipes" role="menuitem">Recetas</a>
+									<a class="header-dropdown__item" href="/generalViews/book" role="menuitem">Libros</a>
+								</div>
+							</div>
+							<a href="/generalViews/gastronomic" class="header-btn">Mi&nbsp;Marca</a>
+							<a href="/generalViews/blog" class="header-btn">Blog personal</a>
 						</div>
-					</div>
-					<a href="/generalViews/gastronomic" class="nav-link">Mi Marca</a>
-					<a href="/generalViews/blog" class="nav-link">Blog personal</a>
-				</div>
-				
-				<a href="/generalViews/home" class="logo-link desktop-logo">
-					<span class="logo">Hija del Fuego</span>
-				</a>
-				
-				<div class="nav-right">
-					<a href="/generalViews/contact" class="nav-link">Contacto</a>
-					<div id="auth-buttons-global" class="auth-buttons">
-						<a href="/generalViews/register" class="nav-link">Registrarse</a>
-						<a href="/generalViews/login" class="nav-link nav-icon-link" aria-label="Iniciar Sesión"><i class="bi bi-person-circle"></i></a>
-					</div>
-					<div id="user-menu-global" class="user-menu">
-						<div class="nav-dropdown">
-							<button type="button" class="nav-link nav-dropdown__trigger user-btn-global" id="userDropdownTriggerGlobal" aria-haspopup="true" aria-expanded="false">
-								<i class="bi bi-person-circle"></i> Mi Cuenta
-							</button>
-							<div class="nav-dropdown__menu" role="menu">
-								<a class="nav-dropdown__item" href="/generalViews/perfil" role="menuitem"><i class="bi bi-person"></i> Mi Perfil</a>
-								<a class="nav-dropdown__item" href="/generalViews/perfil#pedidos" role="menuitem"><i class="bi bi-bag-check"></i> Mis Pedidos</a>
-								<a class="nav-dropdown__item" href="/generalViews/perfil#direcciones" role="menuitem"><i class="bi bi-geo-alt"></i> Direcciones</a>
-								<a class="nav-dropdown__item text-danger" href="#" id="logout-btn-global" role="menuitem"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+					</li>
+					<li class="logo-li"><a href="/generalViews/home" class="logo-link"><span class="logo">Hija del Fuego
+
+							</span></a></li>
+					<li>
+						<div class="btn-group-contact">
+							<a href="/generalViews/contact" class="header-btn">Contacto</a>
+							<div id="auth-buttons-global">
+								<a href="/generalViews/register" class="header-btn">Registrarse</a>
+							</div>
+							<div id="user-menu-global">
+								<div class="header-dropdown">
+									<button type="button" class="header-btn header-dropdown__trigger user-btn-global" id="userDropdownTriggerGlobal" aria-haspopup="true" aria-expanded="false">
+										<i class="bi bi-person-circle"></i> Mi Cuenta
+									</button>
+									<div class="header-dropdown__menu" role="menu">
+										<a class="header-dropdown__item" href="/generalViews/perfil" role="menuitem"><i class="bi bi-person"></i> Mi Perfil</a>
+										<a class="header-dropdown__item" href="/generalViews/perfil#pedidos" role="menuitem"><i class="bi bi-bag-check"></i> Mis Pedidos</a>
+										<a class="header-dropdown__item" href="/generalViews/perfil#direcciones" role="menuitem"><i class="bi bi-geo-alt"></i> Direcciones</a>
+										<a class="header-dropdown__item text-danger" href="#" id="logout-btn-global" role="menuitem"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-					<a href="/generalViews/cart" class="cart-icon" aria-label="Carrito" title="Carrito">
-						<i class="bi bi-cart-fill"></i>
-					</a>
-				</div>
+					</li>
+					<li class="icon-li"><a href="/generalViews/cart" aria-label="Carrito" title="Carrito"><i class="bi bi-cart-fill header-icon"></i></a></li>
+				</ul>
 			</nav>
-
-			<!-- Mobile Menu Overlay -->
-			<div id="mobile-menu" class="mobile-menu">
-				<button type="button" class="mobile-link mobile-dropdown__trigger" id="mobileProductsDropdownTrigger" aria-haspopup="true" aria-expanded="false">Productos</button>
-				<div class="mobile-dropdown__menu" id="mobileProductsDropdownMenu" role="menu">
-					<a href="/generalViews/recipes" class="mobile-sublink" role="menuitem">Recetas</a>
-					<a href="/generalViews/book" class="mobile-sublink" role="menuitem">Libros</a>
-				</div>
-				<a href="/generalViews/gastronomic" class="mobile-link">Mi Marca</a>
-				<a href="/generalViews/blog" class="mobile-link">Blog</a>
-				<a href="/generalViews/contact" class="mobile-link">Contacto</a>
-				
-				<div id="auth-buttons-mobile" class="auth-buttons-mobile">
-					<a href="/generalViews/login" class="mobile-link"><i class="bi bi-person-circle"></i> Iniciar Sesión</a>
-					<a href="/generalViews/register" class="mobile-link">Registrarse</a>
-				</div>
-
-				<div id="user-menu-mobile" class="user-menu-mobile">
-					<hr>
-					<a href="/generalViews/perfil" class="mobile-link"><i class="bi bi-person"></i> Mi Perfil</a>
-					<a href="/generalViews/perfil#pedidos" class="mobile-link"><i class="bi bi-bag"></i> Mis Pedidos</a>
-					<a href="/generalViews/perfil#direcciones" class="mobile-link"><i class="bi bi-geo-alt"></i> Direcciones</a>
-					<a href="#" id="logout-btn-mobile" class="mobile-link text-danger"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a>
-				</div>
-			</div>
 		</div>
 	</header>
 </body>

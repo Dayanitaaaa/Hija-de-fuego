@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Hija del Fuego</title>
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../../assets/css/generalViews/headerGlobal.css">
+    <link rel="stylesheet" href="../../../assets/css/generalViews/perfil.css">
+</head>
+<body>
+    <header>
+		<object type="text/html" data="../headerGlobal/headerGlobal.html" class="header-include"></object>
+	</header>
+
+    <main class="profile-container">
+        <div class="profile-header">
+            <h1 class="aboreto-font">Mi Perfil</h1>
+            <p id="user-welcome">Bienvenido a tu espacio personal</p>
+        </div>
+
+        <div class="profile-content">
+            <!-- Sidebar Navigation -->
+            <aside class="profile-sidebar">
+                <nav class="profile-nav">
+                    <button class="nav-item active" data-section="perfil-info">
+                        <i class="bi bi-person"></i> Mis Datos
+                    </button>
+                    <button class="nav-item" data-section="perfil-pedidos">
+                        <i class="bi bi-bag"></i> Mis Pedidos
+                    </button>
+                    <button class="nav-item" data-section="perfil-direcciones">
+                        <i class="bi bi-geo-alt"></i> Direcciones
+                    </button>
+                    <button class="nav-item text-danger" id="logout-profile">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Main Section -->
+            <section class="profile-main-section">
+                <!-- Información del Perfil -->
+                <div id="perfil-info" class="section-content active">
+                    <h2 class="aboreto-font">Mis Datos Personales</h2>
+                    <form id="profile-form" class="elegant-form">
+                        <div class="form-group">
+                            <label for="profile-name">Nombre Completo</label>
+                            <input type="text" id="profile-name" class="editable-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-email">Correo Electrónico</label>
+                            <input type="email" id="profile-email" class="editable-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-phone">Número de Celular</label>
+                            <input type="tel" id="profile-phone" class="editable-input">
+                        </div>
+                        <div class="profile-form-actions d-none">
+                            <button type="submit" class="btn-elegant">Guardar Cambios</button>
+                            <button type="button" class="btn-outline" id="cancel-edit">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Historial de Pedidos -->
+                <div id="perfil-pedidos" class="section-content">
+                    <h2 class="aboreto-font">Historial de Compras</h2>
+                    <div id="orders-list" class="orders-container">
+                        <p class="empty-message">No tienes pedidos registrados aún.</p>
+                    </div>
+                </div>
+
+                <!-- Direcciones -->
+                <div id="perfil-direcciones" class="section-content">
+                    <h2 class="aboreto-font">Mis Direcciones</h2>
+                    <div id="address-list" class="address-container">
+                        <p class="empty-message">No tienes direcciones guardadas.</p>
+                        <button class="btn-elegant small"><i class="bi bi-plus"></i> Añadir Dirección</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer></footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../../assets/js/system/constans.js"></script>
+    <script src="../../../assets/js/generalViews/headerGlobal/headerGlobal.js"></script>
+    <script src="../../../assets/js/generalViews/perfil/perfil.js"></script>
+</body>
+</html>

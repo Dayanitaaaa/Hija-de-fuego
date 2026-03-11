@@ -4,15 +4,19 @@ import cors from 'cors';
 import express from 'express';
 import rolesRoutes from '../routes/roles.Routes.js';// Rutas
 import usersRoutes from '../routes/users.Routes.js';
-import typeFiles from '../routes/typeFiles.Routes.js';
-import filesRoutes from '../routes/files.Routes.js';
 import typeProductRoutes from '../routes/typeProduct.Routes.js';
 import productsRoutes from '../routes/product.Routes.js';
 import storeProductsRoutes from '../routes/storeProducts.Routes.js';
 import contactoRoutes from '../routes/contacto.Routes.js';
 import mensajesContactoRoutes from '../routes/mensajesContacto.Routes.js';
+import pedidosRoutes from '../routes/pedidos.Routes.js';
+import addressesRoutes from '../routes/addresses.Routes.js';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport from '../config/passport.js';
 import { verifyToken } from '../middleware/authMiddleware.js';  
+import jwt from 'jsonwebtoken';
+import { connect } from '../config/db/connect.js';
 
 
 
@@ -33,19 +37,88 @@ app.use('/uploads', express.static(uploadsPath));
 app.use(cors());
 app.use(cookieParser());
 
+app.use(session({
+    secret: process.env.JWT_SECRET || 'secret_hija_fuego',
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/mySystem', rolesRoutes);
 app.use('/mySystem', usersRoutes);
-app.use('/mySystem', typeFiles);
-app.use('/mySystem', filesRoutes);
 app.use('/mySystem', typeProductRoutes); 
 app.use('/mySystem', productsRoutes);
 app.use('/mySystem', storeProductsRoutes);
 app.use('/mySystem', mensajesContactoRoutes);
+app.use('/mySystem/pedidos', pedidosRoutes);
+app.use('/mySystem/addresses', addressesRoutes);
 
 app.use(contactoRoutes);
+
+// --- Rutas de Autenticación Social (Google) ---
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/generalViews/login' }),
+    async (req, res) => {
+        try {
+            // El usuario ya fue autenticado y guardado/encontrado en DB por Passport
+            const user = req.user;
+
+            // Obtener el rol del usuario para el token
+            const [roleResult] = await connect.query(
+                'SELECT R.Roles_id, R.Roles_name FROM roles R WHERE R.Roles_id = ?',
+                [user.Roles_fk]
+            );
+            const role = roleResult.length > 0 ? roleResult[0] : { Roles_id: user.Roles_fk, Roles_name: 'Cliente' };
+
+            // Generar el mismo tipo de JWT que usa el login tradicional
+            const token = jwt.sign(
+                { id: user.User_id, email: user.User_email, role: role.Roles_name },
+                process.env.JWT_SECRET,
+                { expiresIn: '1h' }
+            );
+
+            // Preparar objeto de respuesta para el frontend
+            const userData = JSON.stringify({
+                User_id: user.User_id,
+                User_name: user.User_name,
+                User_email: user.User_email
+            });
+            const roleData = JSON.stringify({
+                id: role.Roles_id,
+                name: role.Roles_name
+            });
+
+            // Enviar script para guardar en localStorage y redirigir
+            res.send(`
+                <script>
+                    localStorage.setItem('token', '${token}');
+                    localStorage.setItem('user', '${userData}');
+                    localStorage.setItem('role', '${roleData}');
+                    
+                    const redirectUrl = localStorage.getItem('post_login_redirect');
+                    if (redirectUrl) {
+                        localStorage.removeItem('post_login_redirect');
+                        window.location.href = redirectUrl;
+                    } else {
+                        window.location.href = '/generalViews/home';
+                    }
+                </script>
+            `);
+        } catch (error) {
+            console.error('Error en callback social:', error);
+            res.redirect('/generalViews/login?error=auth_failed');
+        }
+    }
+);
 
 
 // Redirección de la raíz a la página de inicio
@@ -63,21 +136,16 @@ app.get('/dashboard/users', (req, res) => {
 app.get('/dashboard/roles', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/dashboard/roles/roles.html'));
 });
-app.get('/dashboard/typeFiles', (req, res) => {
-    res.redirect('/dashboard/archivos');
-});
-app.get('/dashboard/files', (req, res) => {
-    res.redirect('/dashboard/archivos');
-});
-app.get('/dashboard/archivos', (req, res) => {
-    res.sendFile(path.join(publicPath, 'views/dashboard/archivos/archivos.html'));
-});
 app.get('/dashboard/gestion-productos', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/dashboard/gestionProductos/gestionProductos.html'));
 });
 
 app.get('/dashboard/mensajes-contacto', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/dashboard/mensajesContacto/mensajesContacto.html'));
+});
+
+app.get('/dashboard/pedidos', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/dashboard/pedidos/pedidos.html'));
 });
 
 app.get('/dashboard/editor-web', (req, res) => {
@@ -157,6 +225,14 @@ app.get('/generalViews/comida-con-alma', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/comidaConAlma/comidaConAlma.html'));
 });
 
+app.get('/generalViews/forgot-password', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/login/forgot-password.html'));
+});
+
+app.get('/generalViews/reset-password/:token', (req, res) => {
+    res.sendFile(path.join(publicPath, 'views/generalViews/login/reset-password.html'));
+});
+
 app.get('/generalViews/comida-con-alma/producto/:id', (req, res) => {
     res.sendFile(path.join(publicPath, 'views/generalViews/comidaConAlma/comidaConAlmaDetail.html'));
 });
@@ -192,8 +268,6 @@ app.get('/views/dashboard/:section/:file', (req, res) => {
     const map = {
         users: '/dashboard/users',
         roles: '/dashboard/roles',
-        typeFiles: '/dashboard/typeFiles',
-        files: '/dashboard/files',
         products: '/dashboard/gestion-productos'
     };
     if (map[section]) return res.redirect(map[section]);

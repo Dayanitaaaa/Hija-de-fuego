@@ -41,9 +41,9 @@
             <li><a class="menu-button" id="menu-dashboardHome" href="/dashboard/homeDashboard"><i class="fas fa-home"></i> Inicio</a></li>
             <li><a class="menu-button" id="menu-users" href="/dashboard/users"><i class="fas fa-users"></i> Usuarios</a></li>
             <li><a class="menu-button" id="menu-roles" href="/dashboard/roles"> <i class="fas fa-user-tag"></i> Roles</a></li>
-            <li><a class="menu-button" id="menu-archivos" href="/dashboard/archivos"><i class="fas fa-folder-open"></i> Archivos</a></li>
             <li><a class="menu-button" id="menu-editorWeb" href="/dashboard/gestion-productos"><i class="fas fa-pen-to-square"></i> Gestión de Productos</a></li>
             <li><a class="menu-button" id="menu-mensajesContacto" href="/dashboard/mensajes-contacto"><i class="fas fa-inbox"></i> Mensajes de Contacto</a></li>
+            <li><a class="menu-button" id="menu-pedidos" href="/dashboard/pedidos"><i class="fas fa-shopping-cart"></i> Pedidos</a></li>
             <li><hr></li>
         </ul>
 
@@ -60,9 +60,29 @@
     <div class="main-content">
         <div class="container-fluid">
             <!-- Header del dashboard -->
-            <div class="dashboard-header">
-                <h1><i class="fas fa-tachometer-alt"></i> Panel de Administración</h1>
-                <p class="text-muted">Gestiona todos los módulos del sistema desde aquí</p>
+            <div class="dashboard-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <h1><i class="fas fa-tachometer-alt"></i> Panel de Administración</h1>
+                    <p class="text-muted">Gestiona todos los módulos del sistema desde aquí</p>
+                </div>
+                <div class="admin-notifications" id="adminNotifications">
+                    <button type="button" class="admin-notifications__btn" id="adminNotificationsBtn" aria-label="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="admin-notifications__badge" id="adminNotificationsBadge" hidden>0</span>
+                    </button>
+                    <div class="admin-notifications__menu" id="adminNotificationsMenu" hidden>
+                        <div class="admin-notifications__title">Notificaciones</div>
+                        <a class="admin-notifications__item" href="/dashboard/pedidos" id="adminNotifPedidos">
+                            <span>Pedidos nuevos</span>
+                            <strong id="adminNotifPedidosCount">0</strong>
+                        </a>
+                        <a class="admin-notifications__item" href="/dashboard/mensajes-contacto" id="adminNotifMensajes">
+                            <span>Mensajes nuevos</span>
+                            <strong id="adminNotifMensajesCount">0</strong>
+                        </a>
+                        <button type="button" class="admin-notifications__clear" id="adminNotificationsClear">Marcar como visto</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Cards de módulos -->
@@ -98,29 +118,28 @@
                     </div>
                 </div>
 
-
-                <!-- Card Tipos de Archivos -->
+                <!-- Card Gestión de Productos -->
                 <div class="col-lg-3 col-md-6">
-                    <div class="module-card" data-module="typeFiles">
+                    <div class="module-card" data-module="products">
                         <div class="card-icon">
-                            <i class="fas fa-file-alt"></i>
+                            <i class="fas fa-pen-to-square"></i>
                         </div>
                         <div class="card-content">
-                            <h3>Tipos de Archivos</h3>
-                            <p>Gestión de tipos de archivos del sistema</p>
+                            <h3>Productos</h3>
+                            <p>Gestión de tienda e inventario</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card Archivos -->
+                <!-- Card Pedidos -->
                 <div class="col-lg-3 col-md-6">
-                    <div class="module-card" data-module="files">
+                    <div class="module-card" data-module="pedidos">
                         <div class="card-icon">
-                            <i class="fas fa-file-upload"></i>
+                            <i class="fas fa-shopping-cart"></i>
                         </div>
                         <div class="card-content">
-                            <h3>Archivos</h3>
-                            <p>Gestión de archivos del sistema</p>
+                            <h3>Pedidos</h3>
+                            <p>Gestión de ventas y envíos</p>
                         </div>
                     </div>
                 </div>
@@ -134,6 +153,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../../../assets/js/dashboard/homeDashboard/homeDashboard.js"></script>
     <script src="../../../assets/js/dashboard/userBadge.js"></script>
+    <script src="../../../assets/js/dashboard/adminNotifications.js"></script>
     <script src="../../../assets/js/system/constans.js"></script>
     <script src="../../../assets/js/dashboard/homeDashboard/sidebar.js"></script>
     <script src="../../../assets/js/logOut/logOut.js"></script>

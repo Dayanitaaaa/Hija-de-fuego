@@ -261,35 +261,13 @@ function bindEvents() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(payload)
     })
       .then(async (res) => {
-        const contentType = res.headers.get('content-type');
-        let data;
-        
-        if (contentType && contentType.includes('application/json')) {
-          data = await res.json();
-        } else {
-          const text = await res.text();
-          console.error('Respuesta no JSON recibida:', text);
-          throw new Error('El servidor devolvió una respuesta inesperada. Por favor, intenta de nuevo.');
-        }
-
-        if (!res.ok) {
-          // Si el token es inválido o expiró, redirigir al login
-          if (res.status === 401) {
-            showNiceAlert('Sesión expirada', 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
-            setTimeout(() => {
-              localStorage.removeItem('token');
-              window.location.href = '/generalViews/login';
-            }, 3000);
-            return;
-          }
-          throw new Error(data.error || data.message || 'Error al procesar pedido');
-        }
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al procesar pedido');
 
         if (hint) hint.textContent = '¡Pedido realizado con éxito! El stock ha sido actualizado.';
         writeCart([]);
@@ -298,9 +276,7 @@ function bindEvents() {
         localStorage.setItem('checkout_draft_v1', JSON.stringify(payload));
       })
       .catch((err) => {
-        console.error('Error en checkout:', err);
         if (hint) hint.textContent = 'Error: ' + err.message;
-        showNiceAlert('Error en el pedido', err.message);
       })
       .finally(() => {
         btn.disabled = false;

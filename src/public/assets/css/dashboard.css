@@ -145,6 +145,106 @@
 	background: #d01527;
 	color: #fff;
 }
+
+.admin-notifications {
+	position: relative;
+	margin-left: auto;
+	z-index: 3000;
+}
+
+.admin-notifications__btn {
+	position: relative;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	border: 1px solid rgba(150, 53, 59, 0.18);
+	background: rgba(255, 255, 255, 0.85);
+	box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.admin-notifications__btn:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 16px 36px rgba(0,0,0,0.14);
+	border-color: rgba(150, 53, 59, 0.28);
+}
+
+.admin-notifications__btn i {
+	color: #96353b;
+	font-size: 1.1rem;
+}
+
+.admin-notifications__badge {
+	position: absolute;
+	top: -7px;
+	right: -7px;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 5px;
+	border-radius: 999px;
+	background: #96353b;
+	color: #fff;
+	font-size: 0.72rem;
+	font-weight: 800;
+	line-height: 18px;
+	text-align: center;
+	box-shadow: 0 10px 22px rgba(150, 53, 59, 0.26);
+}
+
+.admin-notifications__menu {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 10px);
+	width: min(320px, 90vw);
+	border-radius: 16px;
+	border: 1px solid rgba(150, 53, 59, 0.16);
+	background: rgba(255, 250, 242, 0.96);
+	box-shadow: 0 22px 70px rgba(0,0,0,0.16);
+	padding: 12px;
+	z-index: 4000;
+}
+
+.admin-notifications__title {
+	font-weight: 800;
+	color: #2c1810;
+	margin-bottom: 10px;
+}
+
+.admin-notifications__item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 10px 12px;
+	border-radius: 12px;
+	text-decoration: none;
+	color: #2c1810;
+	background: rgba(255, 255, 255, 0.85);
+	border: 1px solid rgba(0,0,0,0.08);
+	margin-bottom: 10px;
+	transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.admin-notifications__item:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+	border-color: rgba(150, 53, 59, 0.20);
+}
+
+.admin-notifications__clear {
+	width: 100%;
+	border: none;
+	border-radius: 12px;
+	padding: 10px 12px;
+	font-weight: 800;
+	background: linear-gradient(180deg, #a73b3f, #7a2419);
+	color: #fff;
+	cursor: pointer;
+}
 /* Modal personalizado para dashboard */
 .modal-content {
 	border-radius: 18px;

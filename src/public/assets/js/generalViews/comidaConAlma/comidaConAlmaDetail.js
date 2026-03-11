@@ -20,11 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const images = Array.isArray(p.imagenes) ? p.imagenes : [];
     const mainImage = p.imagen_principal || (images[0]?.url_imagen) || '/assets/imgStatic/logo-circular.png';
     const flavors = Array.isArray(p.sabores) ? p.sabores : [];
-    const flavorOptions = flavors.map((f) => {
-      const name = typeof f === 'object' ? f.nombre : f;
-      const stock = typeof f === 'object' ? f.stock : 0;
-      return `<option value="${escapeHtml(name)}" data-stock="${stock}">${escapeHtml(name)} ${stock > 0 ? `(${stock} disponibles)` : '(Agotado)'}</option>`;
-    }).join('');
+    const flavorOptions = flavors.map((s) => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
 
     root.innerHTML = `
       <div class="shop-header">
@@ -64,7 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${flavorOptions}
                   </select>
                 </label>
-                <p id="stock-availability-msg" style="margin-top: 8px; font-size: 0.9rem; font-weight: 600;"></p>
               </div>
             ` : ''}
 
@@ -87,41 +82,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     initCarousel(root);
     initQty(root);
     initAddToCart(root, p, mainImage);
-    initFlavorStockLogic(root);
   } catch (_err) {
     // silencioso
   }
 });
-
-function initFlavorStockLogic(scope) {
-  const flavorSelect = scope.querySelector('[data-flavor-select]');
-  const stockMsg = scope.querySelector('#stock-availability-msg');
-  const qtyInput = scope.querySelector('.product__qtyInput');
-  const buyBtn = scope.querySelector('[data-add-to-cart]');
-
-  if (!flavorSelect || !stockMsg) return;
-
-  flavorSelect.addEventListener('change', () => {
-    const selectedOption = flavorSelect.options[flavorSelect.selectedIndex];
-    const stock = parseInt(selectedOption.getAttribute('data-stock') || '0');
-
-    if (stock <= 0) {
-      stockMsg.textContent = 'Agotado para este sabor';
-      stockMsg.style.color = '#e74c3c';
-      buyBtn.disabled = true;
-      buyBtn.style.opacity = '0.5';
-      qtyInput.value = '0';
-      qtyInput.max = '0';
-    } else {
-      stockMsg.textContent = `${stock} unidades disponibles`;
-      stockMsg.style.color = '#27ae60';
-      buyBtn.disabled = false;
-      buyBtn.style.opacity = '1';
-      qtyInput.value = '1';
-      qtyInput.max = stock;
-    }
-  });
-}
 
 function initAddToCart(scope, product, fallbackImage) {
   const btn = scope.querySelector('[data-add-to-cart]');
@@ -160,19 +124,12 @@ function initAddToCart(scope, product, fallbackImage) {
 			showNiceAlert('Acción no permitida', 'Tu sesión es de Administrador. Para realizar compras, entra como cliente.');
 			return;
 		}
+    const qty = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
+
     const selectedFlavor = flavorSelect ? String(flavorSelect.value || '').trim() : '';
     if (flavorSelect && !selectedFlavor) {
 		showNiceAlert('Selecciona un sabor', 'Por favor selecciona un sabor para continuar.');
       flavorSelect.focus();
-      return;
-    }
-
-    const qty = Math.max(1, Math.floor(Number(qtyInput.value) || 1));
-    const selectedOption = flavorSelect ? flavorSelect.options[flavorSelect.selectedIndex] : null;
-    const stock = selectedOption ? parseInt(selectedOption.getAttribute('data-stock') || '999') : 999;
-
-    if (qty > stock) {
-      showNiceAlert('Stock insuficiente', `Lo sentimos, solo quedan ${stock} unidades de este sabor.`);
       return;
     }
 

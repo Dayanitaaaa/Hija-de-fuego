@@ -180,39 +180,7 @@ async function verDetalle(pedidoId) {
         document.getElementById('modalEstadoBadge').innerHTML = getEstadoBadge(pedido.estado);
         
         // Establecer estado actual en el select
-        const selectEstado = document.getElementById('nuevoEstadoSelect');
-        selectEstado.value = pedido.estado;
-
-        // Deshabilitar estados anteriores para asegurar que el flujo solo avance
-        const ordenEstados = {
-            'PENDIENTE': 1,
-            'PREPARANDO': 2,
-            'ENVIADO': 3,
-            'ENTREGADO': 4,
-            'CANCELADO': 0
-        };
-
-        const nivelActual = ordenEstados[pedido.estado] || 0;
-
-        Array.from(selectEstado.options).forEach(option => {
-            const nivelOpcion = ordenEstados[option.value] || 0;
-            
-            if (pedido.estado === 'ENTREGADO' || pedido.estado === 'CANCELADO') {
-                option.disabled = true;
-            } else if (option.value === 'CANCELADO') {
-                // Solo permitir cancelar si no ha sido enviado
-                option.disabled = nivelActual >= 3;
-            } else {
-                // Solo permitir estados que sigan en el orden
-                option.disabled = nivelOpcion <= nivelActual;
-            }
-        });
-
-        // Deshabilitar el botón de guardar si el pedido ya está finalizado
-        const btnGuardar = document.querySelector('#detallePedidoModal .btn-primary[onclick="cambiarEstado()"]');
-        if (btnGuardar) {
-            btnGuardar.disabled = (pedido.estado === 'ENTREGADO' || pedido.estado === 'CANCELADO');
-        }
+        document.getElementById('nuevoEstadoSelect').value = pedido.estado;
         
         // Llenar tabla de productos
         const productosBody = document.getElementById('modalProductosTableBody');

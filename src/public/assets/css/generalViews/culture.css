@@ -7,20 +7,23 @@ producbody, html {
 .culture-main {
     position: relative;
     min-height: 100vh;
-    background-image: url('../../../assets/imgStatic/imgKitchen.png');
-    background-size: cover;
-    background-position: center;
-    
+    background-color: #faf7f2;
+    background-image: 
+        url("https://www.transparenttextures.com/patterns/cream-paper.png"),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5) 0%, rgba(250, 247, 242, 0.8) 100%);
+    background-attachment: fixed;
+    padding-top: 120px;
 }
 
 .culture-main::before {
     content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 150px rgba(150, 53, 59, 0.03);
+    pointer-events: none;
     z-index: 1;
 }
 
@@ -33,12 +36,13 @@ producbody, html {
 }
 
 .culture-title {
-    font-family: 'Aboreto', cursive;
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 30px;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-    padding-left: 20px;
+    font-family: 'Aboreto', serif;
+    font-size: 2.5rem;
+    color: #96353b;
+    margin-bottom: 50px;
+    text-align: center;
+    padding-left: 0;
+    text-shadow: none;
 }
 
 .culture-cards-container {
@@ -46,7 +50,7 @@ producbody, html {
     justify-content: center;
     gap: 40px;
     flex-wrap: wrap;
-    margin-top: 180px; /* Espacio para bajar las cards */
+    margin-top: 40px; /* Ajustado para el nuevo diseño */
 }
 
 .culture-card {
@@ -75,12 +79,18 @@ producbody, html {
 }
 
 .culture-card-image-container {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    padding: 15px;
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    margin-bottom: 15px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(150, 53, 59, 0.05);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.culture-card:hover .culture-card-image-container {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(150, 53, 59, 0.12);
 }
 
 .culture-card-image-container img {
@@ -90,10 +100,12 @@ producbody, html {
 }
 
 .culture-card-info {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 25px;
+    background-color: #ffffff;
+    border-radius: 20px;
     padding: 15px 20px;
     text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(150, 53, 59, 0.05);
 }
 
 .culture-card-title {

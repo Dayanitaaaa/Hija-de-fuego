@@ -67,8 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function toggleFlavorsVisibility() {
     const flavorsSection = flavorInput.closest('.col-12');
-    if (!flavorsSection) return;
-    
     if (shouldShowFlavors()) {
       flavorsSection.style.display = '';
     } else {
@@ -96,35 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderFlavors() {
     flavorsWrap.innerHTML = '';
     currentFlavors.forEach((flavor, idx) => {
-      const flavorName = typeof flavor === 'object' ? flavor.nombre : flavor;
-      const flavorStock = typeof flavor === 'object' ? flavor.stock : 0;
-      
-      const chip = document.createElement('div');
-      chip.className = 'badge bg-light text-dark border d-flex align-items-center gap-2 p-2';
-      chip.innerHTML = `
-        <span>${escapeHtml(flavorName)}</span>
-        <i class="fas fa-times text-danger" style="cursor:pointer"></i>
-      `;
-      
-      chip.querySelector('i').addEventListener('click', () => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn-sm btn-outline-secondary';
+      btn.textContent = flavor;
+      btn.addEventListener('click', () => {
         currentFlavors.splice(idx, 1);
         renderFlavors();
       });
-      flavorsWrap.appendChild(chip);
+      flavorsWrap.appendChild(btn);
     });
   }
 
   function addFlavorFromInput() {
-    const name = (flavorInput.value || '').trim();
-    if (!name) return;
-    
-    const exists = currentFlavors.some(f => (typeof f === 'object' ? f.nombre : f) === name);
-    if (exists) {
-      alert('Este sabor ya existe');
-      return;
-    }
-
-    currentFlavors.push({ nombre: name, stock: 0 });
+    const value = (flavorInput.value || '').trim();
+    if (!value) return;
+    if (!currentFlavors.includes(value)) currentFlavors.push(value);
     flavorInput.value = '';
     renderFlavors();
   }
@@ -142,14 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!productId) {
       const msg = document.createElement('div');
       msg.className = 'text-muted';
-      msg.textContent = 'Guarda la línea de bienestar para poder subir imágenes.';
+      msg.textContent = 'Guarda el plato para poder subir imágenes.';
       imagesList.appendChild(msg);
       return;
     }
     if (!currentProductImages.length) {
       const msg = document.createElement('div');
       msg.className = 'text-muted';
-      msg.textContent = 'Esta línea de bienestar aún no tiene imágenes.';
+      msg.textContent = 'Este plato aún no tiene imágenes.';
       imagesList.appendChild(msg);
     }
     currentProductImages.forEach((img) => {
@@ -173,47 +158,15 @@ document.addEventListener('DOMContentLoaded', () => {
       delBtn.className = 'btn btn-sm btn-outline-danger';
       delBtn.innerHTML = '<i class="fas fa-trash"></i>';
       delBtn.addEventListener('click', async () => {
+        if (!confirm('¿Eliminar esta imagen?')) return;
         try {
-          const result = await Swal.fire({
-            title: '¿Eliminar imagen?',
-            text: "Esta acción no se puede deshacer",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#2d5a27',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            background: '#fff',
-            customClass: {
-              popup: 'rounded-4',
-              confirmButton: 'rounded-pill px-4',
-              cancelButton: 'rounded-pill px-4'
-            }
-          });
-
-          if (result.isConfirmed) {
-            const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${productId}/imagenes/${img.imagen_id}`, { method: 'DELETE' });
-            const data = await resp.json().catch(() => ({}));
-            if (!resp.ok) throw new Error(data?.error || 'Error al eliminar imagen');
-            currentProductImages = Array.isArray(data.imagenes) ? data.imagenes : [];
-            renderImagesList(productId);
-            Swal.fire({
-              title: 'Eliminada',
-              text: 'La imagen ha sido eliminada correctamente.',
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false,
-              customClass: { popup: 'rounded-4' }
-            });
-          }
+          const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${productId}/imagenes/${img.imagen_id}`, { method: 'DELETE' });
+          const data = await resp.json().catch(() => ({}));
+          if (!resp.ok) throw new Error(data?.error || 'Error al eliminar imagen');
+          currentProductImages = Array.isArray(data.imagenes) ? data.imagenes : [];
+          renderImagesList(productId);
         } catch (err) {
-          Swal.fire({
-            title: 'Error',
-            text: err.message,
-            icon: 'error',
-            confirmButtonColor: '#2d5a27',
-            customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-          });
+          alert(err.message);
         }
       });
       row.appendChild(left);
@@ -225,37 +178,16 @@ document.addEventListener('DOMContentLoaded', () => {
   async function uploadImages(productId, files) {
     if (!productId) return;
     if (!files || !files.length) return;
-
-    // Convertir FileList a Array para mejor manejo
-    const filesArray = Array.from(files);
-    if (filesArray.length === 0) return;
-
     const formData = new FormData();
-    filesArray.forEach((f) => formData.append('images', f));
-
-    try {
-      const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${productId}/imagenes`, {
-        method: 'POST',
-        body: formData
-      });
-      
-      const data = await resp.json().catch(() => ({}));
-      
-      if (!resp.ok) {
-        // Si el error es por límite de imágenes, el backend ya envía un mensaje claro
-        throw new Error(data?.error || 'Error al subir imágenes');
-      }
-
-      currentProductImages = Array.isArray(data.imagenes) ? data.imagenes : [];
-      renderImagesList(productId);
-      
-      // Limpiar el input de archivos después de subir exitosamente
-      if (storeProductImages) storeProductImages.value = '';
-      
-    } catch (err) {
-      console.error('Error en uploadImages:', err);
-      throw err;
-    }
+    [...files].forEach((f) => formData.append('images', f));
+    const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${productId}/imagenes`, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data?.error || 'Error al subir imágenes');
+    currentProductImages = Array.isArray(data.imagenes) ? data.imagenes : [];
+    renderImagesList(productId);
   }
 
   async function loadInventoryMovements() {
@@ -327,20 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadStoreProducts() {
     try {
       const page = filterPageSelect?.value || 'comida-con-alma';
-      // Traemos todos para filtrar correctamente en el cliente por categoría
       const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}?pagina=${page}`);
       if (!resp.ok) throw new Error('Error al listar productos');
-      let rows = await resp.json();
-      
-      // Separación estricta: 
-      // Si el filtro es 'libros', solo mostrar categoría 'libros'
-      // Si el filtro es 'comida-con-alma', excluir categoría 'libros'
-      if (page === 'libros') {
-        rows = rows.filter(p => (p.categoria || '').toLowerCase() === 'libros');
-      } else {
-        rows = rows.filter(p => (p.categoria || '').toLowerCase() !== 'libros');
-      }
-
+      const rows = await resp.json();
       storeProductsTableBody.innerHTML = '';
       (rows || []).forEach((p) => {
         const tr = document.createElement('tr');
@@ -386,13 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       loadInventoryMovements();
     } catch (err) {
-      Swal.fire({
-        title: 'Error',
-        text: err.message,
-        icon: 'error',
-        confirmButtonColor: '#2d5a27',
-        customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-      });
+      alert(err.message);
     }
   }
 
@@ -421,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}`);
       const data = await resp.json().catch(() => ({}));
       if (!resp.ok) throw new Error(data?.error || 'Error al cargar producto');
-      
       storeProductModalLabel.textContent = 'Editar producto';
       storeProductId.value = data.producto_id;
       storeProductName.value = data.nombre || '';
@@ -429,26 +343,16 @@ document.addEventListener('DOMContentLoaded', () => {
       storeProductStock.value = data.stock ?? 0;
       storeProductDescription.value = data.descripcion || '';
       storeProductActive.checked = Number(data.activo) === 1;
-      
       const cat = data.categoria || '';
       storeProductCategory.value = FIXED_CATEGORIES.includes(cat) ? cat : '';
-      
       currentFlavors = Array.isArray(data.sabores) ? data.sabores : [];
       renderFlavors();
-      
       currentProductImages = Array.isArray(data.imagenes) ? data.imagenes : [];
       renderImagesList(id);
-      
       toggleFlavorsVisibility();
       bootstrap.Modal.getOrCreateInstance(storeProductModal).show();
     } catch (err) {
-      Swal.fire({
-        title: 'Error',
-        text: err.message,
-        icon: 'error',
-        confirmButtonColor: '#2d5a27',
-        customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-      });
+      alert(err.message);
     }
   }
 
@@ -458,93 +362,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function deleteProduct(id) {
-    const result = await Swal.fire({
-      title: '¿Eliminar este producto?',
-      text: "Esta acción no se puede deshacer",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#2d5a27',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      background: '#fff',
-      customClass: {
-        popup: 'rounded-4',
-        confirmButton: 'rounded-pill px-4',
-        cancelButton: 'rounded-pill px-4'
-      }
-    });
-
-    if (result.isConfirmed) {
-      try {
-        const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}`, { method: 'DELETE' });
-        const data = await resp.json().catch(() => ({}));
-        if (!resp.ok) throw new Error(data?.error || 'Error al eliminar producto');
-        
-        loadStoreProducts();
-        Swal.fire({
-          title: 'Eliminado',
-          text: 'El producto ha sido eliminado correctamente.',
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false,
-          customClass: { popup: 'rounded-4' }
-        });
-      } catch (err) {
-        Swal.fire({
-          title: 'Error',
-          text: err.message,
-          icon: 'error',
-          confirmButtonColor: '#2d5a27',
-          customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-        });
-      }
+    if (!confirm('¿Eliminar este plato?')) return;
+    try {
+      const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}`, { method: 'DELETE' });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) throw new Error(data?.error || 'Error al eliminar plato');
+      loadStoreProducts();
+    } catch (err) {
+      alert(err.message);
     }
   }
 
-  async function openInventoryMovement(id, name) {
+  function openInventoryMovement(id, name) {
     document.getElementById('invProductId').value = id;
     const nameDisplay = document.getElementById('invProductNameDisplay');
     if (nameDisplay) nameDisplay.textContent = name;
-    
-    const flavorGroup = document.getElementById('invFlavorGroup');
-    const flavorSelect = document.getElementById('invFlavorSelect');
-    
-    try {
-      const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/${id}`);
-      const data = await resp.json();
-      
-      if (data.sabores && Array.isArray(data.sabores) && data.sabores.length > 0) {
-        flavorGroup.style.display = 'block';
-        flavorSelect.innerHTML = '<option value="" disabled selected>Selecciona un sabor</option>';
-        data.sabores.forEach(f => {
-          const flavorName = typeof f === 'object' ? f.nombre : f;
-          const flavorStock = typeof f === 'object' ? f.stock : 0;
-          const option = document.createElement('option');
-          option.value = flavorName;
-          option.textContent = `${flavorName} (Stock actual: ${flavorStock})`;
-          flavorSelect.appendChild(option);
-        });
-        flavorSelect.required = true;
-      } else {
-        flavorGroup.style.display = 'none';
-        flavorSelect.innerHTML = '<option value="">General (Sin sabor específico)</option>';
-        flavorSelect.required = false;
-      }
-    } catch (err) {
-      console.error('Error al cargar sabores para el modal:', err);
-      flavorGroup.style.display = 'none';
-    }
-
-    const qtyInput = document.getElementById('invQuantity');
-    if (qtyInput) qtyInput.value = '';
+    document.getElementById('inventoryMovementForm').reset();
     bootstrap.Modal.getOrCreateInstance(document.getElementById('inventoryMovementModal')).show();
   }
 
   function getCurrentAdminName() {
     const userStr = localStorage.getItem('user');
     const token = localStorage.getItem('token');
-
+    
     const decodeJWTPayload = (jwtToken) => {
       if (!jwtToken || typeof jwtToken !== 'string') return null;
       const parts = jwtToken.split('.');
@@ -559,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .join('')
         );
         return JSON.parse(json);
-      } catch {
+      } catch (_) {
         return null;
       }
     };
@@ -568,18 +408,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const user = userStr ? JSON.parse(userStr) : null;
-      let name =
-        (user && (user.User_username || user.username || user.User_name || user.nombre)) ||
-        (tokenPayload && (tokenPayload.User_username || tokenPayload.username || tokenPayload.User_name || tokenPayload.nombre)) ||
-        (user && (user.User_email || user.email)) ||
-        'Administrador';
+      
+      // Depuración para ver qué campos trae exactamente el usuario
+      console.log('User data in localStorage:', user);
+      console.log('Token data:', tokenPayload);
 
+      // Prioridad absoluta: 
+      // 1. User_username (Campo específico de la base de datos para el nombre de usuario de login)
+      // 2. username
+      // 3. User_name (Nombre real)
+      // 4. nombre
+      let name = (user && (user.User_username || user.username || user.User_name || user.nombre)) || 
+                 (tokenPayload && (tokenPayload.User_username || tokenPayload.username || tokenPayload.User_name || tokenPayload.nombre)) || 
+                 (user && (user.User_email || user.email)) ||
+                 'Administrador';
+      
       if (typeof name === 'string' && name.includes('@')) {
         name = name.split('@')[0];
       }
-
+                   
+      console.log('FINAL ADMIN NAME FOR PDF:', name);
       return name;
-    } catch {
+    } catch (e) {
       return 'Administrador';
     }
   }
@@ -589,50 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = document.getElementById('invProductId').value;
     const type = document.getElementById('invType').value;
     const qty = document.getElementById('invQuantity').value;
-    const flavorGroup = document.getElementById('invFlavorGroup');
-    const flavorSelect = document.getElementById('invFlavorSelect');
-    const flavor = (flavorGroup && flavorGroup.style.display !== 'none') ? (flavorSelect ? flavorSelect.value : '') : '';
     const adminName = getCurrentAdminName();
-
-    if (!id) {
-      Swal.fire({
-        title: 'Error',
-        text: 'No se pudo identificar el producto. Cierra y vuelve a abrir el modal.',
-        icon: 'error',
-        confirmButtonColor: '#2d5a27',
-        customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-      });
-      return;
-    }
-
-    if (!qty || Number(qty) <= 0) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Ingresa una cantidad válida.',
-        icon: 'error',
-        confirmButtonColor: '#2d5a27',
-        customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-      });
-      return;
-    }
-
-    const requiresFlavor = flavorGroup && flavorGroup.style.display !== 'none';
-    if (requiresFlavor && !flavor) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Selecciona un sabor para añadir stock.',
-        icon: 'error',
-        confirmButtonColor: '#2d5a27',
-        customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-      });
-      flavorSelect?.focus();
-      return;
-    }
-    
-    let reason = `Reposición Manual - Agregado por: ${adminName}`;
-    if (flavor) {
-      reason += ` (Sabor: ${flavor})`;
-    }
+    const reason = `Reposición Manual - Agregado por: ${adminName}`;
     
     try {
       const resp = await fetch(`${HOST}${STORE_PRODUCTS_PATH}/movimientos`, {
@@ -642,33 +450,18 @@ document.addEventListener('DOMContentLoaded', () => {
           producto_id: id,
           tipo_movimiento: type,
           cantidad: qty,
-          motivo: reason,
-          sabor: flavor || null
+          motivo: reason
         })
       });
       if (!resp.ok) {
-        const data = await resp.json().catch(() => ({}));
-        throw new Error(data?.error || data?.message || 'Error al registrar movimiento');
+        const data = await resp.json();
+        throw new Error(data.error || 'Error al registrar movimiento');
       }
       bootstrap.Modal.getOrCreateInstance(document.getElementById('inventoryMovementModal')).hide();
       loadStoreProducts();
-      Swal.fire({
-        title: '¡Éxito!',
-        text: 'Movimiento registrado correctamente.',
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false,
-        background: '#fff',
-        customClass: { popup: 'rounded-4' }
-      });
+      alert('Movimiento registrado con éxito');
     } catch (err) {
-      Swal.fire({
-        title: 'Error',
-        text: err.message,
-        icon: 'error',
-        confirmButtonColor: '#2d5a27',
-        customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-      });
+      alert(err.message);
     }
   });
 
@@ -677,68 +470,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = storeProductId.value;
 
     const priceNumber = parseCopToNumber(storeProductPrice.value);
-    const cat = storeProductCategory.value || null;
     const payload = {
       nombre: (storeProductName.value || '').trim(),
-      categoria: cat,
+      categoria: storeProductCategory.value || null,
       precio_cop: priceNumber,
+      stock: Number(storeProductStock.value || 0),
       descripcion: (storeProductDescription.value || '').trim() || null,
       sabores: currentFlavors,
-      activo: storeProductActive.checked ? 1 : 0,
-      pagina: (cat && cat.toLowerCase() === 'libros') ? 'libros' : 'comida-con-alma'
+      activo: storeProductActive.checked ? 1 : 0
     };
-
     if (!payload.nombre || !payload.precio_cop) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Nombre y precio son requeridos',
-        icon: 'error',
-        confirmButtonColor: '#2d5a27',
-        customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-      });
+      alert('Nombre y precio son requeridos');
       return;
     }
-
     try {
       const method = id ? 'PUT' : 'POST';
       const url = id ? `${HOST}${STORE_PRODUCTS_PATH}/${id}` : `${HOST}${STORE_PRODUCTS_PATH}`;
-      
       const resp = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
       const data = await resp.json().catch(() => ({}));
-      if (!resp.ok) throw new Error(data?.error || 'Error al guardar producto');
-
+      if (!resp.ok) throw new Error(data?.error || 'Error al guardar plato');
       const savedId = id || data?.data?.[0]?.producto_id;
-      
-      // Si hay imágenes seleccionadas en el input, subirlas ahora
-      if (savedId && storeProductImages.files.length > 0) {
-        await uploadImages(savedId, storeProductImages.files);
+      if (savedId) {
+        try {
+          const files = storeProductImages.files;
+          await uploadImages(savedId, files);
+        } catch (err) {
+          alert(err.message);
+        }
       }
-
       bootstrap.Modal.getOrCreateInstance(storeProductModal).hide();
       loadStoreProducts();
-      Swal.fire({
-        title: '¡Guardado!',
-        text: 'El producto se ha guardado correctamente.',
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false,
-        background: '#2d5a27',
-        color: '#fff',
-        customClass: { popup: 'rounded-4' }
-      });
     } catch (err) {
-      Swal.fire({
-        title: 'Error',
-        text: err.message,
-        icon: 'error',
-        confirmButtonColor: '#2d5a27',
-        customClass: { popup: 'rounded-4', confirmButton: 'rounded-pill px-4' }
-      });
+      alert(err.message);
     }
   });
 

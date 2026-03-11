@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { verifyToken } from '../middleware/authMiddleware.js';
 import {
 	listStoreProducts,
 	getStoreProductById,
@@ -7,15 +8,25 @@ import {
 	updateStoreProductStock,
 	deleteStoreProduct,
 	uploadStoreProductImages,
-	deleteStoreProductImage
+	deleteStoreProductImage,
+	addInventoryMovement,
+	listInventoryMovements,
+	processCheckout
 } from '../controllers/storeProducts.Controller.js';
 
 const router = Router();
 const name = '/tiendaProductos';
 
+router.route(`${name}/checkout`)
+	.post(verifyToken, processCheckout);
+
 router.route(name)
 	.get(listStoreProducts)
 	.post(createStoreProduct);
+
+router.route(`${name}/movimientos`)
+	.get(listInventoryMovements)
+	.post(addInventoryMovement);
 
 router.route(`${name}/:id`)
 	.get(getStoreProductById)

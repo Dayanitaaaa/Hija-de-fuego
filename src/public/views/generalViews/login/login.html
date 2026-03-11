@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -48,9 +50,26 @@
                                 <input type="checkbox">
                                 Mantener sesión iniciada
                             </label>
-                            <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                            <a href="/generalViews/forgot-password" class="forgot-password">¿Olvidaste tu contraseña?</a>
                         </div>
                         <button type="submit" class="login-btn">Ingresar</button>
+
+                        <div class="social-login-separator">
+                            <span>O ingresa con red social</span>
+                        </div>
+
+                        <div class="social-login-options">
+                            <button type="button" class="social-btn facebook-btn">
+                                <i class="fab fa-facebook-f"></i> Login con Facebook
+                            </button>
+                            <button type="button" class="social-btn apple-btn">
+                                <i class="fab fa-apple"></i> Login con Apple
+                            </button>
+                            <button type="button" class="social-btn google-btn">
+                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Login con Google
+                            </button>
+                        </div>
+
                         <div class="register-link">
                             <span>¿No tienes cuenta?</span>
                             <a href="/generalViews/register">Regístrate</a>

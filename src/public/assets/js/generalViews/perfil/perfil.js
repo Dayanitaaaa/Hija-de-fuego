@@ -230,7 +230,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         logoutBtn.addEventListener('click', handleLogout);
     }
 
-    // Placeholder para cargar pedidos/direcciones: se cargan cuando hay sesión válida arriba
+    // Placeholder para cargar pedidos (aquí iría un fetch a la API)
+    loadOrders();
     loadAddresses();
 
     // Formulario de edición (opcional)
@@ -241,17 +242,8 @@ async function loadOrders(email) {
     const ordersContainer = document.getElementById('orders-list');
     if (!ordersContainer) return;
 
-    if (!email) {
-        ordersContainer.innerHTML = `
-            <div class="empty-state">
-                <i class="bi bi-bag-x"></i>
-                <p>No se pudieron cargar tus pedidos (correo no disponible en la sesión).</p>
-            </div>`;
-        return;
-    }
-
     try {
-        const res = await fetch(`${HOST}/mySystem/pedidos/usuario/${encodeURIComponent(email)}`);
+        const res = await fetch(`${HOST}/mySystem/pedidos/usuario/${email}`);
         const orders = await res.json();
 
         if (!orders || orders.length === 0) {
@@ -270,11 +262,10 @@ async function loadOrders(email) {
             const date = new Date(order.fecha_pedido).toLocaleDateString();
             const total = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(order.total);
             const statusClass = `status-${order.estado.toLowerCase()}`;
-            const orderCode = `HF-${String(order.pedido_id).padStart(4, '0')}`;
             
             html += `
                 <tr>
-                    <td><strong>${orderCode}</strong></td>
+                    <td><strong>#${order.pedido_id}</strong></td>
                     <td>${date}</td>
                     <td>${total}</td>
                     <td><span class="status-badge ${statusClass}">${order.estado}</span></td>

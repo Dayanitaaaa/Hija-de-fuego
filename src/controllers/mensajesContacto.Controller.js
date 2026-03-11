@@ -72,10 +72,10 @@ export const responderMensajeContacto = async (req, res) => {
 			});
 		}
 
-		// 3. Eliminar mensaje inmediatamente de la base de datos
+		// 3. Eliminar el mensaje de la base de datos tras responder (caducidad inmediata)
 		await connect.query('DELETE FROM mensajes_contacto WHERE id = ?', [id]);
 
-		return res.json({ message: 'Respuesta enviada correctamente. El mensaje ha sido eliminado automáticamente.' });
+		return res.json({ message: 'Respuesta enviada correctamente y mensaje eliminado del sistema' });
 	} catch (error) {
 		console.error('Error general al responder mensaje:', error);
 		return res.status(500).json({ message: 'Error interno del servidor', error: error.message });
