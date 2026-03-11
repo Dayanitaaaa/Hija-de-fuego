@@ -217,29 +217,20 @@ header {
     z-index: 5;
 }
 
-.recipes-title-region {
-    font-family: 'Aboreto', cursive;
-    font-size: 3.5rem;
+.region-page-title {
+    font-family: 'Aboreto', serif;
+    font-size: 3rem;
     color: #000 !important;
-    margin: 0 0 10px 0;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 4px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px #fff, 0 0 5px #fff; /* Resplandor para que resalte sobre el fondo */
 }
 
-.recipes-subtitle-region {
+.region-description {
     font-family: 'Georgia', serif;
-    font-size: 1.25rem;
-    color: #000 !important; /* Texto negro para contraste */
-    font-weight: 700;
-    margin: 0;
-    background: rgba(255, 255, 255, 0.85) !important; /* Fondo claro para que se lea */
-    padding: 15px 25px;
-    border-radius: 15px;
-    display: inline-block;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-size: 1.2rem;
+    color: #000 !important;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px #fff, 0 0 3px #fff; /* Resplandor para legibilidad */
 }
 
 /* Botón Ver Todas */
