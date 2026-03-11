@@ -48,16 +48,43 @@ header {
 .recipes-content-container {
     max-width: 1200px;
     width: 95%;
-    background-color: rgba(255, 255, 255, 0.05); /* Casi invisible */
-    -webkit-backdrop-filter: blur(2px) saturate(110%); /* Desenfoque casi nulo para ver el fondo nítido */
-    backdrop-filter: blur(2px) saturate(110%); 
+    background-color: rgba(255, 255, 255, 0.92) !important; /* Forzar fondo casi opaco */
     padding: 60px 40px;
     border-radius: 40px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
     margin: 40px auto;
     position: relative;
     z-index: 10;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.recipes-intro {
+    font-family: 'Georgia', serif;
+    font-size: 1.4rem;
+    line-height: 1.8;
+    color: #000 !important;
+    max-width: 900px;
+    margin: 0 auto 40px auto;
+    font-weight: 700;
+    text-align: center;
+    background: white !important; /* Fondo blanco sólido para el texto intro */
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.region-title-container {
+    background: white !important; /* Fondo blanco sólido para títulos */
+    padding: 30px;
+    border-radius: 25px;
+    margin-bottom: 35px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+    border: 1px solid #eee;
 }
 
 .recipe-card {
@@ -196,10 +223,17 @@ header {
 
 .recipes-subtitle-region {
     font-family: 'Georgia', serif;
-    font-size: 1.2rem;
-    color: #333 !important;
-    font-weight: 600;
+    font-size: 1.25rem;
+    color: #000 !important; /* Texto negro para contraste */
+    font-weight: 700;
     margin: 0;
+    background: rgba(255, 255, 255, 0.85) !important; /* Fondo claro para que se lea */
+    padding: 15px 25px;
+    border-radius: 15px;
+    display: inline-block;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 /* Botón Ver Todas */
@@ -472,18 +506,19 @@ header {
     font-size: 1.3rem;
     line-height: 1.8;
     color: #000 !important;
-    max-width: 850px;
+    max-width: 900px;
     margin: 0 auto 40px auto;
     font-weight: 700;
     text-align: center;
-    background: rgba(255, 255, 255, 0.75);
-    padding: 25px 35px;
-    border-radius: 20px;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.85) !important; /* Más opaco para ver el texto */
+    padding: 30px 40px;
+    border-radius: 25px;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     position: relative;
     z-index: 5;
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 /* Estilos para la imagen del plato en el detalle - Diseño Premium */
